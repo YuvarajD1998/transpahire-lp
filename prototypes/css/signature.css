@@ -1,0 +1,337 @@
+/* ==========================================================================
+   STAGE 2 PROTOTYPE — THE SCORE, TAKEN APART
+   --------------------------------------------------------------------------
+   Six layers of one object on a sticky stage. The scroll is the clock:
+   prototypes/js/scene.js writes `--p` (0 → 1 across the stage's scroll
+   length) and `data-state` (1 → 6) onto `.sig`. Everything below maps those
+   two values to opacity and transform — and nothing else. No layout property
+   animates; no dependency; no keyframes.
+
+   Three executions differ ONLY in the mapping (§ V1 / V2 / V3). The static
+   composition (§ STATIC) is the markup as it stands: six frames in reading
+   order, each with its caption — the fallback for reduced motion, phones,
+   and JavaScript unavailable. It is a composition, not a broken animation.
+
+   This is P6 "staged layers" from the Stage 1 report (§ 19), scroll mode,
+   capped at one per page.
+   ========================================================================== */
+
+/* ---- The stage --------------------------------------------------------------- */
+.sig { position: relative; }
+.sig--pinned { height: calc(var(--scene-length) * 100vh); }
+.sig--pinned .sig__stage {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  max-height: 800px;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  column-gap: var(--gap-wide);
+  align-items: stretch;
+  padding-inline: var(--page-pad);
+  max-width: var(--container);
+  margin-inline: auto;
+  overflow: hidden;
+}
+.sig__layers { position: relative; min-width: 0; }
+.sig--pinned .layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--sp-6);
+  padding-top: var(--sp-8);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.sig--pinned .layer__body { display: grid; align-content: center; min-height: 0; padding-bottom: var(--sp-10); }
+
+/* The caption: number, key line, one sentence. Present in every mode. */
+.layer__cap { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 var(--sp-3); align-items: baseline; max-width: 64ch; }
+.layer__n { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: var(--tr-label); color: var(--text-accent); }
+.layer__k { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h3); letter-spacing: var(--tr-heading); color: var(--text-strong); }
+.layer__s { grid-column: 2; font-size: var(--fs-body-lg); color: var(--text-muted); margin-top: 2px; }
+
+/* The rail: six steps, the current one ink, the passed ones indigo. A pin
+   never feels like a trap when the progress is visible. */
+.srail { list-style: none; margin: 0; padding: var(--sp-8) 0 0; display: grid; gap: var(--sp-4); align-content: start; }
+.srail__item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--sp-2); align-items: baseline; font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: .06em; color: var(--text-faint); transition: color var(--dur-medium) var(--ease-standard); }
+.srail__n { position: relative; }
+.srail__n::after { content: ""; position: absolute; left: 0; top: -4px; width: 100%; height: 1px; background: currentColor; transform-origin: left; transform: scaleX(0); transition: transform var(--dur-medium) var(--ease-standard); }
+.srail__item.is-passed { color: var(--text-accent); }
+.srail__item.is-passed .srail__n::after { transform: scaleX(1); }
+.srail__item.is-current { color: var(--text-strong); }
+.srail__item.is-current .srail__n::after { transform: scaleX(1); background: var(--text-accent); }
+.srail__k { font-family: var(--font-sans); font-size: var(--fs-small); letter-spacing: 0; }
+
+/* The persistent 87 — v2 only. Hidden in the others. */
+.sig__persist { position: absolute; right: var(--page-pad); top: var(--sp-8); z-index: 3; opacity: 0; transform: translateY(-8px); transition: opacity var(--dur-medium) var(--ease-entrance), transform var(--dur-medium) var(--ease-entrance); pointer-events: none; }
+
+/* ---- Layer bodies ----------------------------------------------------------- */
+.layer--1 .rank { background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-2) var(--sp-5); box-shadow: var(--shadow-card); }
+.layer--1 .rank__row[aria-current="true"] { box-shadow: inset 3px 0 0 var(--c-indigo-bright); }
+
+.sig-score { display: grid; justify-items: start; gap: var(--sp-3); }
+.sig-score .ring { --ring-size: 220px; }
+.sig-score .ring__value { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: 84px; letter-spacing: -0.04em; }
+.sig-score__of { margin: 0; font-family: var(--font-mono); font-size: var(--fs-data); color: var(--text-muted); }
+.sig-score__who { margin: var(--sp-2) 0 0; font-size: var(--fs-lede); color: var(--text-strong); }
+.sig-score__sep { color: var(--text-faint); }
+.sig-score__chips { margin: 0; display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+.sig-weights { display: grid; gap: var(--sp-6); max-width: 720px; }
+.sig-weights__head { margin: 0; display: flex; align-items: baseline; gap: var(--sp-3); }
+.sig-weights__n { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-quote); letter-spacing: -0.03em; color: var(--text-strong); }
+.sig-weights__eq { font-family: var(--font-mono); color: var(--text-faint); }
+.sig-weights__sum { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h3); color: var(--text-accent); }
+.sig-weights__mods, .sig-weights__gate { margin: 0; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); line-height: 1.8; }
+.sig-weights__mods b { color: var(--text-strong); font-weight: var(--fw-regular); }
+.sig-weights__gate { border-top: 1px solid var(--border); padding-top: var(--sp-3); }
+
+.sig-skills { display: grid; gap: var(--sp-5); max-width: 760px; }
+.sig-skills__head { margin: 0; display: flex; align-items: baseline; gap: var(--sp-3); }
+.sig-skills__head .wrow__label { font-size: var(--fs-h3); font-family: var(--font-display); color: var(--text-strong); }
+.sig-skills__head .wrow__pct { font-size: var(--fs-h3); }
+.sig-skills__open { font-family: var(--font-serif); font-style: italic; color: var(--text-accent); font-size: var(--fs-h3); }
+.srows { display: grid; }
+.srow { display: grid; grid-template-columns: 24px minmax(0, 1fr) 20px minmax(0, 1.4fr) auto 5ch; gap: var(--sp-3); align-items: center; padding: var(--sp-3) 0; border-top: 1px solid var(--border); }
+.srow:last-child { border-bottom: 1px solid var(--border); }
+.srow__glyph { font-family: var(--font-mono); font-size: var(--fs-body-lg); }
+.srow--covered .srow__glyph { color: var(--state-ok); }
+.srow--partial .srow__glyph, .srow__glyph--partial { color: var(--state-info); }
+.srow--missing .srow__glyph { color: var(--state-none); }
+.srow__concept { font-weight: var(--fw-medium); color: var(--text-strong); }
+.srow__arrow { color: var(--text-faint); text-align: center; }
+.srow__matched { color: var(--text-body); font-size: var(--fs-body); }
+.srow__matched--none { color: var(--text-faint); }
+.srow__conf { font-family: var(--font-mono); font-size: var(--fs-data); text-align: right; color: var(--text-strong); font-variant-numeric: tabular-nums; }
+.srow--partial { background: var(--surface-raised); box-shadow: inset 3px 0 0 var(--state-info); padding-inline: var(--sp-3); }
+.relchip--none { color: var(--text-faint); border-color: var(--border); }
+
+.sig-evidence { display: grid; gap: var(--sp-4); max-width: 720px; }
+.sig-evidence__head { margin: 0; font-size: var(--fs-h3); font-family: var(--font-display); color: var(--text-strong); display: flex; gap: var(--sp-2); align-items: baseline; flex-wrap: wrap; }
+.sig-evidence__head .srow__matched { font-size: inherit; color: var(--state-info); }
+.sig-evidence__rel { margin: 0; display: flex; gap: var(--sp-3); align-items: center; flex-wrap: wrap; }
+.sig-evidence__edge { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); }
+.sig-evidence__edge em { font-style: normal; color: var(--text-accent); }
+.sig-evidence__reason { margin: 0; font-size: var(--fs-body-lg); color: var(--text-body); }
+.sig-evidence__source { margin: var(--sp-2) 0 0; padding: var(--sp-5); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-raised); display: grid; gap: var(--sp-3); }
+.sig-evidence__from { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
+.sig-evidence__quote { margin: 0; font-size: var(--fs-lede); line-height: 1.5; color: var(--text-strong); }
+.sig-evidence__quote mark { background: var(--wash-evidence); color: var(--text-evidence); padding: 2px 6px; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.sig-evidence__conf { margin: 0; display: flex; align-items: center; gap: var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); }
+.sig-evidence__conf .meter { width: 160px; }
+
+.sig-cand { max-width: 420px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-lift); overflow: hidden; }
+.sig-cand__route { margin: 0; padding: var(--sp-3) var(--sp-5); border-bottom: 1px solid var(--border-soft); font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: .06em; color: var(--text-muted); background: var(--surface-sunken); }
+.sig-cand__body { padding: var(--sp-5); display: grid; gap: var(--sp-5); }
+.sig-cand__score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-4); align-items: center; }
+.sig-cand__score .ring__value { font-family: var(--font-display); font-size: 30px; font-weight: var(--fw-medium); }
+.sig-cand__trail { margin: 0; }
+
+/* ==========================================================================
+   MAPPINGS — arrival (--a) and departure (--d) per layer, from --p
+   ========================================================================== */
+.sig--pinned .layer--1 { --a: 1;                                          --d: clamp(0, (var(--p) - 0.10) / 0.07, 1); }
+.sig--pinned .layer--2 { --a: clamp(0, (var(--p) - 0.12) / 0.07, 1);     --d: clamp(0, (var(--p) - 0.28) / 0.07, 1); }
+.sig--pinned .layer--3 { --a: clamp(0, (var(--p) - 0.30) / 0.07, 1);     --d: clamp(0, (var(--p) - 0.46) / 0.07, 1); }
+.sig--pinned .layer--4 { --a: clamp(0, (var(--p) - 0.48) / 0.07, 1);     --d: clamp(0, (var(--p) - 0.64) / 0.07, 1); }
+.sig--pinned .layer--5 { --a: clamp(0, (var(--p) - 0.66) / 0.07, 1);     --d: clamp(0, (var(--p) - 0.80) / 0.07, 1); }
+.sig--pinned .layer--6 { --a: clamp(0, (var(--p) - 0.82) / 0.07, 1);     --d: 0; }
+
+/* ---- V1 · SUBTLE — an editorial page turning ---------------------------------- */
+[data-execution="v1"].sig--pinned .layer {
+  opacity: calc(var(--a) * (1 - var(--d)));
+  transform: translate3d(0, calc((1 - var(--a)) * 24px - var(--d) * 12px), 0);
+}
+
+/* ---- V2 · CINEMATIC — layers separate, recede, and recompose ------------------ */
+[data-execution="v2"].sig--pinned .layer {
+  opacity: calc(var(--a) * (1 - var(--d)));
+  transform:
+    translate3d(0, calc((1 - var(--a)) * 64px - var(--d) * 56px), 0)
+    scale(calc(0.95 + var(--a) * 0.05 - var(--d) * 0.07));
+  transform-origin: 50% 40%;
+}
+/* The 87 stays on screen while its parts are shown: the parts are still it. */
+[data-execution="v2"][data-state="3"] .sig__persist,
+[data-execution="v2"][data-state="4"] .sig__persist,
+[data-execution="v2"][data-state="5"] .sig__persist { opacity: 1; transform: none; }
+[data-execution="v2"] .sig__persist .ring { --ring-size: 56px; }
+[data-execution="v2"] .sig__persist .ring__value { font-size: var(--fs-body-lg); }
+/* The list recedes as a whole and the selected row is the last thing to go. */
+[data-execution="v2"].sig--pinned .layer--1 .rank__row:not([aria-current="true"]) { opacity: calc(1 - var(--d)); }
+/* Bars fill as the weights arrive: "this quantity has a magnitude". */
+[data-execution="v2"].sig--pinned .layer--3 .wrow__fill { transform: scaleX(var(--a)); }
+
+/* ---- V3 · EXPERIMENTAL — the score becomes structure --------------------------- */
+[data-execution="v3"].sig--pinned .layer { opacity: calc(var(--a) * (1 - var(--d))); }
+/* The list compresses to the left and stays as a ghost: the interface
+   rearranging itself around the thing being examined. */
+[data-execution="v3"].sig--pinned .layer--1 {
+  opacity: max(calc(0.3 * (1 - var(--p))), calc(1 - var(--d)));
+  transform: translate3d(calc(var(--d) * -30%), calc(var(--d) * 56%), 0) scale(calc(1 - var(--d) * 0.6));
+  transform-origin: 0 0;
+}
+[data-execution="v3"].sig--pinned .layer--1 .layer__cap { opacity: calc(1 - var(--d)); }
+/* The 87 grows past its own size before it splits. */
+[data-execution="v3"].sig--pinned .layer--2 {
+  transform: translate3d(calc((1 - var(--a)) * 10%), 0, 0) scale(calc(0.9 + var(--a) * 0.1 + var(--d) * 0.35));
+  transform-origin: 30% 40%;
+}
+/* The weights emerge out of the numeral: bars grow from zero, rows fan down. */
+[data-execution="v3"].sig--pinned .layer--3 { transform: translate3d(0, calc((1 - var(--a)) * -40px), 0); }
+[data-execution="v3"].sig--pinned .layer--3 .wrow { transform: translate3d(0, calc((1 - var(--a)) * (var(--i) * 18px + 8px)), 0); }
+[data-execution="v3"].sig--pinned .layer--3 .wrow__fill { transform: scaleX(var(--a)); }
+/* The skill rows arrive one after another. */
+[data-execution="v3"].sig--pinned .layer--4 .srow { opacity: clamp(0, calc(var(--a) * 2.4 - var(--i, 0) * 0.28), 1); transform: translate3d(calc((1 - var(--a)) * 24px), 0, 0); }
+/* The evidence line enters from another layer, from the right, and lands. */
+[data-execution="v3"].sig--pinned .layer--5 { transform: translate3d(calc((1 - var(--a)) * 22vw), 0, 0); }
+[data-execution="v3"].sig--pinned .layer--5 .sig-evidence__source { transform: translate3d(calc((1 - var(--a)) * 12vw), 0, 0) rotate(calc((1 - var(--a)) * 0.6deg)); }
+/* The candidate's screen rises from below, as a phone would. */
+[data-execution="v3"].sig--pinned .layer--6 { transform: translate3d(0, calc((1 - var(--a)) * 28vh), 0) scale(calc(0.92 + var(--a) * 0.08)); transform-origin: 50% 100%; }
+
+/* ==========================================================================
+   STATIC — six frames in flow. The fallback IS a composition.
+   Reached by: .sig--stacked (authored), .sig--static (reduced motion or a
+   narrow viewport, set by scene.js), or html:not(.js) (JavaScript absent).
+   ========================================================================== */
+.sig--stacked .sig__stage,
+.sig--static .sig__stage,
+html:not(.js) .sig .sig__stage {
+  position: static;
+  height: auto;
+  max-height: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-inline: var(--page-pad);
+  max-width: var(--container);
+  margin-inline: auto;
+  overflow: visible;
+}
+.sig--stacked, .sig--static, html:not(.js) .sig { height: auto; }
+.sig--stacked .srail, .sig--static .srail, html:not(.js) .sig .srail,
+.sig--stacked .sig__persist, .sig--static .sig__persist, html:not(.js) .sig .sig__persist { display: none; }
+.sig--stacked .sig__layers, .sig--static .sig__layers, html:not(.js) .sig .sig__layers { display: grid; gap: var(--sp-16); }
+.sig--stacked .layer, .sig--static .layer, html:not(.js) .sig .layer {
+  position: static;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  column-gap: var(--gap-wide);
+  row-gap: var(--sp-6);
+  align-items: start;
+  opacity: 1 !important;
+  transform: none !important;
+  padding-top: 0;
+  pointer-events: auto;
+  will-change: auto;
+}
+.sig--stacked .layer__cap, .sig--static .layer__cap, html:not(.js) .sig .layer__cap { grid-template-columns: minmax(0, 1fr); position: sticky; top: calc(var(--header-h) + var(--sp-6)); }
+.sig--stacked .layer__s, .sig--static .layer__s, html:not(.js) .sig .layer__s { grid-column: 1; }
+.sig--stacked .layer .wrow__fill, .sig--static .layer .wrow__fill, html:not(.js) .sig .layer .wrow__fill,
+.sig--stacked .layer .srow, .sig--static .layer .srow, html:not(.js) .sig .layer .srow,
+.sig--stacked .layer .wrow, .sig--static .layer .wrow, html:not(.js) .sig .layer .wrow,
+.sig--stacked .layer .sig-evidence__source, .sig--static .layer .sig-evidence__source, html:not(.js) .sig .layer .sig-evidence__source,
+.sig--stacked .layer .rank__row, .sig--static .layer .rank__row, html:not(.js) .sig .layer .rank__row { opacity: 1 !important; transform: none !important; }
+@media (max-width: 899px) {
+  .sig--stacked .layer, .sig--static .layer, html:not(.js) .sig .layer { grid-template-columns: minmax(0, 1fr); }
+  .sig--stacked .layer__cap, .sig--static .layer__cap, html:not(.js) .sig .layer__cap { position: static; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sig--pinned { height: auto; }
+  .sig--pinned .sig__stage { position: static; height: auto; max-height: none; grid-template-columns: minmax(0, 1fr); overflow: visible; }
+  .sig--pinned .srail, .sig--pinned .sig__persist { display: none; }
+  .sig--pinned .sig__layers { display: grid; gap: var(--sp-16); }
+  .sig--pinned .layer { position: static; opacity: 1 !important; transform: none !important; padding-top: 0; pointer-events: auto; }
+  .sig--pinned .layer * { opacity: 1 !important; transform: none !important; }
+}
+/* Phone-specific bodies in the stack. */
+@media (max-width: 699px) {
+  .sig-score .ring { --ring-size: 160px; }
+  .sig-score .ring__value { font-size: 60px; }
+  .srow { grid-template-columns: 20px minmax(0, 1fr) auto; grid-template-areas: "g c conf" "g m m" "g r r"; row-gap: 4px; }
+  .srow__glyph { grid-area: g; } .srow__concept { grid-area: c; } .srow__arrow { display: none; }
+  .srow__matched { grid-area: m; } .srow .relchip { grid-area: r; justify-self: start; } .srow__conf { grid-area: conf; }
+  .layer--1 .rank { padding-inline: var(--sp-3); }
+  .layer--1 .rank__row:nth-child(n + 5) { display: none; }
+}
+
+/* ==========================================================================
+   STAGE 3 — FINAL · the one mapping the page ships with
+   --------------------------------------------------------------------------
+   V2's separation (a layer rises in, and recedes as it leaves) with V3's
+   single borrowed moment: between states 2 and 3 the 87 grows past its own
+   size and the four bars grow out of zero as their rows fan down. Everything
+   else V2 kept is kept; everything else V3 tried is not (STAGE-2.md § 11).
+
+   THE WINDOWS DO NOT OVERLAP. Each boundary t (js/scene.js `data-thresholds`,
+   lib/final.mjs FINAL_THRESHOLDS) has the outgoing layer leaving over
+   [t − w, t] and the incoming layer arriving over [t, t + w]. At t exactly the
+   stage holds only the caption of the arriving layer and, in states 4–5, the
+   persistent 87. Two layers are never on screen together, which is the
+   "can I tell what changed?" rule (§ 12 of the brief) made structural.
+   ========================================================================== */
+[data-execution="final"].sig--pinned { --w: 0.055; }
+[data-execution="final"].sig--pinned .layer--1 { --a: 1;                                                        --d: clamp(0, (var(--p) - (0.14 - var(--w))) / var(--w), 1); }
+[data-execution="final"].sig--pinned .layer--2 { --a: clamp(0, (var(--p) - 0.14) / var(--w), 1);                --d: clamp(0, (var(--p) - (0.31 - var(--w))) / var(--w), 1); }
+[data-execution="final"].sig--pinned .layer--3 { --a: clamp(0, (var(--p) - 0.31) / var(--w), 1);                --d: clamp(0, (var(--p) - (0.48 - var(--w))) / var(--w), 1); }
+[data-execution="final"].sig--pinned .layer--4 { --a: clamp(0, (var(--p) - 0.48) / var(--w), 1);                --d: clamp(0, (var(--p) - (0.65 - var(--w))) / var(--w), 1); }
+[data-execution="final"].sig--pinned .layer--5 { --a: clamp(0, (var(--p) - 0.65) / var(--w), 1);                --d: clamp(0, (var(--p) - (0.82 - var(--w))) / var(--w), 1); }
+[data-execution="final"].sig--pinned .layer--6 { --a: clamp(0, (var(--p) - 0.82) / var(--w), 1);                --d: 0; }
+
+/* The base: V2. Arrive rising 48px from 0.96; leave receding 40px to 0.95. */
+[data-execution="final"].sig--pinned .layer {
+  opacity: calc(var(--a) * (1 - var(--d)));
+  transform:
+    translate3d(0, calc((1 - var(--a)) * 48px - var(--d) * 40px), 0)
+    scale(calc(0.96 + var(--a) * 0.04 - var(--d) * 0.05));
+  transform-origin: 50% 40%;
+}
+/* State 1: the unselected rows go first; the selected row is the last thing
+   on screen, and it is the thing the next layer is about. */
+[data-execution="final"].sig--pinned .layer--1 .rank__row:not([aria-current="true"]) { opacity: calc(1 - var(--d)); }
+/* 2 → 3, from V3: the 87 grows past itself as it goes … */
+[data-execution="final"].sig--pinned .layer--2 {
+  transform: translate3d(0, calc((1 - var(--a)) * 48px), 0) scale(calc(0.96 + var(--a) * 0.04 + var(--d) * 0.35));
+  transform-origin: 18% 42%;
+}
+/* … and the weights come out of where it was: the layer arrives from above
+   rather than below, the bars grow from zero, and the rows fan down. */
+[data-execution="final"].sig--pinned .layer--3 {
+  transform: translate3d(0, calc((1 - var(--a)) * -32px - var(--d) * 40px), 0) scale(calc(1 - var(--d) * 0.05));
+}
+[data-execution="final"].sig--pinned .layer--3 .wrow { transform: translate3d(0, calc((1 - var(--a)) * (var(--i) * 18px + 8px)), 0); }
+[data-execution="final"].sig--pinned .layer--3 .wrow__fill { transform: scaleX(var(--a)); }
+/* State 4: the skill rows arrive in order (V3), because they assemble in
+   order: exact, equivalent, transferable, missing. */
+[data-execution="final"].sig--pinned .layer--4 .srow { opacity: clamp(0, calc(var(--a) * 2.4 - var(--i, 0) * 0.28), 1); transform: translate3d(calc((1 - var(--a)) * 16px), 0, 0); }
+/* The 87 stays on screen while its parts are shown — states 4 and 5 only,
+   since state 3 carries its own 87 in the head. */
+[data-execution="final"][data-state="4"] .sig__persist,
+[data-execution="final"][data-state="5"] .sig__persist { opacity: 1; transform: none; }
+[data-execution="final"] .sig__persist .ring { --ring-size: 56px; }
+[data-execution="final"] .sig__persist .ring__value { font-size: var(--fs-body-lg); }
+
+/* ==========================================================================
+   TIMELINE — where the browser can drive the clock, it does.
+   --------------------------------------------------------------------------
+   `--p` is registered as a number and animated 0 → 1 across the stage's
+   contain range, inset by the header so it equals the listener's
+   (scrollY − top) / (height − (viewport − header)). js/scene.js sees the same
+   support flag and stops writing `--p`, keeping only the rail and
+   `data-state`. Without support, the listener is the clock and nothing here
+   applies. Under reduced motion the stage is static and the animation is off.
+   ========================================================================== */
+@property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
+@keyframes sig-progress { from { --p: 0; } to { --p: 1; } }
+@supports (animation-timeline: view()) {
+  html.js [data-execution="final"].sig--pinned:not(.sig--static) {
+    animation: sig-progress linear both;
+    animation-timeline: view(block 64px 0px);   /* --header-h; CSS cannot read a token here */
+    animation-range: contain 0% contain 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.js [data-execution="final"].sig--pinned { animation: none; }
+  }
+}

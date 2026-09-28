@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add('js');</script>
+
+<title>Motion Lab — Transpahire design system</title>
+<meta name="description" content="Internal reference for the Transpahire motion and interaction system.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/motion.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/sections.css">
+
+<script type="module" src="assets/js/main.js"></script>
+
+<style>
+  /* Lab-only chrome. Nothing here belongs in the design system — it exists to
+     label and measure the primitives, not to style the marketing site. */
+  .lab-head {
+    padding-block: var(--sp-16) var(--sp-10);
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 6px var(--sp-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--surface-raised);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .lab-status__dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--c-ok);
+  }
+  .lab-status--reduced .lab-status__dot { background: var(--c-warn); }
+
+  .lab-section {
+    padding-block: var(--sp-16);
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-section__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-10);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: var(--gap-grid);
+  }
+
+  /* The swatch: a labelled box that carries one primitive so its behaviour can
+     be observed in isolation. */
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    min-height: 150px;
+    padding: var(--sp-5);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .swatch__code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    color: var(--text-accent);
+    word-break: break-all;
+  }
+  .swatch__note {
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  .lab-controls {
+    position: sticky;
+    top: var(--header-h);
+    z-index: var(--z-sticky);
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    align-items: center;
+    padding: var(--sp-3) 0;
+    background: rgba(250, 250, 251, .9);
+    -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .spacer {
+    display: grid;
+    place-items: center;
+    min-height: 55vh;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .layer-stack { display: grid; gap: var(--sp-3); }
+  .layer {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--text-body);
+  }
+</style>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><defs>
+  <symbol id="stratum" viewBox="0 0 64 64">
+    <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+    <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+    <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+    <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 20 20"><path d="M11 1L3 12h6l-2 7 8-11h-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></symbol>
+</defs></svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="index.html" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+    <p class="label">Motion Lab · internal</p>
+    <a class="btn btn--secondary hover-icon" href="index.html">
+      Back to site
+      <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="container">
+
+  <!-- ===================================================================== -->
+  <header class="lab-head">
+    <p class="eyebrow">Design system · internal reference</p>
+    <h1 class="h-display mt-6">Motion Lab</h1>
+    <p class="lede measure mt-6">
+      Every motion primitive the Transpahire marketing site is allowed to use,
+      on one page. If an animation is not demonstrated here, it does not exist
+      in the system — <em>add it here first,</em> then use it.
+    </p>
+    <p class="body-copy measure mt-6">
+      This page is <code>noindex</code> and is not linked from the public site.
+      Its job is to make the system falsifiable: a primitive that looks wrong
+      here is wrong everywhere, and a primitive nobody can find a use for on
+      this page should be deleted.
+    </p>
+  </header>
+
+  <div class="lab-controls">
+    <p class="lab-status" id="motion-status">
+      <span class="lab-status__dot" aria-hidden="true"></span>
+      <span id="motion-status-text">Checking motion preference…</span>
+    </p>
+    <p class="swatch__note" style="margin:0">
+      Toggle <code>prefers-reduced-motion</code> in your OS or devtools — this
+      page updates live and every primitive below must remain usable.
+    </p>
+  </div>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">1 · Reveal</h2>
+      <p class="label">motion.css § 1</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      Entrance on scroll. One attribute per element, five variants. Distance
+      scales with the size of the object: a line of type moves 16px, a
+      dashboard moves 64px. Everything decelerates — nothing eases in.
+    </p>
+
+    <div class="demo-grid">
+      <div class="swatch" data-reveal="fade">
+        <p class="h-card">Fade</p>
+        <div>
+          <p class="swatch__code">data-reveal="fade"</p>
+          <p class="swatch__note">Opacity only. The safe default inside an already-transformed parent.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="up">
+        <p class="h-card">Fade Up</p>
+        <div>
+          <p class="swatch__code">data-reveal="up"</p>
+          <p class="swatch__note">The workhorse. Used for roughly 80% of reveals on the site.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="down">
+        <p class="h-card">Fade Down</p>
+        <div>
+          <p class="swatch__code">data-reveal="down"</p>
+          <p class="swatch__note">Only for elements that belong above their trigger — a dropdown, a banner.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="left" data-reveal-distance="lg">
+        <p class="h-card">Slide Left</p>
+        <div>
+          <p class="swatch__code">data-reveal="left"</p>
+          <p class="swatch__note">Paired with "right" across a two-column segment so the halves converge.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="right" data-reveal-distance="lg">
+        <p class="h-card">Slide Right</p>
+        <div>
+          <p class="swatch__code">data-reveal="right"</p>
+          <p class="swatch__note">Never on narrow viewports where it would imply horizontal overflow.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="scale">
+        <p class="h-card">Scale Reveal</p>
+        <div>
+          <p class="swatch__code">data-reveal="scale"</p>
+          <p class="swatch__note">0.94 → 1. For a self-contained panel that should read as arriving whole.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="blur">
+        <p class="h-card">Fade + Blur</p>
+        <div>
+          <p class="swatch__code">data-reveal="blur"</p>
+          <p class="swatch__note">Expensive to composite and visually loud. One per view, headlines only.</p>
+        </div>
+      </div>
+      <div class="swatch" data-reveal="rise">
+        <p class="h-card">Rise</p>
+        <div>
+          <p class="swatch__code">data-reveal="rise"</p>
+          <p class="swatch__note">The product-composition entrance: 64px, slower settle, slight scale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">2 · Stagger</h2>
+      <p class="label">motion.css § 2</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      Cascading siblings. Stagger is a hierarchy device — it tells the eye
+      there is an order to read things in. A group whose items have no order
+      should reveal together, not in sequence.
+    </p>
+
+    <p class="label" style="margin-bottom:var(--sp-4)">Fast · 50ms step — dense grids of six or more</p>
+    <div class="demo-grid" data-reveal-group data-stagger="fast" style="margin-bottom:var(--sp-10)">
+      <div class="swatch"><p class="h-card">01</p><p class="swatch__note">Six items at 50ms resolve in 250ms.</p></div>
+      <div class="swatch"><p class="h-card">02</p><p class="swatch__note">Fast enough to read as one gesture.</p></div>
+      <div class="swatch"><p class="h-card">03</p><p class="swatch__note">Not as a sequence of six.</p></div>
+      <div class="swatch"><p class="h-card">04</p><p class="swatch__note">Index is written by reveal.js.</p></div>
+      <div class="swatch"><p class="h-card">05</p><p class="swatch__note">No :nth-child ceiling.</p></div>
+      <div class="swatch"><p class="h-card">06</p><p class="swatch__note">A 24-item grid still works.</p></div>
+    </div>
+
+    <p class="label" style="margin-bottom:var(--sp-4)">Normal · 80ms step — the default, two to five items</p>
+    <div class="demo-grid" data-reveal-group data-stagger="normal" style="margin-bottom:var(--sp-10)">
+      <div class="swatch"><p class="h-card">01</p><p class="swatch__note">The house rhythm.</p></div>
+      <div class="swatch"><p class="h-card">02</p><p class="swatch__note">Used by every card grid on the homepage.</p></div>
+      <div class="swatch"><p class="h-card">03</p><p class="swatch__note">Perceptible without being slow.</p></div>
+    </div>
+
+    <p class="label" style="margin-bottom:var(--sp-4)">Slow · 120ms step — sequences where order carries meaning</p>
+    <div class="demo-grid" data-reveal-group data-stagger="slow">
+      <div class="swatch"><p class="h-card">Step 01</p><p class="swatch__note">Reserved for genuinely ordered content.</p></div>
+      <div class="swatch"><p class="h-card">Step 02</p><p class="swatch__note">A process, a pipeline, a build-up.</p></div>
+      <div class="swatch"><p class="h-card">Step 03</p><p class="swatch__note">The delay is the message: this follows that.</p></div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">3 · Hover</h2>
+      <p class="label">motion.css § 3</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      Pointer feedback, gated behind <code>(hover: hover) and (pointer: fine)</code>
+      so a touch device never gets stuck in a hover state. Press feedback is
+      not gated — it is the only affordance a touch user gets.
+    </p>
+
+    <div class="demo-grid">
+      <div class="card hover-lift">
+        <span class="card__icon"><svg width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-zap"/></svg></span>
+        <p class="h-card card__title">Card Lift</p>
+        <p class="swatch__code">.hover-lift</p>
+        <p class="swatch__note">3px up, border darkens, shadow deepens. The icon picks up the accent — one gesture, four coordinated changes.</p>
+      </div>
+
+      <div class="swatch">
+        <div class="stack stack--3">
+          <button type="button" class="btn btn--primary hover-icon press">Primary <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></button>
+          <button type="button" class="btn btn--secondary hover-icon press">Secondary <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></button>
+        </div>
+        <div>
+          <p class="swatch__code">.hover-icon .icon-shift</p>
+          <p class="swatch__note">The arrow leans toward where it will take you. Also fires on keyboard focus.</p>
+        </div>
+      </div>
+
+      <div class="swatch hover-scale" style="padding:0; overflow:hidden">
+        <div class="hover-scale__target frame__placeholder" style="min-height:150px">
+          <span class="frame__tag">Image scale</span>
+        </div>
+      </div>
+
+      <div class="swatch hover-border">
+        <p class="h-card">Border Shift</p>
+        <div>
+          <p class="swatch__code">.hover-border</p>
+          <p class="swatch__note">For outline-only surfaces where a lift would be too much movement.</p>
+        </div>
+      </div>
+
+      <div class="swatch hover-bg">
+        <p class="h-card">Background Shift</p>
+        <div>
+          <p class="swatch__code">.hover-bg</p>
+          <p class="swatch__note">Quiet row highlight. Table rows, list items, nav entries.</p>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <p class="h-card">Nav underline</p>
+        <nav class="site-nav" style="gap:var(--sp-5)">
+          <a class="site-nav__link" href="/product/">Product</a>
+          <a class="site-nav__link" href="/for-teams/">For teams</a>
+        </nav>
+        <div>
+          <p class="swatch__code">.site-nav__link</p>
+          <p class="swatch__note">A hairline scaling in from the left — reinforces the thin-rule vocabulary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">4 · Product</h2>
+      <p class="label">motion.css § 4</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      Rule 3 territory: product visualisations may be more expressive than
+      text. Use at most one of these per composition. Float and parallax both
+      stop entirely under reduced motion.
+    </p>
+
+    <div class="split" style="gap:var(--gap-grid); align-items:start">
+      <div>
+        <p class="label" style="margin-bottom:var(--sp-4)">Float · 6px over 7s</p>
+        <div class="frame float" style="--ratio: 16 / 10">
+          <div class="frame__chrome">
+            <span class="frame__dot" aria-hidden="true"></span><span class="frame__dot" aria-hidden="true"></span><span class="frame__dot" aria-hidden="true"></span>
+            <span class="frame__meta">float</span>
+          </div>
+          <div class="frame__body"><div class="frame__placeholder"><span class="frame__tag">Drifting panel</span></div></div>
+        </div>
+        <p class="swatch__note mt-4">
+          Below the threshold where the eye tracks it as animation, above the
+          threshold where the panel reads as inert. Never more than two in one
+          viewport.
+        </p>
+      </div>
+
+      <div>
+        <p class="label" style="margin-bottom:var(--sp-4)">Parallax · capped at ±40px</p>
+        <div class="frame" style="--ratio: 16 / 10" data-parallax="0.05">
+          <div class="frame__chrome">
+            <span class="frame__dot" aria-hidden="true"></span><span class="frame__dot" aria-hidden="true"></span><span class="frame__dot" aria-hidden="true"></span>
+            <span class="frame__meta">parallax 0.05</span>
+          </div>
+          <div class="frame__body"><div class="frame__placeholder"><span class="frame__tag">Scroll me</span></div></div>
+        </div>
+        <p class="swatch__note mt-4">
+          Zero offset as the element passes the viewport centre, so it sits at
+          its authored position at the moment it is read. Disabled on coarse
+          pointers.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <p class="label" style="margin-bottom:var(--sp-4)">Layer reveal · a composition that assembles itself</p>
+      <div class="split" style="gap:var(--gap-grid); align-items:center">
+        <div class="layer-stack" data-layers>
+          <div class="layer">Job requirements parsed</div>
+          <div class="layer">2,340 candidates scored</div>
+          <div class="layer">Skill coverage · experience · location</div>
+          <div class="layer">118 ranked matches</div>
+          <div class="layer">Rationale generated per match</div>
+        </div>
+        <p class="body-copy">
+          Panels arrive in order, 120ms apart. This communicates
+          <em>"these things are related and built up in sequence"</em> — which
+          is exactly what a scoring breakdown or a pipeline is. It is the one
+          product motion that carries real information, and the pattern the
+          Phase 2 product visualisations should be built on.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">4b · Product primitives — P1 … P5</h2>
+      <p class="label">motion.css § 4b</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      The primitives the product compositions use. Each is here
+      <em>because</em> it is used: P1 by nine compositions, P2 by the section 06
+      sequence and by the mission console, P3 by section 08 and by section 07's
+      payoff, P4 by the skill graph, P5 by the homepage hero. If one of them ever
+      stops being used, it should be deleted rather than kept for symmetry.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      <strong>P5 was added in Phase 4 and re-hosted in Phase 5</strong>, and it is documented as a
+      composition of two existing primitives rather than as a fifth animation —
+      see the bottom of this section for why that distinction is worth making.
+    </p>
+
+    <!-- ---- P1 --------------------------------------------------------- -->
+    <h3 class="h-sub" style="margin-bottom:var(--sp-4)">P1 · Meter fill</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Communicates:</strong> this quantity has a magnitude relative to a
+      whole. <code>scaleX</code> from a left origin over 620ms on
+      <code>--ease-entrance</code>, so it is transform-only. The value is a
+      unitless <code>--meter-v</code> fraction, and with JavaScript unavailable
+      the bar renders at its true width immediately — the value is the content,
+      not a decoration of it.
+    </p>
+    <div class="split" style="gap:var(--gap-grid); align-items:start; margin-bottom:var(--sp-16)">
+      <div class="card" id="lab-p1" data-reveal="up">
+        <dl class="breakdown">
+          <div class="breakdown__row">
+            <dt class="breakdown__label">Skill coverage</dt>
+            <dd class="breakdown__meter"><span class="meter meter--ok" aria-hidden="true"><span class="meter__fill" style="--meter-v: .84"></span></span></dd>
+            <dd class="breakdown__value">84</dd>
+          </div>
+          <div class="breakdown__row">
+            <dt class="breakdown__label">Salary alignment</dt>
+            <dd class="breakdown__meter"><span class="meter meter--warn" aria-hidden="true"><span class="meter__fill" style="--meter-v: .76"></span></span></dd>
+            <dd class="breakdown__value">76</dd>
+          </div>
+          <div class="breakdown__row">
+            <dt class="breakdown__label">Location preference</dt>
+            <dd class="breakdown__meter"><span class="meter meter--ok" aria-hidden="true"><span class="meter__fill" style="--meter-v: 1"></span></span></dd>
+            <dd class="breakdown__value">100</dd>
+          </div>
+        </dl>
+        <p style="margin-top:var(--sp-6)">
+          <button type="button" class="btn btn--secondary press" data-lab-replay="lab-p1">Replay</button>
+        </p>
+      </div>
+      <p class="swatch__note">
+        Three meters, three magnitudes, one primitive. The 76 beside two high
+        numbers is the point of a breakdown: if every dimension agreed there
+        would be nothing to decompose. Reduced motion renders all three at width
+        with no transition.
+      </p>
+    </div>
+
+    <!-- ---- P2 --------------------------------------------------------- -->
+    <h3 class="h-sub" style="margin-bottom:var(--sp-4)">P2 · Sequenced reveal with per-beat offsets</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Communicates:</strong> these parts assemble in this order, and
+      <em>this</em> part is separate. <code>data-layers</code> gives a fixed
+      120ms cadence; a sequence needs specific beats, because the pauses are the
+      information. Below, the fourth item is deliberately alone: it arrives
+      600ms after the third and 400ms before the fifth, and the gap is doing all
+      the work.
+    </p>
+    <div class="split" style="gap:var(--gap-grid); align-items:start; margin-bottom:var(--sp-16)">
+      <div class="card">
+        <div class="layer-stack" id="lab-p2" data-sequence>
+          <div class="layer" data-beat="0">requirement read · 4 tiers</div>
+          <div class="layer" data-beat="200">pool scored · 0–100</div>
+          <div class="layer" data-beat="400">skills matched · covered / missing</div>
+          <div class="layer" data-beat="1000" style="border-color:var(--state-info);color:var(--state-info)">≈ partial · the adjacent skill named</div>
+          <div class="layer" data-beat="1400">narrative written</div>
+        </div>
+        <p style="margin-top:var(--sp-6)">
+          <button type="button" class="btn btn--secondary press" data-lab-replay="lab-p2">Replay</button>
+        </p>
+      </div>
+      <p class="swatch__note">
+        <code>data-beat</code> takes the storyboard's own absolute number rather
+        than an offset from the previous beat, so editing one beat cannot shift
+        every beat after it. <code>--beat-delay</code> inherits, which is how a
+        meter or an SVG path inside a beat picks up that beat's timing without
+        being told separately. Under reduced motion the whole stack is present
+        immediately.
+      </p>
+    </div>
+
+    <!-- ---- P3 --------------------------------------------------------- -->
+    <h3 class="h-sub" style="margin-bottom:var(--sp-4)">P3 · List reorder</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Communicates:</strong> your priorities changed the answer. This is
+      the one animation on the site that <em>is</em> the information rather than
+      a decoration of it — the movement is what tells you the ranking responded.
+      A FLIP: measure, put the rows in their new order, transform them back to
+      where they were, release. 320ms on <code>--ease-standard</code>, and
+      nothing animates a layout property.
+    </p>
+    <div class="split" style="gap:var(--gap-grid); align-items:start; margin-bottom:var(--sp-16)">
+      <div>
+        <ul class="rank__list reorder" id="lab-p3" style="border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-raised)">
+          <li class="rank__row reorder__row" data-row="a" style="grid-template-columns:44px minmax(0,1fr)">
+            <span class="rank__number">87</span><span class="rank__name">Row A</span>
+          </li>
+          <li class="rank__row reorder__row" data-row="b" style="grid-template-columns:44px minmax(0,1fr)">
+            <span class="rank__number">81</span><span class="rank__name">Row B</span>
+          </li>
+          <li class="rank__row reorder__row" data-row="c" style="grid-template-columns:44px minmax(0,1fr)">
+            <span class="rank__number">78</span><span class="rank__name">Row C</span>
+          </li>
+          <li class="rank__row reorder__row" data-row="d" style="grid-template-columns:44px minmax(0,1fr)">
+            <span class="rank__number">74</span><span class="rank__name">Row D</span>
+          </li>
+        </ul>
+        <p style="margin-top:var(--sp-6)">
+          <button type="button" class="btn btn--secondary press" id="lab-p3-shuffle">Reorder</button>
+        </p>
+      </div>
+      <p class="swatch__note">
+        No absolute positioning, so the list keeps its own height and nothing
+        below it moves. Under reduced motion the DOM is reordered with no
+        transform at all, which repositions instantly — the new order is the
+        information and it survives; only the movement is dropped.
+      </p>
+    </div>
+
+    <!-- ---- P4 --------------------------------------------------------- -->
+    <h3 class="h-sub" style="margin-bottom:var(--sp-4)">P4 · Path draw <span class="badge">documented exception</span></h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Communicates:</strong> these two things are connected, and here is
+      the connection. Used once, by the skill-relationship graph in section 07.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>This is the one place the site animates a property outside the
+      <code>transform</code> / <code>opacity</code> / <code>filter</code>
+      allowlist.</strong> <code>stroke-dashoffset</code> is not in it, and there
+      is no transform that draws a line along itself. The exception is bounded:
+      six paths maximum on a page, this primitive only, short simple paths only.
+      Section 07 draws one.
+    </p>
+    <div class="split" style="gap:var(--gap-grid); align-items:start">
+      <div class="card">
+        <div id="lab-p4" data-sequence>
+          <svg viewBox="0 0 300 200" style="width:100%;height:auto" aria-hidden="true" focusable="false">
+            <g class="node node--required">
+              <rect class="node__box" x="70" y="10" width="160" height="46" rx="8"/>
+              <text class="node__name" x="86" y="39">Kubernetes</text>
+            </g>
+            <g class="edge">
+              <path class="edge__path" d="M150 140 L150 68" data-beat="200"/>
+              <polygon class="edge__arrow" points="150,58 145,70 155,70" data-beat="700" data-beat-fade/>
+              <text class="edge__label" x="162" y="108" data-beat="700" data-beat-fade>requires</text>
+            </g>
+            <g class="node node--profile">
+              <rect class="node__box" x="70" y="140" width="160" height="46" rx="8"/>
+              <text class="node__name" x="86" y="169">Docker</text>
+            </g>
+          </svg>
+        </div>
+        <p style="margin-top:var(--sp-6)">
+          <button type="button" class="btn btn--secondary press" data-lab-replay="lab-p4">Replay</button>
+        </p>
+      </div>
+      <p class="swatch__note">
+        The dash offset is measured from the path's own length at run time, not
+        authored: the geometry is responsive, so an authored length would be
+        wrong at every width but one. With no JavaScript, or under reduced
+        motion, the line is simply there — a relationship the reader cannot see
+        is a relationship the page did not state.
+      </p>
+    </div>
+
+    <!-- ---- P5 --------------------------------------------------------- -->
+    <h3 class="h-sub" style="margin-top:var(--sp-16); margin-bottom:var(--sp-4)">P5 · Drawer reveal <span class="badge">composed, not new</span></h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Communicates:</strong> a row is selected, and the view opens into
+      it. Used once, by the homepage hero, where the list gives you a number and
+      the drawer gives you the argument — which is the site's whole thesis in one
+      frame.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Updated in Phase 5, not replaced.</strong> The composition it
+      belongs to was rebuilt — the drawer is inset to <strong>42%</strong> rather
+      than 22%, and it is tabbed — but the animation is byte-for-byte the one
+      Phase 4 shipped. That is the test of whether P5 was documented correctly:
+      a composition changing shape should not move the motion system, and it
+      did not.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Why it is not a fifth animation.</strong> It composes two things
+      the site already had: the nav drawer's translate-and-fade, and the
+      <code>tp-panel-in</code> entrance. There is no new keyframe and no new
+      module — the trigger is an ancestor's reveal, exactly like P1's meter fill,
+      so with JavaScript unavailable the drawer is simply there. A primitive that
+      is really two primitives pointed at one composition should be documented as
+      that, or the system grows a new entry every time an existing pair gets a
+      new job.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Cap: one per page</strong>, enforced by <code>tools/check.mjs</code>.
+      A page with two drawers sliding in has an animation, not a statement. And
+      the hero is allowed to run it above the fold because it is a one-shot
+      entrance on load that finishes inside <code>--dur-medium</code>, not an
+      interaction — there is deliberately no click-to-open behaviour in the hero.
+    </p>
+    <div class="split" style="gap:var(--gap-grid); align-items:start">
+      <div class="card">
+        <div id="lab-p5" data-reveal="fade">
+          <!-- PHASE 5 updated this entry for the composition it documents, which
+               is `jobWorkspace()` rather than the retired `matchesWorkspace()`.
+               Three things changed and all three are visible here: the drawer is
+               inset to 42% rather than 22%, so the list keeps all five of its
+               tracks plus the `Move to…` affordance; the drawer is TABBED; and
+               the two panes share a `.workspace__panes` positioning context, so
+               the drawer's extent is derived from the list rather than from its
+               own content. The animation itself did not change at all — which is
+               the point of documenting P5 as a composition of two existing
+               primitives rather than as a fifth one. -->
+          <div class="workspace" data-drawer-reveal>
+            <div class="workspace__panes">
+            <div class="workspace__list">
+              <div class="rank">
+                <ul class="rank__list">
+                  <li class="rank__row rank__row--tracked rank__row--move" aria-current="true">
+                    <span class="mono-disc" aria-hidden="true">SI</span>
+                    <span class="rank__ident">
+                      <span class="rank__name">Sneha Iyer</span>
+                      <span class="rank__headline">Staff Engineer · PhonePe</span>
+                    </span>
+                    <span class="pill pill--info pill--stage">Shortlisted</span>
+                    <span class="ring ring--strong" style="--ring-size: 38px">
+                      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+                        <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+                        <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                                stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                                transform="rotate(-90 19 19)"/>
+                      </svg>
+                      <span class="ring__value">87</span>
+                    </span>
+                    <span class="rank__origin">Applied <span class="rank__when">· 2d</span></span>
+                    <span class="rank__move" aria-hidden="true">Move to… <svg width="12" height="12" focusable="false"><use href="#i-chevron-down"/></svg></span>
+                  </li>
+                  <li class="rank__row rank__row--tracked rank__row--move">
+                    <span class="mono-disc" aria-hidden="true">RV</span>
+                    <span class="rank__ident">
+                      <span class="rank__name">Rahul Verma</span>
+                      <span class="rank__headline">SDE III · Razorpay</span>
+                    </span>
+                    <span class="pill pill--info pill--stage">Interviewing</span>
+                    <span class="ring ring--strong" style="--ring-size: 38px">
+                      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+                        <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+                        <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                                stroke-dasharray="83.9 19.8" stroke-linecap="round"
+                                transform="rotate(-90 19 19)"/>
+                      </svg>
+                      <span class="ring__value">81</span>
+                    </span>
+                    <span class="rank__origin">Sourced <span class="rank__when">· 3d</span></span>
+                    <span class="rank__move" aria-hidden="true">Move to… <svg width="12" height="12" focusable="false"><use href="#i-chevron-down"/></svg></span>
+                  </li>
+                  <li class="rank__row rank__row--tracked rank__row--move">
+                    <span class="mono-disc" aria-hidden="true">PN</span>
+                    <span class="rank__ident">
+                      <span class="rank__name">Priya Nair</span>
+                      <span class="rank__headline">Backend Engineer · Zoho</span>
+                    </span>
+                    <span class="pill pill--none pill--stage">Reviewed</span>
+                    <span class="ring ring--strong" style="--ring-size: 38px">
+                      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+                        <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+                        <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                                stroke-dasharray="80.8 22.9" stroke-linecap="round"
+                                transform="rotate(-90 19 19)"/>
+                      </svg>
+                      <span class="ring__value">78</span>
+                    </span>
+                    <span class="rank__origin">Sourced <span class="rank__when">· 4d</span></span>
+                    <span class="rank__move" aria-hidden="true">Move to… <svg width="12" height="12" focusable="false"><use href="#i-chevron-down"/></svg></span>
+                  </li>
+                  <li class="rank__row rank__row--tracked rank__row--move">
+                    <span class="mono-disc" aria-hidden="true">RR</span>
+                    <span class="rank__ident">
+                      <span class="rank__name">Rishav Ranjan</span>
+                      <span class="rank__headline">SDE II · Flipkart</span>
+                    </span>
+                    <span class="pill pill--none pill--stage">Reviewed</span>
+                    <span class="ring ring--strong" style="--ring-size: 38px">
+                      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+                        <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+                        <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                                stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                                transform="rotate(-90 19 19)"/>
+                      </svg>
+                      <span class="ring__value">74</span>
+                    </span>
+                    <span class="rank__origin">Applied <span class="rank__when">· 6d</span></span>
+                    <span class="rank__move" aria-hidden="true">Move to… <svg width="12" height="12" focusable="false"><use href="#i-chevron-down"/></svg></span>
+                  </li>
+                  <li class="rank__row rank__row--tracked rank__row--move">
+                    <span class="mono-disc" aria-hidden="true">MK</span>
+                    <span class="rank__ident">
+                      <span class="rank__name">Meera Krishnan</span>
+                      <span class="rank__headline">Platform Engineer · Swiggy</span>
+                    </span>
+                    <span class="pill pill--none pill--stage">Sourced</span>
+                    <span class="ring ring--strong" style="--ring-size: 38px">
+                      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+                        <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+                        <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                                stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                                transform="rotate(-90 19 19)"/>
+                      </svg>
+                      <span class="ring__value">68</span>
+                    </span>
+                    <span class="rank__origin">Sourced <span class="rank__when">· 1w</span></span>
+                    <span class="rank__move" aria-hidden="true">Move to… <svg width="12" height="12" focusable="false"><use href="#i-chevron-down"/></svg></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="workspace__drawer">
+              <div class="dhead">
+                <div class="dhead__top">
+                  <span class="mono-disc" aria-hidden="true">SI</span>
+                  <span class="dhead__ident">
+                    <span class="dhead__name">Sneha Iyer</span>
+                    <span class="dhead__headline">Staff Engineer · PhonePe</span>
+                  </span>
+                  <span class="dhead__close" aria-hidden="true">
+                    <svg width="12" height="12" focusable="false"><use href="#i-close"/></svg>
+                  </span>
+                </div>
+                <div class="dhead__meta" aria-hidden="true">
+                  <span class="pill pill--info pill--stage">Shortlisted</span>
+                  <span class="pill pill--none">Applied</span>
+                  <span class="dhead__profile">Full profile <span aria-hidden="true">↗</span></span>
+                </div>
+              </div>
+              <div class="tabstrip tabstrip--drawer" aria-hidden="true">
+                <span class="tabstrip__tab">Profile</span>
+                <span class="tabstrip__tab is-active">Match</span>
+                <span class="tabstrip__tab">Interviews</span>
+                <span class="tabstrip__tab">Feedback</span>
+                <span class="tabstrip__tab">Activity</span>
+              </div>
+              <p class="body-copy" style="font-size:var(--fs-micro)">
+                The drawer translates in from the right over
+                <code>--dur-medium</code> on <code>--ease-entrance</code>, 120ms
+                after its ancestor reveals. Nothing else in the composition
+                waits: the job header, the pulse strip, the tab strip and the
+                list are all above-the-fold content and are present at 0ms.
+              </p>
+            </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:var(--sp-6)">
+          <button type="button" class="btn btn--secondary press" data-lab-replay="lab-p5">Replay</button>
+        </p>
+      </div>
+      <p class="swatch__note">
+        <strong>The list does not dim.</strong> The plan asked for 60% opacity on
+        the pane behind the drawer, and 60% opacity on a real text element takes
+        the row's secondary line to roughly 2.5:1 against paper, which fails AA.
+        Accessibility outranks a number in a plan sketch, so the relationship is
+        stated a better way instead: the selected row carries
+        <code>aria-current="true"</code>, which is announced as well as drawn.
+        Under reduced motion the drawer is present, static and complete — an
+        absent drawer is not a calmer version of this composition, it is half the
+        composition missing. Toggle the switch at the top of the page and replay.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">4c · P6 — Staged layers</h2>
+      <p class="label">motion.css § 4b · scene.js</p>
+    </div>
+    <p class="body-copy measure">
+      <strong>P6 · the score, taken apart.</strong> Added in Phase 6 for the
+      landing page's signature (prototypes/STAGE-3.md § 8). Six layers of one
+      object on a sticky stage, and the scroll is the clock: <code>--p</code>
+      runs 0 → 1 across a stage <code>--scene-length</code> viewports tall;
+      the layers arrive and leave in non-overlapping windows at 0.14 · 0.31 ·
+      0.48 · 0.65 · 0.82, and the rail says where you are. Only
+      <code>transform</code> and <code>opacity</code> move.
+    </p>
+    <p class="body-copy measure">
+      <strong>Two clocks, one number.</strong> Where the browser supports a
+      <code>view()</code> scroll timeline, CSS drives <code>--p</code> itself
+      and <code>scene.js</code> keeps only the rail and <code>data-state</code>;
+      everywhere else one passive scroll listener writes it. The timeline has
+      to hard-code the header inset (<code>view(block 64px 0px)</code>) because
+      it cannot read a token, so <code>tools/check.mjs</code> asserts that
+      number equals <code>--header-h</code>, and <code>tools/audit.mjs</code>
+      asserts the two clocks agree at eighteen scroll positions.
+    </p>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      <strong>Cap: one per page</strong>, enforced by <code>tools/check.mjs</code>.
+      <strong>The stack is the base.</strong> Under reduced motion, below 700px
+      wide or 620px tall, or without JavaScript, the same six layers stack in
+      reading order with sticky captions — nothing hidden, nothing microscopic.
+      Toggle the switch at the top of the page and scroll through it.
+    </p>
+    <div id="lab-p6">
+  <div class="sig sig--pinned" data-signature data-thresholds="0.14,0.31,0.48,0.65,0.82" data-state="1">
+    <div class="sig__stage">
+      <div class="sig__persist" aria-hidden="true">
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+      </div>
+      <ol class="srail" aria-hidden="true">
+        <li class="srail__item" data-for="1"><span class="srail__n">01</span><span class="srail__k">Ranked.</span></li>
+        <li class="srail__item" data-for="2"><span class="srail__n">02</span><span class="srail__k">The score.</span></li>
+        <li class="srail__item" data-for="3"><span class="srail__n">03</span><span class="srail__k">Four weights, published.</span></li>
+        <li class="srail__item" data-for="4"><span class="srail__n">04</span><span class="srail__k">Every skill, matched.</span></li>
+        <li class="srail__item" data-for="5"><span class="srail__n">05</span><span class="srail__k">Every match, cited.</span></li>
+        <li class="srail__item" data-for="6"><span class="srail__n">06</span><span class="srail__k">The same number, on her screen.</span></li>
+      </ol>
+      <div class="sig__layers">
+      <div class="layer layer--1" data-layer="1">
+        <p class="layer__cap"><span class="layer__n">01</span> <span class="layer__k">Ranked.</span> <span class="layer__s">47 people scored against the role. Sneha Iyer first, at 87.</span></p>
+        <div class="layer__body">
+  <div class="rank rank--tracked">
+
+    <p class="sr-only" id="lab-p6-list-summary">Everyone tracked against this job — whether they applied or you found them.</p>
+    <ul class="rank__list" id="lab-p6-list" aria-describedby="lab-p6-list-summary">
+      <li class="rank__row rank__row--tracked" data-row="c1" data-classification="strong" aria-current="true">
+        <span class="mono-disc" aria-hidden="true">SI</span>
+        <span class="rank__ident">
+          <span class="rank__name">Sneha Iyer</span>
+          <span class="rank__headline">Staff Engineer · PhonePe</span>
+        </span>
+        <span class="pill pill--info pill--stage">Shortlisted</span>
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+        <span class="rank__origin">Applied <span class="rank__when">· 2d</span></span>
+
+        <span class="sr-only" data-row-sr>Sneha Iyer, Staff Engineer · PhonePe: Shortlisted, match score 87 out of 100, Strong Match. Applied 2d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c2" data-classification="strong">
+        <span class="mono-disc" aria-hidden="true">RV</span>
+        <span class="rank__ident">
+          <span class="rank__name">Rahul Verma</span>
+          <span class="rank__headline">SDE III · Razorpay</span>
+        </span>
+        <span class="pill pill--info pill--stage">Interviewing</span>
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="84.0 19.7" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>81</span>
+      </span>
+        <span class="rank__origin">Sourced, then applied <span class="rank__when">· 3d</span></span>
+
+        <span class="sr-only" data-row-sr>Rahul Verma, SDE III · Razorpay: Interviewing, match score 81 out of 100, Strong Match. Sourced, then applied 3d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c3" data-classification="good">
+        <span class="mono-disc" aria-hidden="true">PN</span>
+        <span class="rank__ident">
+          <span class="rank__name">Priya Nair</span>
+          <span class="rank__headline">Backend Engineer · Zoho</span>
+        </span>
+        <span class="pill pill--none pill--stage">Reviewed</span>
+        <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="80.9 22.8" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>78</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 4d</span></span>
+
+        <span class="sr-only" data-row-sr>Priya Nair, Backend Engineer · Zoho: Reviewed, match score 78 out of 100, Good Match. Sourced 4d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c4" data-classification="good">
+        <span class="mono-disc" aria-hidden="true">RR</span>
+        <span class="rank__ident">
+          <span class="rank__name">Rishav Ranjan</span>
+          <span class="rank__headline">SDE II · Flipkart</span>
+        </span>
+        <span class="pill pill--none pill--stage">Reviewed</span>
+        <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>74</span>
+      </span>
+        <span class="rank__origin">Applied <span class="rank__when">· 6d</span></span>
+
+        <span class="sr-only" data-row-sr>Rishav Ranjan, SDE II · Flipkart: Reviewed, match score 74 out of 100, Good Match. Applied 6d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c5" data-classification="potential">
+        <span class="mono-disc" aria-hidden="true">MK</span>
+        <span class="rank__ident">
+          <span class="rank__name">Meera Krishnan</span>
+          <span class="rank__headline">Platform Engineer · Swiggy</span>
+        </span>
+        <span class="pill pill--none pill--stage">Sourced</span>
+        <span class="ring ring--potential" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>68</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 1w</span></span>
+
+        <span class="sr-only" data-row-sr>Meera Krishnan, Platform Engineer · Swiggy: Sourced, match score 68 out of 100, Potential Match. Sourced 1w ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c6" data-classification="potential">
+        <span class="mono-disc" aria-hidden="true">VS</span>
+        <span class="rank__ident">
+          <span class="rank__name">Vikram Singh</span>
+          <span class="rank__headline">SDE I · Myntra</span>
+        </span>
+        <span class="pill pill--none pill--stage">Sourced</span>
+        <span class="ring ring--potential" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="63.2 40.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>61</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 2w</span></span>
+
+        <span class="sr-only" data-row-sr>Vikram Singh, SDE I · Myntra: Sourced, match score 61 out of 100, Potential Match. Sourced 2w ago.</span>
+      </li>
+    </ul>
+
+
+  </div>
+        </div>
+      </div>
+      <div class="layer layer--2" data-layer="2">
+        <p class="layer__cap"><span class="layer__n">02</span> <span class="layer__k">The score.</span> <span class="layer__s">87 out of 100. Strong Match, high confidence.</span></p>
+        <div class="layer__body">
+<div class="sig-score">
+      <span class="ring ring--strong" style="--ring-size: 220px" data-row-ring data-ring-c="675.4">
+        <svg width="220" height="220" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="110" cy="110" r="107.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="110" cy="110" r="107.5" fill="none" stroke-width="5"
+                  stroke-dasharray="587.6 87.8" stroke-linecap="round"
+                  transform="rotate(-90 110 110)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+      <p class="sig-score__of" aria-hidden="true">/ 100</p>
+      <p class="sig-score__who">Sneha Iyer <span class="sig-score__sep">·</span> Staff Engineer · PhonePe</p>
+      <p class="sig-score__chips">
+        <span class="chip chip--mono chip--strong">Strong Match</span>
+        <span class="pill pill--ai">AI</span>
+        <span class="pill pill--ok">High confidence</span>
+      </p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--3" data-layer="3">
+        <p class="layer__cap"><span class="layer__n">03</span> <span class="layer__k">Four weights, published.</span> <span class="layer__s">Skill coverage carries 65% of it. Salary is a ±10% adjustment after, not a fifth weight.</span></p>
+        <div class="layer__body">
+<div class="sig-weights">
+      <p class="sig-weights__head"><span class="sig-weights__n">87</span> <span class="sig-weights__eq">=</span> <span class="sig-weights__sum">four weights, published</span></p>
+      <div class="wrows wrows--lg">
+      <div class="wrow wrow--skill wrow--lead" style="--i: 0">
+        <span class="wrow__label">Skill coverage</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 65"></span></span>
+        <span class="wrow__pct">65%</span>
+      </div>
+      <div class="wrow wrow--semantic" style="--i: 1">
+        <span class="wrow__label">Semantic similarity</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 25"></span></span>
+        <span class="wrow__pct">25%</span>
+      </div>
+      <div class="wrow wrow--experience" style="--i: 2">
+        <span class="wrow__label">Experience curve</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 7"></span></span>
+        <span class="wrow__pct">7%</span>
+      </div>
+      <div class="wrow wrow--location" style="--i: 3">
+        <span class="wrow__label">Location &amp; work mode</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 3"></span></span>
+        <span class="wrow__pct">3%</span>
+      </div>
+      </div>
+      <p class="sig-weights__mods">then, in this order: <span><b>±10%</b> Salary alignment</span> <span><b>×</b> Skill rarity</span> <span><b>×</b> Seniority</span></p>
+      <p class="sig-weights__gate">before any of it: A candidate missing a critical skill never reaches the scorer.</p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--4" data-layer="4">
+        <p class="layer__cap"><span class="layer__n">04</span> <span class="layer__k">Every skill, matched.</span> <span class="layer__s">3 exact or equivalent, 1 transferable, 1 not found.</span></p>
+        <div class="layer__body">
+<div class="sig-skills">
+      <p class="sig-skills__head"><span class="wrow__label">Skill coverage</span> <span class="wrow__pct">65%</span> <span class="sig-skills__open">opens into</span></p>
+      <div class="srows">
+      <div class="srow srow--covered" data-concept="Python" style="--i: 0">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">Python</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">Python</span>
+        <span class="relchip">exact</span>
+        <span class="srow__conf">96%</span>
+        <span class="sr-only">Python: covered, matched to “Python” (exact), 96% confidence.</span>
+      </div>
+      <div class="srow srow--covered" data-concept="Distributed Systems" style="--i: 1">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">Distributed Systems</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">ledger sharded across three regions</span>
+        <span class="relchip">≈ equivalent</span>
+        <span class="srow__conf">91%</span>
+        <span class="sr-only">Distributed Systems: covered, matched to “ledger sharded across three regions” (≈ equivalent), 91% confidence.</span>
+      </div>
+      <div class="srow srow--covered" data-concept="PostgreSQL" style="--i: 2">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">PostgreSQL</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">PostgreSQL</span>
+        <span class="relchip">exact</span>
+        <span class="srow__conf">94%</span>
+        <span class="sr-only">PostgreSQL: covered, matched to “PostgreSQL” (exact), 94% confidence.</span>
+      </div>
+      <div class="srow srow--partial" data-concept="Kubernetes" style="--i: 3">
+        <span class="srow__glyph" aria-hidden="true">≈</span>
+        <span class="srow__concept">Kubernetes</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">container orchestration</span>
+        <span class="relchip">transferable</span>
+        <span class="srow__conf">78%</span>
+        <span class="sr-only">Kubernetes: partial match, matched to “container orchestration” (transferable), 78% confidence.</span>
+      </div>
+      <div class="srow srow--missing" style="--i: 4">
+        <span class="srow__glyph" aria-hidden="true">✗</span>
+        <span class="srow__concept">Kafka</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched srow__matched--none">not found in profile</span>
+        <span class="relchip relchip--none">preferred</span>
+        <span class="srow__conf">—</span>
+        <span class="sr-only">Kafka: missing; a preferred requirement.</span>
+      </div>
+      </div>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--5" data-layer="5">
+        <p class="layer__cap"><span class="layer__n">05</span> <span class="layer__k">Every match, cited.</span> <span class="layer__s">Kubernetes is Docker experience transfers, and here is the line it came from.</span></p>
+        <div class="layer__body">
+<div class="sig-evidence">
+      <p class="sig-evidence__head">
+        <span class="srow__glyph srow__glyph--partial" aria-hidden="true">≈</span>
+        <span class="srow__concept">Kubernetes</span> <span class="srow__arrow" aria-hidden="true">→</span> <span class="srow__matched">container orchestration</span>
+      </p>
+      <p class="sig-evidence__rel"><span class="relchip">transferable</span> <span class="sig-evidence__edge">Docker → Kubernetes · <em>requires</em> · 0.9</span></p>
+      <p class="sig-evidence__reason">Deep Docker work, and the taxonomy holds Docker as a prerequisite for Kubernetes.</p>
+      <figure class="sig-evidence__source">
+        <figcaption class="sig-evidence__from"><span class="label">from the profile · Experience</span> <span class="concept__verified">✓ verified against the candidate's own words</span></figcaption>
+        <blockquote class="sig-evidence__quote"><mark>Containerised the settlement services and ran them under Docker Compose in staging.</mark></blockquote>
+      </figure>
+      <p class="sig-evidence__conf"><span class="meter meter--thin" aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.78"></span></span> <span>78% confidence</span></p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--6" data-layer="6">
+        <p class="layer__cap"><span class="layer__n">06</span> <span class="layer__k">The same number, on her screen.</span> <span class="layer__s">The candidate sees 87, with the same breakdown.</span></p>
+        <div class="layer__body">
+<div class="sig-cand">
+      <p class="sig-cand__route">app.transpahire.com / jobs / recommended</p>
+      <div class="sig-cand__body">
+        <div>
+          <p class="cview__job">Senior Backend Engineer, Payments</p>
+          <p class="cview__meta">Payments · Bengaluru · Hybrid</p>
+        </div>
+        <div class="sig-cand__score">
+          <span class="ring ring--strong" style="--ring-size: 88px" data-row-ring data-ring-c="260.8">
+        <svg width="88" height="88" viewBox="0 0 88 88" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="44" cy="44" r="41.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="44" cy="44" r="41.5" fill="none" stroke-width="5"
+                  stroke-dasharray="226.9 33.9" stroke-linecap="round"
+                  transform="rotate(-90 44 44)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+          <p class="cview__same">the same score the recruiter sees</p>
+        </div>
+        <dl class="cview__rows sig-cand__rows">
+        <div class="cview__row"><dt class="cview__label">Skill coverage <span class="cview__weight">65%</span></dt><dd class="cview__value">84</dd></div>
+        <div class="cview__row"><dt class="cview__label">Semantic similarity <span class="cview__weight">25%</span></dt><dd class="cview__value">93</dd></div>
+        <div class="cview__row"><dt class="cview__label">Experience curve <span class="cview__weight">7%</span></dt><dd class="cview__value">91</dd></div>
+        <div class="cview__row"><dt class="cview__label">Location &amp; work mode <span class="cview__weight">3%</span></dt><dd class="cview__value">100</dd></div>
+        </dl>
+        <ol class="trail sig-cand__trail"><li class="trail__step trail__step--done">Applied</li><li class="trail__step trail__step--done">Viewed</li><li class="trail__step trail__step--current">Shortlisted</li></ol>
+      </div>
+    </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+    </div>
+    <p class="swatch__note" style="margin-top:var(--sp-6)">
+      <strong>The rejection it lifts.</strong> § 3's Rejected table turned down
+      scroll-scrubbed sequences because reduced motion had no honest fallback
+      for content that only exists at certain scroll offsets. P6 is admitted on
+      the condition that answers it: every layer is complete DOM in reading
+      order, every state is a still, and the fallback is the same markup with
+      no animation at all.
+    </p>
+  </section>
+
+  <!-- ===================================================================== -->
+  <section class="lab-section">
+    <div class="lab-section__head">
+      <h2 class="h-section">5 · Utility</h2>
+      <p class="label">motion.css § 5</p>
+    </div>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-8)">
+      Component state transitions. Each is driven by a JS module that owns the
+      accessibility contract — roles, keyboard, focus — and delegates all
+      visual movement to CSS.
+    </p>
+
+    <h3 class="h-sub" style="margin-bottom:var(--sp-6)">Tabs</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      Roving tabindex, arrow keys, Home / End, <code>aria-selected</code>,
+      panels toggled with the real <code>hidden</code> attribute. Try it with
+      the keyboard.
+    </p>
+    <div data-tabs id="lab-tabs" style="margin-bottom:var(--sp-16)">
+      <div class="tabs">
+        <div class="tabs__list" role="tablist" aria-label="Motion lab tabs">
+          <button class="tab is-active" data-tab="one">Crossfade</button>
+          <button class="tab" data-tab="two">Keyboard</button>
+          <button class="tab" data-tab="three">Semantics</button>
+        </div>
+      </div>
+      <div class="tab-panel" data-panel="one">
+        <div class="card"><p class="body-copy">The incoming panel fades up 8px over 320ms. No height animation: the frame is a fixed aspect ratio, so there is nothing to reflow and nothing to shift.</p></div>
+      </div>
+      <div class="tab-panel" data-panel="two">
+        <div class="card"><p class="body-copy">Arrow keys move between tabs and activate them. Home and End jump to the ends. Only the selected tab is in the page tab order, so a keyboard user tabs past the whole group in one press.</p></div>
+      </div>
+      <div class="tab-panel" data-panel="three">
+        <div class="card"><p class="body-copy">The Myniq reference has the same visual pattern with none of this behind it. Borrowing the interaction idea and rebuilding the implementation is the whole thesis of this phase.</p></div>
+      </div>
+    </div>
+
+    <h3 class="h-sub" style="margin-bottom:var(--sp-6)">Accordion</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      Height animates with <code>grid-template-rows: 0fr → 1fr</code>: no JS
+      measurement, no max-height guesswork, no jump when the content reflows at
+      a different breakpoint.
+    </p>
+    <div class="accordion" data-accordion data-accordion-single style="margin-bottom:var(--sp-16)">
+      <div class="accordion__item" data-open="true">
+        <h4 class="accordion__heading">
+          <button class="accordion__trigger" data-accordion-trigger>
+            Why a real button rather than a div?
+            <span class="accordion__marker" aria-hidden="true"><svg width="14" height="14"><use href="#i-chevron-down"/></svg></span>
+          </button>
+        </h4>
+        <div class="accordion__panel"><div class="accordion__inner"><div class="accordion__content">
+          A <code>div</code> with <code>tabindex="0"</code> — what the Myniq
+          export uses — announces nothing to a screen reader and cannot be
+          operated with Space. A button gets the role, the state, and both keys
+          for free.
+        </div></div></div>
+      </div>
+      <div class="accordion__item" data-open="false">
+        <h4 class="accordion__heading">
+          <button class="accordion__trigger" data-accordion-trigger>
+            What does the marker do?
+            <span class="accordion__marker" aria-hidden="true"><svg width="14" height="14"><use href="#i-chevron-down"/></svg></span>
+          </button>
+        </h4>
+        <div class="accordion__panel"><div class="accordion__inner"><div class="accordion__content">
+          Rotates 180°, driven purely by the <code>data-open</code> attribute on
+          the item. It is decorative and hidden from assistive technology —
+          <code>aria-expanded</code> on the button is what actually conveys
+          state.
+        </div></div></div>
+      </div>
+      <div class="accordion__item" data-open="false">
+        <h4 class="accordion__heading">
+          <button class="accordion__trigger" data-accordion-trigger>
+            Is the collapsed panel reachable by keyboard?
+            <span class="accordion__marker" aria-hidden="true"><svg width="14" height="14"><use href="#i-chevron-down"/></svg></span>
+          </button>
+        </h4>
+        <div class="accordion__panel"><div class="accordion__inner"><div class="accordion__content">
+          No. A closed panel is marked <code>inert</code>, so its links leave
+          the tab order and the accessibility tree — but it keeps its box, which
+          is what the height transition animates from.
+        </div></div></div>
+      </div>
+    </div>
+
+    <h3 class="h-sub" style="margin-bottom:var(--sp-6)">Count up</h3>
+    <p class="body-copy measure" style="margin-bottom:var(--sp-6)">
+      Numbers below are demonstration values, not Transpahire metrics. The
+      element reserves its final width before counting, so growing digits
+      cannot shift the layout, and the true value stays in the accessibility
+      tree throughout.
+    </p>
+    <div class="stats on-ink" style="border-radius:var(--radius-lg)">
+      <div class="container">
+        <div class="stats__grid" style="margin-bottom:0" data-reveal-group>
+          <div class="stat">
+            <p class="stat__value"><span data-count="128" data-suffix="">128</span></p>
+            <p class="stat__label">Integer</p>
+          </div>
+          <div class="stat">
+            <p class="stat__value"><span data-count="99.4" data-decimals="1" data-suffix="%">99.4%</span></p>
+            <p class="stat__label">One decimal, suffixed</p>
+          </div>
+          <div class="stat">
+            <p class="stat__value"><span data-count="12" data-prefix="&lt; " data-suffix=" min">&lt; 12 min</span></p>
+            <p class="stat__label">Prefix and suffix</p>
+          </div>
+          <div class="stat">
+            <p class="stat__value"><span data-count="4" data-suffix="x" data-duration="2200">4x</span></p>
+            <p class="stat__label">Custom duration</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <section class="lab-section" style="border-bottom:0">
+    <div class="lab-section__head">
+      <h2 class="h-section">6 · Scroll behaviour</h2>
+      <p class="label">reveal.js</p>
+    </div>
+    <p class="body-copy measure">
+      Two rules worth seeing rather than reading. Anything already on screen at
+      first paint is revealed <em>without</em> animation — animating content the
+      reader is already looking at reads as a page that has not finished
+      loading. And every reveal fires once: scrolling back up does not replay
+      it.
+    </p>
+    <div class="spacer">scroll ↓</div>
+    <div class="card" data-reveal="rise">
+      <p class="h-sub">Revealed on entry</p>
+      <p class="body-copy mt-4">Fired once, then the compositor layer was released. Scroll up and back — nothing replays.</p>
+    </div>
+    <div class="spacer">keep going ↓</div>
+    <div class="demo-grid" data-reveal-group data-stagger="normal">
+      <div class="swatch"><p class="h-card">Deep 01</p><p class="swatch__note">Observed lazily.</p></div>
+      <div class="swatch"><p class="h-card">Deep 02</p><p class="swatch__note">One observer for the whole page.</p></div>
+      <div class="swatch"><p class="h-card">Deep 03</p><p class="swatch__note">Unobserved after firing.</p></div>
+    </div>
+  </section>
+
+</div>
+
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <p class="label">Transpahire · Motion Lab · not a public page</p>
+    <p class="body-copy mt-4 measure">
+      Documented in <code>docs/motion-system.md</code>. Add a primitive here
+      before using it anywhere else.
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+  // Lab-only: reflect the live motion preference so the reduced-motion path
+  // can be verified without a reload.
+  import { prefersReducedMotion, onMotionPreferenceChange } from './assets/js/modules/prefs.js';
+
+  const status = document.getElementById('motion-status');
+  const text = document.getElementById('motion-status-text');
+
+  function render(reduced) {
+    status.classList.toggle('lab-status--reduced', reduced);
+    text.textContent = reduced
+      ? 'prefers-reduced-motion: reduce — travel and duration are zeroed'
+      : 'prefers-reduced-motion: no-preference — full motion active';
+  }
+
+  render(prefersReducedMotion());
+  onMotionPreferenceChange(render);
+</script>
+
+<script type="module">
+  // Lab-only: replay controls for the product primitives, so each one can be
+  // watched more than once without reloading the page. P5 shares P1's path —
+  // both are released by an ancestor's reveal, which is the point of documenting
+  // P5 as a composition rather than as a new primitive.
+  import { playSequence, resetSequence } from './assets/js/modules/sequence.js';
+  import { reorder } from './assets/js/modules/tuner.js';
+
+  /* P2 and P4 are sequences: reset, then play. */
+  document.querySelectorAll('[data-lab-replay]').forEach((button) => {
+    const target = document.getElementById(button.dataset.labReplay);
+    if (!target) return;
+
+    button.addEventListener('click', () => {
+      if (target.hasAttribute('data-sequence')) {
+        resetSequence(target);
+        playSequence(target);
+        return;
+      }
+      /* P1 is released by a revealed ancestor, so replaying it means putting
+         the ancestor back to unrevealed for a frame. */
+      target.classList.remove('is-revealed', 'is-settled');
+      void target.offsetHeight;
+      requestAnimationFrame(() => target.classList.add('is-revealed'));
+    });
+  });
+
+  /* P3 reorders on demand, cycling through three orders so the movement can be
+     watched in both directions. */
+  const p3 = document.getElementById('lab-p3');
+  const p3Button = document.getElementById('lab-p3-shuffle');
+  if (p3 && p3Button) {
+    const orders = [
+      ['a', 'b', 'c', 'd'],
+      ['c', 'a', 'd', 'b'],
+      ['d', 'c', 'b', 'a'],
+    ];
+    let index = 0;
+    p3Button.addEventListener('click', () => {
+      index = (index + 1) % orders.length;
+      reorder(p3, orders[index]);
+    });
+  }
+</script>
+
+</body>
+</html>

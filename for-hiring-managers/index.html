@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>For hiring managers — Transpahire</title>
+<meta name="description" content="Come to the meeting with the reasoning. The argument for each shortlisted candidate, the four signals a CV does not carry, and a way to test a requirement before the debrief rather than during it.">
+<link rel="canonical" href="https://transpahire.com/for-hiring-managers/">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/for-hiring-managers/">
+<meta property="og:title" content="For hiring managers — Transpahire">
+<meta property="og:description" content="Come to the meeting with the reasoning. The argument for each shortlisted candidate, the four signals a CV does not carry, and a way to test a requirement before the debrief rather than during it.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="For hiring managers — Transpahire">
+<meta name="twitter:description" content="Come to the meeting with the reasoning. The argument for each shortlisted candidate, the four signals a CV does not carry, and a way to test a requirement before the debrief rather than during it.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <!-- Sign in is commented out of the header, on request (28 Sep 2026).
+             The mobile drawer still carries it. Uncomment to restore; the
+             ≤900px rule in sections.css that hides it is still in place.
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+        -->
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="page-head">
+  <div class="container">
+    <div class="page-head__inner">
+      <p class="eyebrow">For hiring managers</p>
+      <h1 class="h-display" data-reveal="up">Come to the meeting <em>with the reasoning.</em></h1>
+      <p class="lede" data-reveal="up">You are handed a shortlist and asked to trust it. This is the version where you can read the case for each name, disagree with it in the meeting, and test the requirement that is quietly costing you the role.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Six arguments ────────────────────────────────────────────────────── -->
+<section class="section section--tight-top" data-content="provisional">
+  <div class="container pair pair--lead">
+    <div data-reveal="left">
+      <p class="eyebrow">What arrives</p>
+      <h2 class="h-section mt-6">Six arguments, <em>not six names.</em></h2>
+      <p class="body-copy body-copy--lg measure mt-8">
+        Each shortlisted candidate comes with a score out of 100 and the reasoning behind it:
+        every requirement matched to a phrase in their own profile, the relationship named, and
+        the section of the profile it was drawn from. You can read one in a minute and
+        interrogate it in two.
+      </p>
+      <p class="body-copy measure mt-6">
+        Including the parts that count against them. A shortlist where every entry looks perfect
+        is a shortlist somebody edited.
+      </p>
+      <p class="mt-8"><a class="link hover-icon" href="/product/matching/">How a score comes apart <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+    </div>
+    <div data-reveal="right">
+
+<div class="frame " style="--ratio: 16 / 9">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / matches / sneha-iyer</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="panel">
+    <div class="panel__block">
+      <p class="panel__rule">Signals</p>
+      <dl class="signals">
+        <div class="signals__cell">
+          <dt class="signals__label">Seniority</dt>
+          <dd class="signals__value">slightly over-levelled</dd>
+        </div>
+        <div class="signals__cell">
+          <dt class="signals__label">Trajectory</dt>
+          <dd class="signals__value">consistent growth</dd>
+        </div>
+        <div class="signals__cell">
+          <dt class="signals__label">Potential</dt>
+          <dd class="signals__value">high</dd>
+        </div>
+        <div class="signals__cell">
+          <dt class="signals__label">Drop-off</dt>
+          <dd class="signals__value">moderate</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="panel__block">
+      <p class="panel__rule">Why</p>
+      <p class="narrative">Six years on payment infrastructure at PhonePe, covering both critical skills. No direct Kubernetes, but deep Docker work makes the ramp short. Salary expectation sits above the band.</p>
+    </div>
+  </div>
+  </div>
+</div>
+      <p class="composition-note">Illustrative data · invented people and companies</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── The four signals ─────────────────────────────────────────────────── -->
+<section class="section section--sunken" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Signals</p>
+      <h2 class="h-section">Four things <em>the CV does not carry.</em></h2>
+      <p class="lede">Computed from the structured profile and shown as the classification the model returned, rather than as a number with no name attached.</p>
+    </div>
+    <div class="pair">
+      <div data-reveal="left">
+        <ul class="checklist checklist--ruled">
+          <li class="checklist__item"><strong>Seniority</strong> — over- or under-levelled for this role, which is the question that decides whether an interview is worth an hour</li>
+          <li class="checklist__item"><strong>Trajectory</strong> — the shape of a career: consistent growth, a pivot, a specialist, a generalist</li>
+          <li class="checklist__item"><strong>Potential</strong> — whether they would grow into a role they do not yet fill — the signal that makes a stretch candidate discussable rather than dismissable</li>
+          <li class="checklist__item"><strong>Drop-off</strong> — whether they are likely to still be in the process in three weeks, which is worth knowing before you build a panel around them</li>
+        </ul>
+      </div>
+      <div data-reveal="right">
+        <p class="body-copy body-copy--lg measure">
+          They arrive last in the explanation, after the reasoning, because they are the part
+          nobody could have derived by reading the document — and because a signal read before
+          the evidence becomes the conclusion instead of an input to it.
+        </p>
+        <p class="body-copy measure mt-6">
+          Every one is a classification the model returned, not a score we invented a label for.
+          Where the model has no basis for one, the panel shows nothing rather than a guess.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Disagree with it in the room ─────────────────────────────────────── -->
+<section class="section" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">In the debrief</p>
+      <h2 class="h-section">Test the requirement <em>before the meeting, not during it.</em></h2>
+      <p class="lede">“What if we relaxed that?” is the most useful question in a hiring debrief and the one nobody can answer in the room. Simulation answers it in advance, with a number.</p>
+    </div>
+    <div class="control">
+      <div data-reveal="left">
+<div class="tuner" data-tuner="control-list">
+  <div class="weights" role="group" aria-label="Skill importance">
+      <div class="weight" data-optional="true">
+        <label class="weight__head" for="weight-python">
+          <span class="weight__skill">Python</span>
+          <span class="weight__tier" data-weight-readout="python" data-tone="crit">critical</span>
+        </label>
+        <input type="range" id="weight-python" min="0" max="3" step="1" value="3"
+               data-weight="python" data-skill="Python"
+               aria-valuetext="Python: critical">
+        <div class="weight__scale" aria-hidden="true">
+          <span>bonus</span>
+          <span>preferred</span>
+          <span>required</span>
+          <span>critical</span>
+        </div>
+      </div>
+      <div class="weight">
+        <label class="weight__head" for="weight-kubernetes">
+          <span class="weight__skill">Kubernetes</span>
+          <span class="weight__tier" data-weight-readout="kubernetes" data-tone="warn">required</span>
+        </label>
+        <input type="range" id="weight-kubernetes" min="0" max="3" step="1" value="2"
+               data-weight="kubernetes" data-skill="Kubernetes"
+               aria-valuetext="Kubernetes: required">
+        <div class="weight__scale" aria-hidden="true">
+          <span>bonus</span>
+          <span>preferred</span>
+          <span>required</span>
+          <span>critical</span>
+        </div>
+      </div>
+      <div class="weight" data-optional="true">
+        <label class="weight__head" for="weight-kafka">
+          <span class="weight__skill">Kafka</span>
+          <span class="weight__tier" data-weight-readout="kafka" data-tone="info">preferred</span>
+        </label>
+        <input type="range" id="weight-kafka" min="0" max="3" step="1" value="1"
+               data-weight="kafka" data-skill="Kafka"
+               aria-valuetext="Kafka: preferred">
+        <div class="weight__scale" aria-hidden="true">
+          <span>bonus</span>
+          <span>preferred</span>
+          <span>required</span>
+          <span>critical</span>
+        </div>
+      </div>
+    <p class="sr-only" role="status" data-field="tuner-announce"></p>
+  </div>
+
+  <div class="whatif">
+    <div class="whatif__head">
+      <p class="whatif__title">What if</p>
+      <label class="toggle">
+        <input type="checkbox" data-whatif>
+        <span>drop Kafka</span>
+      </label>
+    </div>
+    <p class="whatif__readout">
+      <span>qualified pool</span>
+      <span class="whatif__figure" data-count="248" data-whatif-figure>248</span>
+      <span class="whatif__delta" data-whatif-delta hidden>+169</span>
+      <span class="example-tag">example figures</span>
+    </p>
+    <p class="whatif__note">
+      No analytics values are published yet. These two figures illustrate the
+      control; they are not measured.
+    </p>
+    <p class="sr-only" role="status" data-field="whatif-announce"></p>
+  </div>
+</div>
+        <p class="body-copy mt-8 measure--narrow">
+          Move what matters and the order follows. Drop a preferred requirement and see how many
+          more qualified people appear — <em>before</em> anyone changes the job.
+        </p>
+      </div>
+      <div data-reveal="right">
+
+<div class="frame frame--elevated" style="--ratio: 16 / 10">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / matches</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="rank">
+    <div class="rank__head">
+      <p class="rank__title">Senior Backend Engineer, Payments · Bengaluru · Hybrid · 5–8 yrs</p>
+      <div class="rank__controls">
+        <span><span class="rank__gatecount" data-gatecount></span></span>
+        <span class="rank__sort">sort: match score</span>
+      </div>
+    </div>
+    <p class="sr-only" id="control-list-summary">5 candidates, ordered by match score. Every candidate in the database is scored against the role, except anyone missing a skill set to critical, who is removed before scoring.</p>
+    <ul class="rank__list reorder" id="control-list" aria-describedby="control-list-summary" data-rank-list>
+      <li class="rank__row reorder__row" data-row="c1" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="87" data-row-score>87</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Sneha Iyer</span>
+          <span class="rank__headline">Staff Engineer · PhonePe</span>
+        </span>
+        <span class="rank__meta">6.2y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Sneha Iyer: match score 87 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+        <span class="rank__gate" data-gate hidden><span class="pill pill--none">Not scored</span> <span class="rank__gate-why">missing critical · <b data-gate-skill></b></span></span>
+
+      </li>
+      <li class="rank__row reorder__row" data-row="c2" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="84.0 19.7" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="81" data-row-score>81</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rahul Verma</span>
+          <span class="rank__headline">SDE III · Razorpay</span>
+        </span>
+        <span class="rank__meta">5.4y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓4</span>
+        <span class="is-partial">≈0</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rahul Verma: match score 81 out of 100, Strong Match. 4 skills covered, 0 partial, 1 missing.</span>
+        <span class="rank__gate" data-gate hidden><span class="pill pill--none">Not scored</span> <span class="rank__gate-why">missing critical · <b data-gate-skill></b></span></span>
+
+      </li>
+      <li class="rank__row reorder__row" data-row="c3" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="80.9 22.8" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="78" data-row-score>78</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Priya Nair</span>
+          <span class="rank__headline">Backend Engineer · Zoho</span>
+        </span>
+        <span class="rank__meta">4.9y · Chennai · Remote</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Priya Nair: match score 78 out of 100, Strong Match. 2 skills covered, 2 partial, 1 missing.</span>
+        <span class="rank__gate" data-gate hidden><span class="pill pill--none">Not scored</span> <span class="rank__gate-why">missing critical · <b data-gate-skill></b></span></span>
+
+      </li>
+      <li class="rank__row reorder__row" data-row="c4" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="74" data-row-score>74</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rishav Ranjan</span>
+          <span class="rank__headline">SDE II · Flipkart</span>
+        </span>
+        <span class="rank__meta">4.1y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rishav Ranjan: match score 74 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+        <span class="rank__gate" data-gate hidden><span class="pill pill--none">Not scored</span> <span class="rank__gate-why">missing critical · <b data-gate-skill></b></span></span>
+
+      </li>
+      <li class="rank__row reorder__row" data-row="c5" data-classification="good">
+        <span class="rank__score">
+          <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="68" data-row-score>68</span>
+      </span>
+          <span class="chip chip--mono chip--good" data-row-chip>Good</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Meera Krishnan</span>
+          <span class="rank__headline">Platform Engineer · Swiggy</span>
+        </span>
+        <span class="rank__meta">3.6y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Meera Krishnan: match score 68 out of 100, Good Match. 2 skills covered, 2 partial, 1 missing.</span>
+        <span class="rank__gate" data-gate hidden><span class="pill pill--none">Not scored</span> <span class="rank__gate-why">missing critical · <b data-gate-skill></b></span></span>
+
+      </li>
+    </ul>
+
+
+  </div>
+  </div>
+</div>
+      </div>
+    </div>
+
+    <div class="pair mt-16">
+      <div data-reveal="left">
+        <p class="body-copy body-copy--lg measure">
+          And when the answer is “nothing would change”, it says that. The sourcing agent
+          distinguishes an option it cannot measure, an option it measured at zero, and an option
+          with a number — and it prints the zero out loud, because a plausible invented figure is
+          worse than a blank when somebody is about to act on it.
+        </p>
+      </div>
+      <div data-reveal="right">
+        <p class="body-copy measure">
+          A requisition that has been open for nine weeks usually has one requirement doing the
+          damage. The point of this control is that the conversation about which one stops being
+          a matter of opinion.
+        </p>
+        <p class="mt-6"><a class="link hover-icon" href="/product/sourcing/#market-covered">When the market is covered <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── And the decision stays yours ─────────────────────────────────────── -->
+<section class="section section--sunken">
+  <div class="container container--text">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">The line</p>
+      <h2 class="h-section">The recommendation is the machine&rsquo;s. <em>The decision is yours.</em></h2>
+
+    </div>
+    <div class="prose" data-reveal="up">
+      <p>
+        The platform ranks and it explains. It does not decide, and nothing in it will tell you
+        whether to make an offer. Every score is stored with the weights that produced it, so a
+        decision taken in March can be discussed in June against the model that was actually in
+        force — which is the only version of accountability that survives a model change.
+      </p>
+      <p>
+        None of that makes the machine right. It makes the machine arguable, which is the
+        property that lets a person stay responsible for the outcome.
+      </p>
+      <p><a class="link hover-icon" href="/trust/">What gets logged, and who can see what <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+    </div>
+  </div>
+</section>
+
+<section class="cta cta--tight on-ink">
+  <div class="container cta__inner" data-reveal="scale">
+    <h2 class="h-section cta__title">Bring the role <em>you keep re-scoping.</em></h2>
+    <p class="lede cta__lede">Thirty minutes. We run it through the engine and you read the arguments — and find out which requirement is costing you the pool.</p>
+    <div class="cluster cluster--center">
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <a class="btn btn--secondary press" href="/product/matching/">How matching works</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

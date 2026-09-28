@@ -1,0 +1,107 @@
+/* ==========================================================================
+   STAGE 2 PROTOTYPE — token diff
+   --------------------------------------------------------------------------
+   Palette 01 ("ink, indigo and the highlighter") and the Direction A type pass
+   from the Stage 1 report, §§ 13, 14 and 26, expressed as OVERRIDES of
+   assets/css/tokens.css. Nothing in production is touched: this file loads
+   after the five production stylesheets and re-points the same tokens.
+
+   If the direction is adopted, this file becomes the token diff for
+   tokens.css and is deleted. It is the only place a raw value appears in the
+   prototype layer.
+   ========================================================================== */
+
+:root {
+  /* ---- Palette 01: warm paper, softer display ink, AA-safe tertiary ------ */
+  --c-paper:      #F7F6F2;   /* was #FAFAFB — reads as paper, not a dashboard */
+  --c-bone:       #EFEDE7;   /* was #F4F4F8 — warm alternation to match       */
+  --c-rule:       #E3E1DA;   /* hairline, warmed                              */
+  --c-rule-soft:  #ECEAE3;
+
+  --c-ink-type:   #1A1A2E;   /* display ink on warm paper; grounds keep #0B0B1F */
+  --c-slate-dark: #3A3A4C;   /* body, 10.3:1                                   */
+  --c-slate:      #6B6B7D;   /* muted, 4.8:1 — replaces the failing faint      */
+
+  --text-strong:  var(--c-ink-type);
+  --text-faint:   var(--c-slate);          /* #9A9AB0 was 2.64:1 on paper      */
+
+  /* Indigo on ink at text size. #6366F1 stays for large type and fills. */
+  --c-indigo-text-on-ink: #818CF8;
+
+  /* THE HIGHLIGHTER. Cited evidence only: the quoted profile line, the
+     provenance label, the "here is where it came from" moment. Not a glow,
+     not a surface, not a hover. 15:1 with the ink type on it. */
+  --wash-evidence: #FFF1A8;
+  --text-evidence: #1A1A2E;
+
+  /* ---- Type pass (Direction A): scale up, mono legible, data role ------- */
+  --fs-display:  clamp(3rem, 1.6rem + 5.6vw, 6.5rem);      /*  48 → 104 */
+  --fs-h2:       clamp(2rem, 1.25rem + 3.2vw, 4rem);       /*  32 →  64 */
+  --fs-quote:    clamp(2.25rem, 1.4rem + 3.8vw, 4.5rem);   /*  36 →  72 */
+  --fs-lede:     clamp(1.125rem, 1rem + 0.5vw, 1.375rem);  /*  18 →  22 */
+  --fs-label:    0.75rem;                                  /*  12       */
+  --fs-data:     clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem); /* 13 → 15 */
+
+  --lh-tight:    0.98;
+  --lh-lede:     1.45;
+  --tr-display:  -0.03em;
+  --tr-label:     0.14em;
+
+  /* ---- Motion additions (§ 19): one scene beat, one scroll length ------- */
+  --dur-scene:    1400ms;
+  --scene-length: 2.6;     /* viewport heights the pinned signature scrolls for */
+  --pin-length:   1.5;     /* viewport heights the pinned tuner holds for       */
+}
+
+.on-ink {
+  --text-accent: var(--c-indigo-text-on-ink);
+  --wash-evidence: rgba(255, 241, 168, .16);
+  --text-evidence: #FFF1A8;
+}
+
+/* The lede leaves the serif (DESIGN.md § 3 forbids serif paragraphs, and the
+   site's own lede broke that rule). The serif survives only on the accent. */
+.lede {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-lede);
+  color: var(--text-body);
+}
+
+/* Mono floor inside compositions: 10px and 9px become 11px. */
+.pill,
+.jobhead__stats,
+.jobhead__review,
+.weight__scale,
+.tabstrip--drawer .tabstrip__tab,
+.toolbar__count,
+.toolbar__sort { font-size: 11px; }
+.rank__meta, .concept__foot, .evidence__section { font-size: var(--fs-micro); }
+
+/* The data role: numbers read as numbers, not as chrome. */
+.ring__value,
+.score__value,
+.pulse__value,
+.concept__pct,
+.cview__value,
+.wbar__keyvalue { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+
+/* Cited evidence gets the highlighter. This is the one place the wash lives. */
+.concept__quote,
+.evidence__quote {
+  background: var(--wash-evidence);
+  color: var(--text-evidence);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* Direction C's idea as a convention, not a hue: who did the thing. */
+.chip--engine { background: var(--wash-info); color: var(--state-info); border: 1px solid transparent; }
+.chip--human  { background: var(--surface); color: var(--text-strong); border: 1px solid var(--text-strong); }
+
+/* Frames lose the three dots. Chrome is the route line, which is what tells a
+   buyer this is real software; the dots tell them it is a screenshot. */
+.frame__dot { display: none; }
+.frame__chrome { padding-left: var(--sp-4); }

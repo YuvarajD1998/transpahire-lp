@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>Trust, access and what gets logged — Transpahire</title>
+<meta name="description" content="Who can see candidate data, what every score is stored with, what a candidate can ask for, how a job description is checked for language that narrows the pool, and what happens when the model changes.">
+<link rel="canonical" href="https://transpahire.com/trust/">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/trust/">
+<meta property="og:title" content="Trust, access and what gets logged — Transpahire">
+<meta property="og:description" content="Who can see candidate data, what every score is stored with, what a candidate can ask for, how a job description is checked for language that narrows the pool, and what happens when the model changes.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trust, access and what gets logged — Transpahire">
+<meta name="twitter:description" content="Who can see candidate data, what every score is stored with, what a candidate can ask for, how a job description is checked for language that narrows the pool, and what happens when the model changes.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <!-- Sign in is commented out of the header, on request (28 Sep 2026).
+             The mobile drawer still carries it. Uncomment to restore; the
+             ≤900px rule in sections.css that hides it is still in place.
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+        -->
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="page-head">
+  <div class="container">
+    <div class="page-head__inner">
+      <p class="eyebrow">Trust</p>
+      <h1 class="h-display" data-reveal="up">A hiring tool should be able to <em>account for itself.</em></h1>
+      <p class="lede" data-reveal="up">Who can see candidate data, what gets logged, what a candidate can ask for, and what happens when the model changes. Mechanisms, not assurances.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 1 · Who can see what ─────────────────────────────────────────────── -->
+<section class="section section--tight-top" id="access">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Access</p>
+      <h2 class="h-section">Who can see <em>what.</em></h2>
+      <p class="lede">Six roles, a hierarchy, and per-job assignment. An unassigned recruiter does not get a filtered view of a job — they get refused.</p>
+    </div>
+    <div class="pair">
+      <div data-reveal="left">
+        <ul class="checklist checklist--ruled">
+          <li class="checklist__item"><strong>6 organisation roles</strong> — Admin, Job Manager, Hiring Manager, Recruiter, Sourcer, Interviewer — each with its own permissions, set by an administrator.</li>
+          <li class="checklist__item"><strong>A manager-to-recruiter hierarchy.</strong> A manager sees their recruiters&rsquo; work. A recruiter does not see a peer&rsquo;s.</li>
+          <li class="checklist__item"><strong>Per-job assignment.</strong> Access to a job is granted job by job. A recruiter who is not on a job is refused it outright rather than shown a partial version of it.</li>
+          <li class="checklist__item"><strong>Organisation isolation.</strong> One organisation&rsquo;s notes, stages, tags, ratings and pools about a candidate are theirs. Another organisation looking at the same person sees none of it.</li>
+          <li class="checklist__item"><strong>Joining is a decision, not a link.</strong> Members arrive by invitation token or by a join request somebody approves.</li>
+        </ul>
+      </div>
+      <div data-reveal="right">
+        <p class="body-copy body-copy--lg measure">
+          The distinction that matters here is between a permission model and a filter. A
+          filtered view leaks the shape of what it is hiding: a count, a gap in a sequence, a
+          number that does not add up. A refusal does not.
+        </p>
+        <p class="body-copy measure mt-6">
+          It also means the audit log is worth reading, because every access it records is an
+          access that was authorised.
+        </p>
+      </div>
+    </div>
+
+    <!-- PHASE 5 · § 2.7. The two things the section was missing, and they are the
+         two that make the claim checkable rather than assertable: WHERE the
+         refusal happens, and WHAT the refused person sees.
+
+         This is a stronger access-control claim than "role-based permissions",
+         and it is a mechanism claim throughout — the gate is a line of code and
+         the empty state is a string. Neither is a promise about an outcome, which
+         is what CLAUDE.md § 7 requires of anything on this page. -->
+    <div class="pair mt-16" data-reveal="up">
+      <div>
+        <p class="body-copy body-copy--lg measure">
+          The gate is on the request, not on the screen. Asking the API for a job&rsquo;s
+          candidates asserts an active assignment before it returns anything, and the only role
+          exempt from that assertion is the organisation administrator. Everybody else —
+          recruiter, sourcer, interviewer, hiring manager — is refused with a 403 rather than
+          handed a filtered list.
+        </p>
+      </div>
+      <div>
+        <p class="body-copy measure">
+          And the product treats being locked out as a <strong>normal state rather than a
+          failure</strong>, which is a design decision worth quoting because it is the part
+          nobody claims:
+        </p>
+        <blockquote class="pullquote pullquote--sm mt-6">
+          <p>You’re not on this job yet</p>
+          <p class="pullquote__sub">Ask a hiring manager to add you to this role and its candidates will show up here.</p>
+        </blockquote>
+        <p class="body-copy measure mt-6">
+          Not an error, not a permissions dialog, and not an invitation to ask an administrator
+          for more access than the job needs. A request to the one person who can grant it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2 · What is logged ───────────────────────────────────────────────── -->
+<section class="section section--sunken" id="logged" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">The record</p>
+      <h2 class="h-section">What is <em>logged.</em></h2>
+      <p class="lede">Every mutation carries an actor and a timestamp. Every score is stored with the weights, the per-skill scores and the verdict as they were at the time it was computed. Every search is audited.</p>
+    </div>
+    <div class="pair pair--lead">
+      <div data-reveal="left">
+        <div class="prose">
+          <p>
+            The one worth dwelling on is the middle one. A score is not stored as a number; it
+            is stored with the model that produced it — which weights were in force, what each
+            skill scored, which requirements the gate dropped and what verdict came out. So a
+            result from last month can be reconstructed even if the weights have moved since,
+            and “why was she ranked ninth in March” has an answer that is not a reconstruction
+            from memory.
+          </p>
+          <p>
+            That is also what makes a disagreement possible. A ranking you can only re-run
+            under today&rsquo;s model is not a ranking you can question about a decision made
+            under a different one.
+          </p>
+        </div>
+      </div>
+      <div data-reveal="right">
+        <ul class="checklist checklist--ruled">
+          <li class="checklist__item"><strong>Match audit.</strong> The weights, the per-skill scores and the verdict, stored as they were at the time of computation.</li>
+          <li class="checklist__item"><strong>Action audit.</strong> Every mutation carries an actor and a timestamp.</li>
+          <li class="checklist__item"><strong>Search audit.</strong> Every search is logged, and a saved search keeps its own history.</li>
+          <li class="checklist__item"><strong>Access.</strong> Six roles, a manager → recruiter hierarchy, per-job assignment, and organisation-level data isolation.</li>
+          <li class="checklist__item"><strong>Model change.</strong> Scoring modifiers sit behind feature flags and the skill ontology is versioned.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Full width, deliberately. A four-column mono log in a half-column wraps
+         every row onto three lines, which is the opposite of what a log is
+         for. -->
+    <div class="mt-16" data-reveal="rise">
+
+<div class="frame " style="--ratio: 16 / 5">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / platform-admin / audit-logs</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="ledger">
+    <p class="panel__rule">Audit log</p>
+    <ul class="ledger__list">
+      <li class="ledger__row">
+        <span class="ledger__at">14:22</span>
+        <span class="ledger__actor">priya.s@</span>
+        <span class="ledger__action">viewed candidate 8841</span>
+        <span class="ledger__ref">job 1042</span>
+      </li>
+      <li class="ledger__row ledger__row--strong">
+        <span class="ledger__at">14:19</span>
+        <span class="ledger__actor">system</span>
+        <span class="ledger__action">scored 47 candidates</span>
+        <span class="ledger__ref">weights v3 · gate: 6 dropped</span>
+      </li>
+      <li class="ledger__row">
+        <span class="ledger__at">14:04</span>
+        <span class="ledger__actor">arjun.k@</span>
+        <span class="ledger__action">changed Kubernetes REQUIRED → PREFERRED</span>
+        <span class="ledger__ref">job 1042</span>
+      </li>
+      <li class="ledger__row">
+        <span class="ledger__at">13:51</span>
+        <span class="ledger__actor">priya.s@</span>
+        <span class="ledger__action">exported search results (31 rows)</span>
+        <span class="ledger__ref">audit id 4c1e</span>
+      </li>
+      <li class="ledger__row">
+        <span class="ledger__at">09:30</span>
+        <span class="ledger__actor">system</span>
+        <span class="ledger__action">GDPR export completed</span>
+        <span class="ledger__ref">user 3319</span>
+      </li>
+    </ul>
+    <p class="ledger__foot">Every mutation carries an actor and a timestamp. Every score is stored with the weights that produced it.</p>
+  </div>
+  </div>
+</div>
+      <p class="composition-note">Illustrative log · invented actors and identifiers</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3 · What a candidate can ask for ─────────────────────────────────── -->
+<section class="section" id="data-rights">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Data rights</p>
+      <h2 class="h-section">What a candidate <em>can ask for.</em></h2>
+      <p class="lede">Export and delete are routes in the product, not a form that generates an email. Both arrive as a request with a review queue behind it.</p>
+    </div>
+    <div class="grid grid--3" data-reveal-group data-stagger="normal">
+      <article class="card">
+        <h3 class="h-card card__title">Export</h3>
+        <p class="body-copy card__body">A candidate can request everything the platform holds about them. The request is recorded, reviewed and completed, and the completion is itself a logged event.</p>
+        <p class="card__benefit">EXPORT — a request, with a review queue.</p>
+      </article>
+      <article class="card">
+        <h3 class="h-card card__title">Delete</h3>
+        <p class="body-copy card__body">The same route, in the other direction. What happens to an organisation&rsquo;s own notes about a candidate after deletion is a retention decision, and it belongs in the privacy policy rather than in a marketing sentence.</p>
+        <p class="card__benefit">DELETE — a request, with a review queue.</p>
+      </article>
+      <article class="card">
+        <h3 class="h-card card__title">Review before save</h3>
+        <p class="body-copy card__body">Everything extracted from an uploaded résumé is shown to the candidate with a confidence indicator, to accept, edit or reject, before any of it is stored.</p>
+        <p class="card__benefit">A profile they agreed to, not one assembled about them.</p>
+      </article>
+      <article class="card">
+        <h3 class="h-card card__title">Visibility</h3>
+        <p class="body-copy card__body">Public, limited or private, set by the candidate. It controls whether an organisation that did not source them can find them at all.</p>
+        <p class="card__benefit">Searchable is a choice, and it is theirs.</p>
+      </article>
+      <article class="card">
+        <h3 class="h-card card__title">Account status</h3>
+        <p class="body-copy card__body">A profile a recruiter imported is marked unclaimed until the person takes it over, and is visible only inside the organisation that imported it until they do. They can claim it, or opt out of it.</p>
+        <p class="card__benefit"><a class="link hover-icon" href="/product/sourcing/#consent">The two consent bases <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </article>
+      <article class="card">
+        <h3 class="h-card card__title">The reasoning</h3>
+        <p class="body-copy card__body">A candidate sees the same score a recruiter sees, and the same breakdown of where they fit and where they do not — including the parts that count against them.</p>
+        <p class="card__benefit"><a class="link hover-icon" href="/for-candidates/">What candidates see <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4 · Structural fairness ──────────────────────────────────────────── -->
+<section class="section section--sunken" id="fairness" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Structural fairness</p>
+      <h2 class="h-section">How a job description <em>narrows the pool.</em></h2>
+      <p class="lede">How this job description narrows the candidate pool. It looks at the requirements themselves — no demographic data is used or held.</p>
+    </div>
+    <div class="pair pair--lead">
+      <div data-reveal="left">
+        <div class="prose">
+          <p>
+            It reads the requirements. Some of what it finds is language: “rockstar”, “ninja”,
+            “10x” are jargon that discourages applications; “young” is age bias; “recent
+            graduate” narrows a pool against people returning to work; a hard degree
+            requirement excludes people who are good at the job and did not take that route.
+            Each flagged term comes with the reason it was flagged.
+          </p>
+          <p>
+            The rest of what it finds is shape rather than wording — a score distribution that
+            skews hard by years of experience, a bias against people who are over-qualified, a
+            requirement list so long that almost nobody clears all of it. Seven critical skills
+            is not a high bar; it is an empty pool, and it is better to know that before the
+            role has been open for nine weeks.
+          </p>
+          <h3>And it refuses to rate what it cannot measure</h3>
+          <p>
+            Below 50 scored candidates on a role, it will not rate
+            distribution at all. It says it does not have enough data and tells you how far off
+            it is. On the example role beside this paragraph that means it declines at
+            47 — three short.
+          </p>
+          <p>
+            That is the part of this page we would least like to be talked out of. A tool that
+            produces a confident fairness rating from 47 data points is not a
+            more useful tool; it is the same tool with the uncertainty removed.
+          </p>
+          <p>
+            <strong>No demographic data is used, inferred, or held.</strong> Not gender, not
+            age, not ethnicity, not a proxy for any of them. There is no field for it, which is
+            a stronger statement than a policy about it.
+          </p>
+        </div>
+      </div>
+      <div data-reveal="right">
+
+<div class="frame " style="--ratio: 4 / 3">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / insights</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="fairness">
+    <div class="fairness__head">
+      <p class="panel__rule">Structural fairness</p>
+      <span class="pill pill--warn">Needs review</span>
+    </div>
+
+    <p class="fairness__line">How this job description narrows the candidate pool. It looks at the requirements themselves — no demographic data is used or held.</p>
+
+    <ul class="flags">
+      <li class="flag">
+        <span class="flag__glyph" aria-hidden="true">⚑</span>
+        <span class="flag__term">“rockstar”</span>
+        <span class="flag__note">exclusionary jargon</span>
+      </li>
+      <li class="flag">
+        <span class="flag__glyph" aria-hidden="true">⚑</span>
+        <span class="flag__term">“recent graduate”</span>
+        <span class="flag__note">overspecifying graduation recency may limit experienced returners</span>
+      </li>
+      <li class="flag">
+        <span class="flag__glyph" aria-hidden="true">⚑</span>
+        <span class="flag__term">7 critical skills</span>
+        <span class="flag__note">almost nobody clears all seven</span>
+      </li>
+    </ul>
+
+    <div class="insufficient">
+      <span class="insufficient__glyph" aria-hidden="true">○</span>
+      <p class="insufficient__body">
+        Not enough scored candidates to rate distribution yet.
+        We need 50; this role has 47.
+      </p>
+    </div>
+  </div>
+  </div>
+</div>
+        <p class="composition-note">Illustrative report · an invented job description</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 5 · When the model changes ───────────────────────────────────────── -->
+<section class="section" id="model-changes">
+  <div class="container container--text">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Change</p>
+      <h2 class="h-section">When the model <em>changes.</em></h2>
+
+    </div>
+    <div class="prose" data-reveal="up">
+      <p>
+        Scoring modifiers are behind feature flags held in the database, so a change to how
+        seniority affects a score is a switch with a state and a history rather than a deploy
+        nobody recorded. The skill taxonomy is versioned: an ontology version is a thing you can
+        name, and two scores computed under different versions are distinguishable.
+      </p>
+      <p>
+        A score computed last month is reproducible because the weights that produced it are
+        stored with it. That sentence is the whole of the argument for versioning anything, and
+        it is why the audit log above is worth more than the ranking it describes.
+      </p>
+      <p>
+        Data quality is snapshotted rather than assumed, and health checks are logged. Neither
+        is interesting until the day something is wrong, which is the only day either matters.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 6 · What we will not claim ───────────────────────────────────────── -->
+<section class="section section--sunken" id="will-not-claim">
+  <div class="container container--text">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">The limits</p>
+      <h2 class="h-section">What we <em>will not claim.</em></h2>
+
+    </div>
+    <div class="prose" data-reveal="up">
+      <p>
+        Automated hiring tools are regulated in most of the markets we work in, and the
+        distance between “this is logged” and “this is compliant” is where a lot of
+        recruitment marketing lives. We would rather describe mechanisms than promise
+        outcomes:
+      </p>
+      <!-- data-claims="negated": this list NAMES the claims we refuse to make,
+           so it is exempt from the outcome-claim check in tools/check.mjs. A
+           disclaimer that cannot name what it disclaims is not a disclaimer. -->
+      <ul data-claims="negated">
+        <li>We will tell you what the platform computes and shows. We will not tell you it is
+          bias-free, fair by design, or defensible. Those are conclusions about an outcome, and
+          they are not ours to draw about your hiring process.</li>
+        <li>We will not publish an outcome metric we have not measured — no time saved, no
+          quality-of-hire number, no accuracy figure.</li>
+        <li>We will not name a customer who has not agreed to be named, and we do not have a
+          testimonial on this site because we do not have one we are allowed to print.</li>
+        <li>Every person and company in every composition on this site is invented, and
+          labelled as invented.</li>
+        <li>The platform computes a recommendation and a ranking. It does not make hiring
+          decisions. A person at the hiring organisation does, and the responsibility stays
+          with them.</li>
+      </ul>
+      <p>
+        The site is currently closed to search engines on purpose, for the same reason: not
+        every claim on it has been through review yet.
+      </p>
+      <p>
+        <a class="link hover-icon" href="/legal/privacy/">The privacy policy, in draft <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="cta cta--tight on-ink">
+  <div class="container cta__inner" data-reveal="scale">
+    <h2 class="h-section cta__title">Bring the question <em>your security team would ask.</em></h2>
+    <p class="lede cta__lede">Thirty minutes on a real requisition, and you can ask about any of the above while looking at it.</p>
+    <div class="cluster cluster--center">
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <a class="btn btn--secondary press" href="/product/matching/">How matching works</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

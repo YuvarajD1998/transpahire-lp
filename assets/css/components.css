@@ -1,0 +1,4197 @@
+/* ==========================================================================
+   Transpahire — Components
+   --------------------------------------------------------------------------
+   Reusable UI and marketing primitives. Everything here is page-agnostic: a
+   component in this file must work in any section, on paper or on ink, without
+   knowing where it sits. Anything that only makes sense in one section belongs
+   in sections.css instead.
+
+   Inventory and usage rules: docs/components.md
+   Consumes: tokens.css, base.css, motion.css
+   ========================================================================== */
+
+/* ==========================================================================
+   Button
+   Three intents (primary, secondary, ghost) × two grounds. On an ink ground
+   `.on-ink` re-points the tokens, so a single ruleset covers both.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 42px;
+  padding-inline: var(--sp-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition:
+    background   var(--dur-fast) var(--ease-standard),
+    color        var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform    var(--dur-fast) var(--ease-standard),
+    box-shadow   var(--dur-fast) var(--ease-standard);
+}
+
+/* The lift is small and the shadow carries the weight. `will-change` is
+   deliberately absent — promoting every button on the page to its own
+   compositor layer costs memory for a 3px move. */
+.btn:hover { transform: translate3d(0, var(--lift-small), 0); }
+.btn:active { transform: none; }
+
+.btn__icon { flex: none; }
+
+.btn--primary {
+  background: var(--c-ink);
+  color: var(--c-white);
+}
+.btn--primary:hover {
+  background: var(--c-indigo-deep);
+  box-shadow: var(--shadow-lift);
+}
+.on-ink .btn--primary {
+  background: var(--c-white);
+  color: var(--c-ink);
+}
+.on-ink .btn--primary:hover { background: var(--c-platinum); }
+
+.btn--accent {
+  background: var(--c-indigo-bright);
+  color: var(--c-white);
+}
+.btn--accent:hover { background: var(--c-indigo); }
+
+.btn--secondary {
+  background: var(--surface-raised);
+  color: var(--text-strong);
+  border-color: var(--border);
+}
+.btn--secondary:hover { border-color: var(--border-strong); }
+.on-ink .btn--secondary {
+  background: transparent;
+  color: var(--text-body);
+  border-color: var(--border);
+}
+.on-ink .btn--secondary:hover {
+  border-color: var(--border-strong);
+  color: var(--c-white);
+}
+
+.btn--ghost {
+  height: 38px;
+  padding-inline: var(--sp-3);
+  color: var(--text-body);
+}
+.btn--ghost:hover { color: var(--text-strong); }
+
+.btn--block { width: 100%; }
+
+/* ==========================================================================
+   Text link — the inline, underlined variant used in running copy.
+   ========================================================================== */
+.link {
+  color: var(--text-strong);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.link:hover { border-color: currentColor; }
+
+/* ==========================================================================
+   Badge — a status marker. Says "not yet", "new", "beta". Never decorative.
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 4px var(--sp-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(79, 70, 229, .18);
+  background: rgba(79, 70, 229, .08);
+  color: var(--c-indigo-bright);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  flex: none;
+}
+.on-ink .badge {
+  border-color: rgba(99, 102, 241, .3);
+  background: rgba(99, 102, 241, .12);
+  color: var(--c-indigo-glow);
+}
+
+/* Chip — a compact data tag (a skill, a filter, a count). */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px var(--sp-2);
+  border-radius: var(--radius-pill);
+  background: var(--c-indigo-tint);
+  color: var(--c-indigo);
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+}
+
+/* Signal dot — state, in the traffic-light sense. Scoped to `.signal` so it
+   cannot collide with the decorative window dots in the product frame. */
+.signal {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  flex: none;
+}
+.signal--ok   { background: var(--c-ok); }
+.signal--warn { background: var(--c-warn); }
+.signal--err  { background: var(--c-err); }
+
+/* ==========================================================================
+   Card
+   The workhorse surface. Hover behaviour comes from `.hover-lift` in
+   motion.css — the card does not define its own movement, so every liftable
+   surface on the site moves identically.
+   ========================================================================== */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(20px, 2.4vw, 32px);
+}
+
+.card.hover-lift:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-elev);
+}
+
+.card--sunken { background: var(--surface-sunken); }
+
+/* Dashed — the visual grammar for "planned, not shipped". Reads as a slot
+   waiting to be filled, which is exactly what it is. */
+.card--dashed {
+  border-style: dashed;
+  background: transparent;
+}
+.card--dashed.hover-lift:hover {
+  border-style: solid;
+  border-color: var(--c-indigo-bright);
+  box-shadow: var(--shadow-card);
+}
+
+.card__icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--sp-5);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  color: var(--text-strong);
+  flex: none;
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.card.hover-lift:hover .card__icon {
+  border-color: var(--c-indigo-bright);
+  color: var(--c-indigo-bright);
+}
+
+.card__title { margin-bottom: var(--sp-2); }
+.card__body { margin-bottom: var(--sp-3); }
+
+/* Benefit line — the serif italic closer that gives each card a point of view.
+   One per card, always last. This is the Transpahire tell. */
+.card__benefit {
+  margin-top: auto;
+  padding-top: var(--sp-1);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-body);
+  line-height: 1.35;
+  color: var(--text-accent);
+}
+
+/* ==========================================================================
+   Product frame
+   The container every product visualisation lives inside: a restrained window
+   chrome plus a content slot. Swapping the slot for an <img>, a <video> or a
+   composed HTML mockup does not change anything around it.
+
+   Full rules in docs/product-visualization.md.
+   ========================================================================== */
+
+.frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.frame--elevated { box-shadow: var(--shadow-elev); }
+.frame--float { box-shadow: var(--shadow-float); }
+
+.frame--ink {
+  background: var(--c-ink-raised);
+  border-color: rgba(255, 255, 255, .08);
+}
+
+/* Chrome — a browser/app title bar. Present so a mockup reads as software
+   rather than as an illustration. The dots are decorative and hidden from AT. */
+.frame__chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
+}
+.frame--ink .frame__chrome {
+  background: var(--c-ink);
+  border-bottom-color: rgba(255, 255, 255, .06);
+}
+
+.frame__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  flex: none;
+}
+.frame--ink .frame__dot { background: rgba(255, 255, 255, .12); }
+
+.frame__meta {
+  margin-left: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The content slot. `--ratio` is set per instance so the box is reserved
+   before any image loads — this is the site's main defence against layout
+   shift. Never remove the aspect-ratio when swapping in real media. */
+.frame__body {
+  position: relative;
+  aspect-ratio: var(--ratio, 16 / 9);
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.frame__body > img,
+.frame__body > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder canvas — graph paper. Explicitly reads as "not the product yet",
+   which is honest, and stops a stand-in from being mistaken for a screenshot.
+   Removed the moment real product imagery arrives in Phase 2. */
+.frame__placeholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background-color: var(--c-paper);
+  background-image:
+    linear-gradient(rgba(11, 11, 31, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 11, 31, .045) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.frame--ink .frame__placeholder {
+  background-color: var(--c-ink-raised);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+}
+.frame__placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 100px rgba(11, 11, 31, .08);
+  pointer-events: none;
+}
+.frame--ink .frame__placeholder::after {
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, .45);
+}
+
+.frame__tag {
+  position: relative;
+  z-index: var(--z-raised);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: calc(100% - var(--sp-8));
+  padding: var(--sp-2) var(--sp-4);
+  background: rgba(255, 255, 255, .85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+}
+.frame--ink .frame__tag {
+  background: rgba(20, 20, 43, .85);
+  border-color: rgba(255, 255, 255, .08);
+}
+.frame__tag-kind {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px var(--sp-2);
+  border-radius: 3px;
+  background: var(--c-ink);
+  color: var(--c-white);
+  font-size: 10px;
+  letter-spacing: .14em;
+  flex: none;
+}
+.frame__tag-kind--video,
+.frame--ink .frame__tag-kind { background: var(--c-indigo-bright); }
+
+/* Play affordance for a video slot. */
+.frame__play {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.frame__play-disc {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--c-white);
+  box-shadow: 0 30px 60px -20px rgba(11, 11, 31, .4);
+  color: var(--c-ink);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.frame__play:hover .frame__play-disc,
+.frame__play:focus-visible .frame__play-disc {
+  transform: scale(calc(1 + .05 * var(--motion)));
+}
+
+/* Caption beneath a frame — serif, so it reads as editorial voice rather than
+   as UI text. */
+.frame__caption {
+  margin-top: var(--sp-4);
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lede);
+  color: var(--text-body);
+}
+
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--sp-8);
+}
+
+.tabs__list {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+}
+.tabs__list::-webkit-scrollbar { display: none; }
+
+.tab {
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-medium);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard);
+}
+.tab:hover { color: var(--text-strong); }
+.tab.is-active {
+  background: var(--surface-raised);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-card);
+}
+
+/* ==========================================================================
+   Accordion
+   ========================================================================== */
+
+.accordion { display: grid; gap: var(--sp-3); }
+
+.accordion__item {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.accordion__item[data-open="true"] { border-color: var(--border-strong); }
+
+.accordion__heading { margin: 0; }
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  width: 100%;
+  padding: var(--sp-5) var(--sp-6);
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-body-lg);
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+}
+
+.accordion__marker {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+/* Bare clipping wrapper — see motion.css § 5. Carries no padding of its own
+   so a collapsed panel measures exactly zero. */
+.accordion__inner { min-width: 0; }
+
+.accordion__content {
+  padding: 0 var(--sp-6) var(--sp-6);
+  color: var(--text-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  max-width: 68ch;
+}
+
+/* ==========================================================================
+   Stat
+   ========================================================================== */
+
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-stat);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--text-strong);
+  margin-bottom: var(--sp-3);
+}
+.stat__label {
+  font-size: var(--fs-micro);
+  line-height: 1.4;
+  color: var(--text-muted);
+  max-width: 22ch;
+}
+
+/* ==========================================================================
+   Quote
+   ========================================================================== */
+
+.quote {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-quote);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.pullquote {
+  font-family: var(--font-serif);
+  font-size: var(--fs-pullquote);
+  line-height: 1.32;
+  color: var(--text-strong);
+  max-width: 56ch;
+}
+
+/* A quoted product string rather than a quoted person. Smaller, because it is
+   evidence rather than a statement — and the sub-line is the second half of the
+   same empty state, so it stays inside the quote. */
+.pullquote--sm {
+  font-size: var(--fs-h3);
+  padding-left: var(--sp-5);
+  border-left: 2px solid var(--c-indigo);
+}
+.pullquote__sub {
+  margin-top: var(--sp-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.cite {
+  display: block;
+  margin-top: var(--sp-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-style: normal;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ==========================================================================
+   Wordmark
+   ========================================================================== */
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: 18px;
+  letter-spacing: var(--tr-wordmark);
+  color: var(--text-strong);
+}
+.wordmark__mark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+/* ==========================================================================
+   Checklist — the ticked feature list used by segments and pricing tiers.
+   The tick is a masked SVG so it inherits currentColor and costs no request.
+   ========================================================================== */
+
+.checklist { display: grid; gap: var(--sp-3); }
+
+/* PHASE 4 CORRECTION, and it fixes a defect that predates Phase 4.
+   This used to be `display: grid` with a 22px tick column and a 1fr text
+   column. That works only while the <li> contains exactly one child, because
+   every element AND every text node inside a grid container becomes its own grid
+   item — so `<strong>Access.</strong> Six roles…` produced two items, the
+   <strong> took the text column, and the sentence after it was placed in the
+   22px tick column and rendered one word per line.
+
+   The tick is now positioned rather than laid out, so an <li> can hold any
+   inline markup. Every existing instance keeps its appearance. */
+.checklist__item {
+  position: relative;
+  padding-left: 34px;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+}
+.checklist__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-accent);
+  -webkit-mask: var(--mask-check) center / contain no-repeat;
+          mask: var(--mask-check) center / contain no-repeat;
+}
+
+/* Ruled variant — a hairline above each row. Used where the list is the main
+   content of a column rather than a supporting detail. */
+.checklist--ruled .checklist__item {
+  border-top: 1px solid var(--border);
+  padding-top: var(--sp-4);
+  font-size: var(--fs-body-lg);
+}
+.checklist--ruled .checklist__item::before { top: calc(var(--sp-4) + 5px); }
+
+.checklist__group {
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.checklist__group::before { display: none; }
+
+:root {
+  /* Shared by .checklist and the comparison table so the tick is drawn once. */
+  --mask-check: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M2 7.5L6 11L12 4' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>");
+}
+
+/* ==========================================================================
+   Comparison table — REMOVED IN PHASE 4
+   --------------------------------------------------------------------------
+   `comparisonTable()` was cut: it shipped one column short, with a note
+   underneath admitting so, on a page about transparency — which reads as
+   concealment. See src/lib/compositions.mjs and docs/components.md § 5c.
+
+   The CSS went with it rather than sitting here unused. If a comparison is ever
+   justified again it will need a different shape anyway, because the reason the
+   old one failed was structural and not visual.
+   ========================================================================== */
+
+/* ==========================================================================
+   Pricing tier
+   ========================================================================== */
+
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  padding: var(--sp-8);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+/* The featured tier inverts rather than shouting with colour. Restraint is
+   the differentiator — see DESIGN.md § Composition. */
+.tier--featured {
+  background: var(--c-ink);
+  border-color: var(--c-ink);
+  box-shadow: var(--shadow-elev);
+}
+
+.tier__badge {
+  position: absolute;
+  top: -12px;
+  left: var(--sp-8);
+  padding: 4px var(--sp-3);
+  border-radius: var(--radius-pill);
+  background: var(--c-indigo-bright);
+  color: var(--c-white);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.tier__name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+.tier__pitch {
+  margin-top: 6px;
+  font-size: var(--fs-small);
+  color: var(--text-muted);
+}
+
+.tier__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-block: var(--sp-6);
+  border-block: 1px solid var(--border);
+}
+.price {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: 44px;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+.price--unset { color: var(--text-faint); }
+.tier__unit { font-size: var(--fs-micro); color: var(--text-muted); }
+
+.tier__note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tier .checklist { flex: 1; }
+
+/* ==========================================================================
+   Logo strip
+   A slot for partner or customer marks. Ships empty on purpose: see
+   docs/content-integrity.md — a row of grey rectangles under the words
+   "trusted by" is a fabricated trust signal, not a placeholder.
+   ========================================================================== */
+
+.logo-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  flex-wrap: wrap;
+}
+.logo-strip__slot {
+  height: 28px;
+  min-width: 92px;
+  display: grid;
+  place-items: center;
+  padding-inline: var(--sp-3);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ==========================================================================
+   Step — the numbered process item.
+   ========================================================================== */
+
+.step { position: relative; }
+
+.step__num {
+  display: inline-block;
+  /* Ignored in `.step`, which is not a grid, and load-bearing inside `.card`,
+     which is — without it the pill stretches the full card width and reads as an
+     empty input rather than as an index. */
+  justify-self: start;
+  margin-bottom: var(--sp-6);
+  padding: 4px var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: .15em;
+  color: var(--text-muted);
+}
+.step__title { margin-bottom: var(--sp-2); }
+
+/* ==========================================================================
+   PRODUCT COMPOSITIONS — Phase 3
+   --------------------------------------------------------------------------
+   Everything below renders a real product surface in composed HTML, styled
+   entirely from the token layer. Specified in
+   docs/phase-2/08-PRODUCT_VISUALIZATION_SPEC.md; every value comes from
+   assets/data/product-demo.js and appears in the markup exactly once.
+
+   Two conventions run through all of them, from `08 § 1`:
+
+     · TYPE  — --font-mono for every label, score and datum; --font-sans for
+       names and narrative prose; --font-display for score values.
+       --font-serif NEVER appears inside a product composition. It is the
+       marketing voice, not the product's, and the moment a mockup speaks in
+       the marketing voice it stops reading as software.
+
+     · DENSITY — these are deliberately tighter than the marketing components
+       above. A mockup twice as airy as the product reads as dishonest the first
+       time someone sees a demo.
+   ========================================================================== */
+
+/* ---- The composed-HTML slot -------------------------------------------- */
+/* `.frame__body` reserves its box with `aspect-ratio` because its usual job is
+   holding media that has not loaded yet. Composed HTML has nothing to load, so
+   here the authored ratio becomes a reserved MINIMUM: an empty spacer holds the
+   box open at `--ratio`, and the composition shares its grid cell and grows
+   past it when the content is taller. `--ratio` therefore stays declared on
+   every frame and survives the swap to real media, which is the property
+   docs/product-visualization.md § 2 actually cares about. */
+
+.frame__body--content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  aspect-ratio: auto;
+  place-items: stretch;
+}
+.frame__body--content::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: 100%;
+  aspect-ratio: var(--ratio, 16 / 9);
+  pointer-events: none;
+}
+.frame__body--content > * { grid-area: 1 / 1; min-width: 0; }
+
+/* ---- Classification and skill-state chips ------------------------------ */
+/* Always paired with the word — colour is never the sole carrier (DESIGN.md
+   § 2). `08 § 1` fixes the mapping: Strong → ok, Good → indigo,
+   Potential → warn, Weak → slate. */
+
+.chip--mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px var(--sp-2);
+}
+
+.chip--strong    { background: var(--wash-ok);   color: var(--state-ok); }
+.chip--good      { background: var(--wash-info); color: var(--state-info); }
+.chip--potential { background: var(--wash-warn); color: var(--state-warn); }
+/* `.chip--weak` was here. The product renders that band to users as "Possible";
+   "weak" is a scorer's word (docs/glossary.md § 4). `.chip--possible` is in the
+   Phase 4 block at the bottom of this file. */
+
+/* ---- The score component ---------------------------------------------- */
+/* NO RING, deliberately. The product returns a 0–100 score and a named
+   classification; a ring implies a proportion of a whole and invites the reader
+   to compute a percentage the product never claimed. The chip already carries
+   the verdict, in the product's own vocabulary. Integers throughout, so
+   counter.js works unmodified. */
+
+.score {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.score__value {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--text-strong);
+}
+.score__scale {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--text-faint);
+}
+.score .chip { align-self: center; margin-left: var(--sp-1); }
+
+.score--sm .score__value { font-size: var(--fs-h3); }
+.score--lg .score__value { font-size: clamp(2.75rem, 2rem + 3vw, 4rem); }
+
+/* ---- Meter (P1's appearance; its movement is motion.css § 4b) ---------- */
+
+.meter {
+  /* A <span>, so it needs an explicit block: an inline box ignores height, and
+     the bar rendered as nothing at all. */
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--wash-none);
+  overflow: hidden;
+}
+.meter__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--state-info);
+}
+.meter--ok   .meter__fill { background: var(--state-ok); }
+.meter--warn .meter__fill { background: var(--state-warn); }
+.meter--quiet .meter__fill { background: var(--c-slate-soft); }
+
+/* ==========================================================================
+   C2 — Explanation panel ★
+   The most important asset on the site. Five blocks, in this order:
+   identity · match breakdown · skills · why · signals.
+   ========================================================================== */
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  padding: clamp(16px, 2vw, 24px);
+  min-width: 0;
+}
+
+.panel__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border);
+}
+.panel__name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1.2;
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+}
+.panel__meta {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+
+/* The block rule — a hairline with a mono label sitting on it. This is the
+   product's own sectioning device and it is why the panel reads as one
+   surface rather than five stacked cards. */
+.panel__block { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
+
+.panel__rule {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--fw-regular);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.panel__rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---- Match breakdown — the five dimensions ---------------------------- */
+
+.breakdown { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); margin: 0; }
+
+.breakdown__row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1.1fr) minmax(60px, 2fr) 34px;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.breakdown__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  margin: 0;
+}
+.breakdown__meter { margin: 0; min-width: 0; }
+
+.breakdown__value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: right;
+  color: var(--text-strong);
+}
+
+/* ---- Skills — three scored states and one unscored -------------------- */
+
+.skills { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
+
+.skillrow {
+  display: grid;
+  grid-template-columns: 18px minmax(70px, auto) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--sp-2) var(--sp-3);
+}
+.skillrow__glyph {
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--state-none);
+}
+.skillrow__state {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.skillrow__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.skill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-sm);
+  background: var(--wash-none);
+  font-size: var(--fs-micro);
+  color: var(--text-body);
+}
+.skill__tier {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--text-faint);
+}
+
+.skillrow--covered .skillrow__glyph { color: var(--state-ok); }
+.skillrow--covered .skill { background: var(--wash-ok); color: var(--state-ok); }
+
+.skillrow--missing .skillrow__glyph { color: var(--state-none); }
+.skillrow--missing .skill { background: var(--wash-none); color: var(--text-muted); }
+
+.skillrow--bonus .skillrow__glyph { color: var(--c-slate-soft); }
+
+/* THE PARTIAL STATE.
+   The single most distinctive element in the product and the hinge of the whole
+   homepage (`07 § 4`). It gets its own glyph, its own colour, its own row and
+   the transfer line beneath it naming the adjacent skill — and the glyph is
+   ringed so it cannot be mistaken for a third grey chip, which `11 § 5` names
+   as the most likely way to build this section wrong. */
+.skillrow--partial { align-items: start; }
+.skillrow--partial .skillrow__glyph {
+  color: var(--state-info);
+  font-weight: var(--fw-semi);
+}
+.skillrow--partial .skillrow__state { color: var(--state-info); }
+.skillrow--partial .skill {
+  background: var(--wash-info);
+  color: var(--state-info);
+  border: 1px solid rgba(79, 70, 229, .22);
+  padding-block: 1px;
+}
+
+.skill__transfer {
+  display: block;
+  flex-basis: 100%;
+  padding-left: 1px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  line-height: 1.5;
+  color: var(--state-info);
+}
+.skill__transfer::before {
+  content: "↳ ";
+  opacity: .6;
+}
+
+/* ---- Why — the AI narrative ------------------------------------------- */
+/* Arrives as a block. No typewriter: it is 200+ characters, it cannot be read
+   while it moves, and it breaks selection and copy (`07 § 4`). */
+
+.narrative {
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--text-body);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* ---- Signals — arrive last, as a group -------------------------------- */
+/* Seniority, trajectory, potential and drop-off are the things a recruiter
+   could not have derived by reading the CV. Landing them after the narrative
+   makes the panel feel like it knows more than it has said. */
+
+.signals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3) var(--sp-5);
+  margin: 0;
+}
+.signals__cell { min-width: 0; }
+.signals__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.signals__value {
+  margin: 2px 0 0;
+  font-size: var(--fs-micro);
+  line-height: 1.35;
+  color: var(--text-strong);
+}
+
+/* ==========================================================================
+   C1 — Ranked candidate list
+   A real <ul> of <li>. Never a stack of divs: the list IS a list, and a screen
+   reader should be told how many people are in it.
+   ========================================================================== */
+
+.rank { display: grid; align-content: start; min-width: 0; }
+
+.rank__head {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) clamp(12px, 1.6vw, 20px);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+.rank__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--text-strong);
+}
+.rank__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.rank__filters { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* Filter chips are real buttons — they actually filter the list, which is what
+   proves the composition is markup rather than an image. */
+.rank__filter {
+  padding: 3px var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+}
+.rank__filter:hover { color: var(--text-strong); border-color: var(--border-strong); }
+.rank__filter[aria-pressed="true"] {
+  background: var(--c-ink);
+  border-color: var(--c-ink);
+  color: var(--c-white);
+}
+.on-ink .rank__filter[aria-pressed="true"] {
+  background: var(--c-white);
+  border-color: var(--c-white);
+  color: var(--c-ink);
+}
+
+.rank__sort {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.rank__list { display: grid; }
+
+/* The score column holds the ring over its classification chip, so it is as
+   wide as the longest chip (`--rank-score`) and it is a FIXED track, not
+   `auto`: every row is its own grid, so an `auto` column is sized per row and
+   the names start wherever each row's chip happens to end. `.trow` and the
+   phone rule read the same token. */
+.rank__row {
+  display: grid;
+  grid-template-columns: var(--rank-score) minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) clamp(12px, 1.6vw, 20px);
+  border-bottom: 1px solid var(--border-soft);
+}
+.rank__list > .rank__row:last-child { border-bottom: 0; }
+
+.rank__score {
+  display: grid;
+  gap: 3px;
+  justify-items: center;   /* the ring sits on its chip's centre line, not its left edge */
+  align-content: center;
+}
+.rank__number {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-strong);
+}
+.rank__ident { min-width: 0; }
+.rank__name {
+  display: block;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.rank__headline {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+}
+.rank__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+}
+
+/* The coverage triplet. Row-level detail worth having: it previews the
+   three-state model before the visitor opens the panel, and it makes the
+   partial column visibly non-zero across the list. */
+.rank__cover {
+  display: flex;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.rank__cover span { display: inline-flex; gap: 2px; }
+.rank__cover .is-covered { color: var(--state-ok); }
+.rank__cover .is-partial { color: var(--state-info); }
+.rank__cover .is-missing { color: var(--state-none); }
+
+.rank__foot {
+  padding: var(--sp-3) clamp(12px, 1.6vw, 20px);
+  border-top: 1px solid var(--border);
+  background: var(--surface-sunken);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-faint);
+}
+
+/* A row the visitor can open. Selected state is a left marker rather than a
+   fill, so the score stays the loudest thing in the row. */
+.rank__row--selectable { cursor: pointer; }
+.rank__row[aria-current="true"] {
+  background: var(--wash-info);
+  box-shadow: inset 3px 0 0 var(--state-info);
+}
+
+/* ---- Row filtering ---------------------------------------------------- */
+.rank__row[hidden] { display: none; }
+
+/* ==========================================================================
+   The candidate switcher — one of the page's two interactions
+   ========================================================================== */
+
+.switcher {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.switcher__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-right: var(--sp-2);
+}
+.switcher .chip {
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-body);
+  padding: 5px var(--sp-4);
+  font-size: var(--fs-micro);
+  letter-spacing: 0;
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.switcher .chip:hover { border-color: var(--border-strong); color: var(--text-strong); }
+.switcher .chip[aria-pressed="true"] {
+  background: var(--c-ink);
+  border-color: var(--c-ink);
+  color: var(--c-white);
+}
+
+/* ==========================================================================
+   C4 — Importance controls and what-if
+   Kept visually separate, because tuning changes the ORDER and simulation
+   changes the POOL. `08 § 5`: conflating them in one control loses both ideas.
+   ========================================================================== */
+
+.tuner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-content: start;
+  min-width: 0;
+}
+
+.weights {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  padding: var(--sp-5);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.weight { display: grid; gap: var(--sp-2); }
+.weight__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.weight__skill {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--text-strong);
+}
+/* The readout is the product's own tier word, never a number: the product does
+   not expose a numeric weight and neither should the demo. */
+.weight__tier {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--state-info);
+}
+
+.weight input[type="range"] {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+.weight input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+}
+.weight input[type="range"]::-moz-range-track {
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+}
+.weight input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  border-radius: var(--radius-pill);
+  background: var(--c-ink);
+  border: 2px solid var(--surface-raised);
+  box-shadow: var(--shadow-card);
+}
+.weight input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--c-ink);
+  border: 2px solid var(--surface-raised);
+}
+.weight__scale {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--text-faint);
+}
+
+/* The simulation. A different surface from the sliders above it, on purpose. */
+.whatif {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+.whatif__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+.whatif__title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Switch. A real checkbox, restyled — never a div with a click handler. */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  cursor: pointer;
+  font-size: var(--fs-small);
+  color: var(--text-strong);
+}
+.toggle input {
+  -webkit-appearance: none;
+          appearance: none;
+  position: relative;
+  width: 38px;
+  height: 22px;
+  flex: none;
+  margin: 0;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.toggle input::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.toggle input:checked { background: var(--c-ink); }
+.toggle input:checked::after { transform: translateX(16px); }
+
+.whatif__readout {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+.whatif__figure {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h3);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-strong);
+}
+.whatif__delta { color: var(--state-ok); }
+
+/* Says in prose what the .example-tag says in a word. Both are here because the
+   tag is what a skimming reader sees and the sentence is what a sceptical one
+   needs — and this is the only quantity on the homepage. */
+.whatif__note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  line-height: 1.5;
+  color: var(--text-faint);
+  max-width: 46ch;
+}
+
+/* The label that keeps an illustrative quantity from reading as a product
+   metric. Required on section 08's pool figures and C10's unlock counts
+   (`10 § R9`) — an unlabelled pool count reads as measured data. */
+.example-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  /* Deliberately NOT nowrap: this label is a sentence, and a non-wrapping
+     sentence sets a minimum width on whatever composition holds it — which is
+     how a 350px column ended up 422px wide at 390px. */
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ==========================================================================
+   C5 — Requisition and dual-mode search
+   The four importance tiers are the load-bearing element.
+   ========================================================================== */
+
+.req { display: grid; align-content: start; min-width: 0; }
+
+.req__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4) clamp(12px, 1.6vw, 20px) var(--sp-3);
+}
+.req__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1.15;
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+}
+.req__meta {
+  display: grid;
+  gap: 3px;
+  padding: 0 clamp(12px, 1.6vw, 20px) var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+
+.req__tiers { display: grid; }
+.req__tier {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-3) clamp(12px, 1.6vw, 20px);
+  border-top: 1px solid var(--border-soft);
+}
+.req__tierlabel {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.req__tierlabel::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+}
+.req__tier--critical .req__tierlabel { color: var(--state-warn); }
+.req__tier--required .req__tierlabel { color: var(--text-muted); }
+
+.req__chips { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* The dual-mode search control, as a second beat at the foot of the card. */
+.dualmode {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) clamp(12px, 1.6vw, 20px);
+  border-top: 1px solid var(--border);
+  background: var(--surface-sunken);
+}
+.segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  width: max-content;
+  max-width: 100%;
+}
+.segmented__opt {
+  padding: 3px var(--sp-4);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: background var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.segmented__opt[aria-selected="true"],
+.segmented__opt.is-active {
+  background: var(--c-ink);
+  color: var(--c-white);
+}
+.dualmode__query {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--text-body);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.dualmode__filters { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* ==========================================================================
+   C7 — Pipeline
+   Deliberately schematic. This section's job is reassurance, not depth, and the
+   product positions itself as lighter than an enterprise ATS — so a dense board
+   would argue against the positioning.
+   ========================================================================== */
+
+.pipeline {
+  padding: var(--sp-5) clamp(12px, 1.6vw, 20px);
+  /* The board's shape is decided by ITS width, not the viewport's — see the
+     container query at the end of this block. */
+  container: pipeline / inline-size;
+}
+
+.pipeline__stages {
+  display: grid;
+  /* SEVEN, not six. Phase 4 added "Not moving forward" as a real, neutral
+     stage; a six-column grid wrapped it onto a second row on its own, which
+     read as an error rather than as a column. `auto-fit` is deliberately not
+     used: these are ordered stages and the order is the information, so the
+     count is explicit and changes when the data does. */
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--sp-2);
+  align-content: start;
+}
+.pipeline__stage {
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  padding: var(--sp-3) var(--sp-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-soft);
+  min-height: 96px;
+}
+.pipeline__name {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.pipeline__count {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-strong);
+}
+.pipeline__card {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  padding: var(--sp-2);
+  border-radius: 6px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--text-body);
+}
+.pipeline__card .chip { font-size: 9px; padding: 1px 5px; }
+
+/* One card advances one stage, once, on reveal. */
+.pipeline__card--advancing {
+  transform: translate3d(calc(var(--advance, 0px) * -1), 0, 0);
+  transition: transform var(--dur-slower) var(--ease-entrance) 600ms;
+}
+html.js [data-reveal].is-revealed .pipeline__card--advancing { transform: none; }
+
+.pipeline__caption {
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-faint);
+}
+
+/* Under 720px of its own width the board becomes a stage list: name, card,
+   count, one stage per row, in the same order. Seven columns need that much to
+   set "Interviewing" whole — below it the names broke mid-word and the cards
+   spilled out of their columns. This used to be a viewport media query, which
+   missed the case that actually broke: a full-width desktop page putting the
+   board in a half-width segment column on /product and /for-teams. A
+   composition's width is a design input (`CLAUDE.md` § 1).
+
+   Every stage keeps its card. The phone rule this replaces hid the advancing
+   one, but `--advance` is never set, so the card never moved and there was
+   nothing to hide it from. */
+@container pipeline (width < 720px) {
+  .pipeline__stages { grid-template-columns: minmax(0, 1fr); gap: var(--sp-1); }
+  .pipeline__stage {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "name card count";
+    align-items: center;
+    min-height: 0;
+    padding: var(--sp-2) var(--sp-3);
+  }
+  .pipeline__name { grid-area: name; font-size: 11px; }
+  .pipeline__card {
+    grid-area: card;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-1) var(--sp-2);
+    font-size: 11px;
+  }
+  .pipeline__count { grid-area: count; min-width: 2ch; text-align: right; }
+}
+
+/* ==========================================================================
+   C8 — Candidate match view
+   Deliberately mobile-shaped, because that is where candidates are. The rule
+   that carries section 10: IT IS THE SAME 87.
+   ========================================================================== */
+
+.cview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-5);
+  align-content: start;
+  padding: clamp(16px, 2vw, 24px);
+  min-width: 0;
+}
+.cview__job {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1.2;
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+}
+.cview__meta {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--text-muted);
+}
+.cview__score {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-5) 0;
+  border-block: 1px solid var(--border);
+  text-align: center;
+}
+.cview__same {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.cview__rows { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); margin: 0; }
+.cview__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+.cview__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+  color: var(--text-muted);
+}
+.cview__value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: right;
+  color: var(--text-strong);
+}
+
+/* The application timeline. Status, not a message: [OVERVIEW] § 7 puts
+   in-platform messaging and notifications in upcoming, so the copy must not
+   imply candidates are messaged — they CAN SEE status, which is a different and
+   still-strong claim. */
+.trail {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.trail__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.trail__step::after {
+  content: "→";
+  color: var(--border-strong);
+}
+.trail__step:last-child::after { content: none; }
+.trail__step--done { color: var(--state-ok); }
+.trail__step--current {
+  color: var(--state-info);
+  font-weight: var(--fw-medium);
+}
+
+/* ==========================================================================
+   C10 — Résumé quality and skill gaps
+   The score is deliberately low. A mockup showing 95 has nothing to offer the
+   reader; a 62 with two named suggestions demonstrates the product being useful.
+   ========================================================================== */
+
+.quality {
+  display: grid;
+  gap: var(--sp-4);
+  padding: clamp(16px, 2vw, 24px);
+  border-bottom: 1px solid var(--border);
+}
+.quality__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.quality__count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--state-warn);
+}
+.quality__list { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); }
+.quality__item {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: var(--sp-2);
+  font-size: var(--fs-micro);
+  color: var(--text-body);
+}
+.quality__item::before {
+  content: "·";
+  color: var(--text-faint);
+}
+
+.gaps { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); padding: clamp(16px, 2vw, 24px); }
+.gaps__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+.gaps__row:last-child { border-bottom: 0; padding-bottom: 0; }
+.gaps__skill { font-size: var(--fs-body); color: var(--text-strong); }
+.gaps__unlock {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--state-info);
+}
+.gaps__demand {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   C3 — Skill relationship graph ★
+   An abstract system diagram, not a screen: the relationship is a property of
+   the taxonomy and no product surface displays a graph, so dressing this as a
+   frame would invent product UI.
+
+   The SVG is aria-hidden and a structured .sr-only description carries the
+   same information — the standard treatment for a diagram, and the reason the
+   hover labels can be decoration rather than the only carrier of meaning.
+   ========================================================================== */
+
+.graph {
+  position: relative;
+  display: grid;
+  gap: var(--sp-8);
+}
+.graph > * { min-width: 0; }
+
+/* Each child centres on its own margins. See the note on .adjacency in
+   sections.css for why this is not justify-items: center. */
+.graph__svg {
+  width: 100%;
+  height: auto;
+  max-width: 820px;
+  margin-inline: auto;
+}
+.graph__svg--tall { display: none; max-width: 340px; }
+
+.node__box {
+  fill: var(--surface-raised);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.node__name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .02em;
+  fill: var(--text-strong);
+}
+.node__role {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .16em;
+  fill: var(--text-faint);
+}
+
+.node--required .node__box { stroke: var(--border-strong); }
+.node--profile .node__box  { stroke: var(--state-info); }
+.node--profile .node__name { fill: var(--state-info); }
+
+.edge__path {
+  fill: none;
+  stroke: var(--state-info);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.edge__path--secondary {
+  stroke: var(--c-slate-soft);
+  stroke-dasharray: 4 4;
+  stroke-width: 1;
+}
+/* A dashed secondary edge cannot also be a drawn path — the dash pattern is
+   the one thing stroke-dashoffset animates, so it arrives as a fade beat
+   instead (motion.css § 4b) and its dash offset stays at zero. */
+.edge__path--secondary { stroke-dashoffset: 0 !important; }
+
+.edge__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  fill: var(--state-info);
+}
+.edge__label--secondary { fill: var(--text-faint); }
+
+/* Hover reveals the relationship reading. Pure decoration on top of a diagram
+   whose meaning is already carried by the drawn path and its visible label —
+   nothing is hover-gated. */
+.node__reading {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .06em;
+  fill: var(--text-muted);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .node:hover .node__reading,
+  .node:focus-visible .node__reading { opacity: 1; }
+  .node:hover .node__box { stroke: var(--state-info); }
+}
+
+.graph__verdict {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+  text-align: center;
+}
+.graph__verdict-line {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: .08em;
+  color: var(--text-strong);
+}
+.graph__verdict-line strong { color: var(--state-info); font-weight: var(--fw-semi); }
+
+.graph__caption {
+  margin-inline: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-faint);
+  max-width: min(60ch, 100%);
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .graph__svg--wide { display: none; }
+  .graph__svg--tall { display: block; }
+}
+
+/* ==========================================================================
+   The abbreviated ranked list section 07 pays off into.
+   ========================================================================== */
+
+.payoff {
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+.payoff__label {
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-sunken);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.payoff__row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-micro);
+  color: var(--text-body);
+}
+.payoff__row:last-child { border-bottom: 0; }
+.payoff__pos {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--text-faint);
+}
+.payoff__row--subject {
+  background: var(--wash-info);
+  color: var(--state-info);
+  font-weight: var(--fw-medium);
+}
+
+/* ==========================================================================
+   Navigation disclosure menu — R23
+   A real disclosure: a <button> with aria-expanded controlling a panel, opened
+   by click or Enter/Space, closed by Escape or an outside click, arrow keys
+   between items. NOT hover-only — `10 § R23` names that explicitly, because a
+   hover menu is unusable on touch and to a keyboard.
+   ========================================================================== */
+
+.navmenu { position: relative; }
+
+.navmenu__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  color: var(--text-body);
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.navmenu__button:hover { color: var(--text-strong); }
+.navmenu__button[aria-expanded="true"] { color: var(--text-strong); }
+.navmenu__caret {
+  transition: transform var(--dur-medium) var(--ease-inout);
+  flex: none;
+}
+.navmenu__button[aria-expanded="true"] .navmenu__caret { transform: rotate(180deg); }
+
+.navmenu__panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  z-index: var(--z-overlay);
+  width: max-content;
+  min-width: 260px;
+  max-width: 320px;
+  padding: var(--sp-3);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-elev);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-50%, -6px, 0);
+  transition:
+    opacity    var(--dur-medium) var(--ease-standard),
+    transform  var(--dur-medium) var(--ease-entrance),
+    visibility 0s linear var(--dur-medium);
+}
+.navmenu__panel[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(-50%, 0, 0);
+  transition:
+    opacity    var(--dur-medium) var(--ease-standard),
+    transform  var(--dur-medium) var(--ease-entrance),
+    visibility 0s linear 0s;
+}
+
+.navmenu__link {
+  display: grid;
+  gap: 2px;
+  padding: var(--sp-3);
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.navmenu__link:hover { background: var(--surface-sunken); }
+.navmenu__link-title {
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  color: var(--text-strong);
+}
+.navmenu__link-note {
+  font-size: var(--fs-micro);
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Philosophy beats — section 11
+   A progression set in type. No icons, no shields, no lock glyphs: the
+   restraint is the argument.
+   ========================================================================== */
+
+.beats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-grid);
+}
+.beat {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--border);
+}
+.beat__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.beat__line {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h3);
+  line-height: 1.15;
+  letter-spacing: var(--tr-heading);
+  color: var(--text-strong);
+}
+
+@media (max-width: 900px) {
+  .beats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .beats { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   Composition note — the honesty label under a product composition.
+   Every person, company and figure inside a composition is invented. Saying so
+   once per page costs one line and removes any chance of a mockup being read as
+   a customer's data.
+   ========================================================================== */
+
+.composition-note {
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* ---- C3 additions: arrowhead, the confirmed-edge aside, the divider ----- */
+
+.edge__arrow { fill: var(--state-info); }
+.edge__arrow--secondary { fill: var(--c-slate-soft); }
+
+.node--aside .node__box { stroke: var(--border); }
+.node--aside .node__name { font-size: 11px; fill: var(--text-muted); }
+
+.graph__divider { stroke: var(--border); stroke-width: 1; }
+
+.graph__note {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .16em;
+  fill: var(--text-faint);
+}
+
+/* ---- § 07 payoff list: the row that overtakes the list ------------------ */
+/* Row height is fixed so the travel distances are exact multiples of it. A
+   measured FLIP would be more general and is not needed for a one-shot that
+   only ever plays one way. */
+
+.payoff { --payoff-row: 46px; }
+.payoff__row { min-height: var(--payoff-row); }
+.payoff__row--subject   { --beat-y: calc(var(--payoff-row) * 3); }
+.payoff__row--displaced { --beat-y: calc(var(--payoff-row) * -1); }
+
+/* ---- The ranked row at 390px -------------------------------------------- */
+/* Two columns, and the score column widens to hold the longest classification
+   word. Spec 08 section 2 drops the coverage triplet at this width; the classification
+   stays, because a score without its verdict reads as a number the product is
+   more confident about than it is. */
+@media (max-width: 700px) {
+  .rank__row,
+  .hero__composition .rank__row {
+    grid-template-columns: var(--rank-score) minmax(0, 1fr);
+    row-gap: 2px;
+  }
+  .rank__meta { grid-column: 2; font-size: 9px; }
+  .rank__cover { display: none; }
+  .rank__row .chip { font-size: 9px; padding-inline: 5px; }
+}
+
+/* ==========================================================================
+   PHASE 4 — the preview library
+   --------------------------------------------------------------------------
+   Everything below styles a composition that renders the product's actual
+   information architecture rather than an abstraction of it. Specified in
+   `docs/phase-4.md` § 3; each block names the product component it models, so
+   a future session can check a composition against the product instead of
+   guessing.
+
+   The two conventions from Phase 3 still run through all of it:
+     · mono for anything that is data, sans for anything that is prose
+     · colour is never the sole carrier of a state — the word rides with it
+   ========================================================================== */
+
+/* ---- The band chip, renamed --------------------------------------------- */
+/* "Weak" is a scorer's word; the product renders that band to users as
+   "Possible" (`docs/phase-4.md` § 1.12). The class follows the label. */
+.chip--possible  { background: var(--wash-none); color: var(--state-none); }
+.chip--crit      { background: var(--wash-crit); color: var(--state-crit); }
+
+/* ---- Pill — a small labelled state ------------------------------------- */
+/* Models the product's status chips: confidence, mission status, scarcity,
+   pipeline stage. Distinct from `.chip`, which is a *value* (a skill, a
+   filter); a pill is a *state*. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: var(--wash-none);
+  color: var(--state-none);
+}
+.pill--ok   { background: var(--wash-ok);   color: var(--state-ok); }
+.pill--info { background: var(--wash-info); color: var(--state-info); }
+.pill--warn { background: var(--wash-warn); color: var(--state-warn); }
+.pill--crit { background: var(--wash-crit); color: var(--state-crit); }
+.pill--none { background: var(--wash-none); color: var(--state-none); }
+
+/* The AI disclosure. The product renders `✨ AI`; DESIGN.md bans floating
+   sparkles, so this is the same disclosure with one fewer decoration. */
+.pill--ai {
+  background: var(--c-indigo-bright);
+  color: var(--c-white);
+  letter-spacing: .14em;
+  font-weight: var(--fw-medium);
+}
+.on-ink .pill--ai { background: var(--c-indigo-glow); color: var(--c-ink); }
+
+.pill--stage { letter-spacing: .06em; }
+
+.pill__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* ---- ScoreRing --------------------------------------------------------- */
+/* Models `ScoreRing`, at the product's own two sizes: 52px in a drawer, 38px on
+   a row. The arc is static — animating `stroke-dashoffset` would spend a second
+   exception against the transform/opacity/filter allowlist, and P4 already
+   holds the only one. The ring arrives on its beat; the numeral counts. */
+.ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--ring-size, 38px);
+  height: var(--ring-size, 38px);
+  flex: none;
+}
+.ring svg { display: block; }
+.ring__track { stroke: var(--border); }
+.ring__arc   { stroke: var(--state-none); }
+
+.ring--strong    .ring__arc { stroke: var(--state-ok); }
+.ring--good      .ring__arc { stroke: var(--state-info); }
+.ring--potential .ring__arc { stroke: var(--state-warn); }
+.ring--possible  .ring__arc { stroke: var(--state-none); }
+
+.ring__value {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+  line-height: 1;
+}
+.ring[style*="52px"] .ring__value,
+.ring[style*="44px"] .ring__value { font-size: var(--fs-small); }
+
+/* ---- Monogram disc ----------------------------------------------------- */
+/* Never a photograph. A composition with an invented person in it should look
+   invented — docs/product-visualization.md § 6. */
+.mono-disc {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--surface-accent);
+  color: var(--text-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+/* ---- The tracked row — the job → candidates list ----------------------- */
+/* Models `CandidateRow`. Five fluid tracks, in the product's own order:
+   avatar · name + headline · stage chip · score ring · origin and when. */
+.rank__row--tracked {
+  display: grid;
+  /* The origin track is 150px, not 96px: "Sourced, then applied · 3d" is the
+     longest value the product can put there and at 96px it overflowed the frame
+     rather than truncating. It still truncates — a narrow viewport has to be
+     able to shrink it — but it no longer does so at full width. */
+  grid-template-columns: 34px minmax(0, 1fr) auto auto minmax(0, 150px);
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+.rank__origin {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-faint);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rank__when { color: var(--text-faint); }
+
+.rank--tracked .rank__sort { text-transform: none; }
+
+@media (max-width: 700px) {
+  .rank__row--tracked { grid-template-columns: 34px minmax(0, 1fr) auto; }
+  .rank__row--tracked .pill--stage,
+  .rank__origin { display: none; }
+}
+
+/* ---- Evidence snippet -------------------------------------------------- */
+/* Models `MatchHighlightChips`: a skill chip beside an italic quoted snippet
+   from the candidate's own profile. The quote is the point of semantic search —
+   a result you can check — and the site had no way to show one. */
+.rank__row--evidence { align-items: start; }
+.rank__evidence {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--sp-2);
+  padding-top: var(--sp-2);
+}
+.evidence {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  font-size: var(--fs-micro);
+}
+.evidence__quote {
+  font-style: italic;
+  color: var(--text-body);
+  quotes: '“' '”';
+}
+.evidence__section {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ==========================================================================
+   explainPanel ★ — models `ExplainMatchPanel`
+   ========================================================================== */
+
+.panel__ident { min-width: 0; }
+.panel__verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.panel__pills {
+  display: inline-flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.panel__summary {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+  margin: 0;
+}
+.panel--crop .panel__summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.panel__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.panel__foot-action { color: var(--text-accent); }
+
+/* ---- Relationship chips ------------------------------------------------ */
+/* Models the panel's "how the concepts connect" strip. Deliberately quieter
+   than a skill chip: this is vocabulary, not data. */
+.relchips { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.relchip {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ---- Concept match card ------------------------------------------------ */
+/* Models `ConceptMatchCard`. The last two lines are the load-bearing ones: the
+   relationship, the section of the profile the match came from, a confidence
+   figure, and the snippet itself. The score cites its sources. */
+.concepts { display: grid; gap: var(--sp-3); }
+
+.concept {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+.concept--muted {
+  background: var(--surface-sunken);
+  border-color: var(--border-soft);
+}
+
+.concept__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin: 0;
+}
+.concept__query {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--text-strong);
+}
+.concept__arrow { color: var(--text-faint); }
+.concept__matched {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--wash-info);
+  color: var(--state-info);
+}
+.concept__verified,
+.concept__unverified {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+.concept__verified   { color: var(--state-ok); }
+.concept__unverified { color: var(--text-faint); }
+
+.concept__reason {
+  font-size: var(--fs-micro);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+  margin: 0;
+}
+
+.concept__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.concept__rel { color: var(--state-info); }
+.concept__conf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-left: auto;
+  min-width: 92px;
+}
+.concept__conf .meter { flex: 1; }
+.concept__pct { font-variant-numeric: tabular-nums; }
+
+/* The snippet, quoted from the candidate's own words. Italic, indented behind a
+   rule, so it reads as a citation rather than as more product copy. */
+.concept__quote {
+  margin: 0;
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--border);
+  font-size: var(--fs-micro);
+  font-style: italic;
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+.concept__quote::before { content: '“'; }
+.concept__quote::after  { content: '”'; }
+
+/* ---- Missing concept row ---------------------------------------------- */
+/* Models `MissingConceptRow`. Neutral, on purpose: a requirement the profile
+   does not meet is a fact, not a verdict on the person. */
+.missing { display: grid; gap: var(--sp-2); }
+.missing-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--text-muted);
+}
+.missing-row__glyph { color: var(--state-none); }
+.missing-row__name  { color: var(--text-body); }
+.missing-row__tier {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+/* ---- A thinner meter, for a confidence bar inside a card -------------- */
+.meter--thin { height: 3px; }
+
+/* ==========================================================================
+   jobWorkspace ★ — the whole job detail surface
+   --------------------------------------------------------------------------
+   Rebuilt in Phase 5. The old block styled a two-pane strip: a list showing
+   three of its five tracks, and a drawer inset to 22% covering 78% of the frame.
+   Both of those were consequences of a 560px column, not decisions — see
+   `docs/phase-5.md` § 3.1 and the deleted rules at the end of this file.
+
+   Three rows now: the job header block, the list, and the drawer over the
+   list's right-hand side at 42% — the inset that is the whole reason the row
+   tracks came back.
+
+   P5's transform lives in motion.css § 4b and did not change.
+   ========================================================================== */
+
+.workspace {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-width: 0;
+  padding: var(--sp-4) clamp(12px, 1.5vw, 20px);
+  gap: var(--sp-3);
+
+  /* How far down the list pane the drawer starts: one toolbar plus one row.
+     A deliberate constant, not a measurement — it keeps the SELECTED row fully
+     visible above the drawer's top edge, which is the relationship the whole
+     composition is about. The row beneath it and the ones after run under the
+     drawer's left edge and are clipped by it, which is what the real
+     application looks like. */
+  --drawer-offset: 96px;
+
+  /* And how much of the list is left clear BELOW it: one row. That row is the
+     critical gate's — an unscored candidate with the named missing requirement —
+     and leaving it clear is the point of the whole layer. The first screen shows
+     a ranking and a refusal, and both explain themselves. */
+  --drawer-tail: 66px;
+}
+
+/* ① ② ③ ④ ⑤ — the job header block. Full frame width: it sits above the
+   drawer rather than behind it, because a requisition's title and its pulse are
+   the context for the drawer, not something the drawer covers. */
+.workspace__job {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+/* The positioning context for the two panes, and the reason the drawer can be
+   sized from the list rather than from its own content. The pane's height is the
+   list's height, because the drawer is out of flow inside it. */
+.workspace__panes { position: relative; min-width: 0; }
+
+.workspace__list { min-width: 0; }
+
+/* ⑧ The drawer. 42%, NOT 22%. At 22% it covered 78% of the frame and the list
+   behind it had room for two tracks; at 42% the list keeps all five, which is
+   what let the three `display: none` rules go. */
+/* Placed in the LIST'S grid cell rather than positioned absolutely, so its top
+   tracks the list pane without a magic offset from the frame — the one constant
+   is --drawer-offset above, which is a design decision and reads as one. */
+/* Anchored to the list's own box, less the offset above and the tail below, so
+   the drawer's extent is DERIVED FROM THE LIST rather than from its own content.
+   The panel inside is far taller than that and is clipped, which is correct
+   twice over: the real drawer scrolls, and docs/product-visualization.md § 3
+   says crop rather than shrink. Letting the panel set the height instead made
+   the frame about 1250px tall and pushed both the copy column and the gate row
+   off the screen — a defect the audit's overflow checks could not see and
+   opening the page found immediately. */
+.workspace__drawer {
+  position: absolute;
+  top: var(--drawer-offset);
+  bottom: var(--drawer-tail);
+  left: 42%;
+  right: 0;
+  z-index: 2;
+  overflow: hidden;
+  /* FLEX COLUMN WITH `flex: none` CHILDREN, not a grid, and this was a real bug
+     rather than a preference. The drawer has a definite height (top and bottom
+     are both set), and inside a grid that made the auto rows shrinkable — which
+     took `.tabstrip`, whose `overflow-x: auto` computes `overflow-y` to `auto`
+     too and therefore has a min-content height of ZERO, down to its 1px border.
+     The five drawer tabs rendered as an empty rule. A flex child that is told
+     not to shrink keeps its content height and overflows the crop instead,
+     which is what the crop is for. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-lift);
+}
+/* The crop's bottom edge, faded rather than cut. A hard edge mid-sentence reads
+   as a rendering bug; a fade reads as a panel that continues, which it does. */
+.workspace__drawer::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 52px;
+  background: linear-gradient(to top, var(--surface-raised) 30%, transparent);
+  pointer-events: none;
+}
+.workspace__drawer > * { flex: none; }
+/* The panel supplies its own 24px inset everywhere else on the site. Inside the
+   drawer that is double padding — the drawer already has its own — and 48px of
+   it is a line and a half of the summary. */
+.workspace__drawer .panel { gap: var(--sp-2); padding: 0; }
+.workspace__drawer .panel__head { padding-bottom: var(--sp-2); }
+.workspace__drawer .panel__rule { margin-top: var(--sp-1); }
+
+/* WHERE THE CROP LANDS, and it is a decision rather than a leftover.
+   § 3.4's sketch shows the relationship chips and a strong-match card inside the
+   drawer as well. They do not fit: at 42% of an 800px frame, with the gate row
+   left clear below and the selected row left clear above, the drawer is about
+   300px tall, and the two things that must survive that are the VERDICT and the
+   SUMMARY — the score with its confidence, and the two sentences that say why,
+   including the part working against the candidate. So the summary is set at
+   body size here and the crop falls just after it, on a block boundary, with the
+   fade saying the panel continues. It does: the chips, the cited concept cards
+   and the not-found list are all there, and they are read at full size in § 06
+   and on /product/matching, where they have the room to be read. A sentence cut
+   off mid-word in the hero would be a defect; a panel that visibly scrolls is
+   the application. */
+.workspace__drawer .panel__summary { font-size: var(--fs-body); }
+/* The quote is the best line in a concept card and there is no room for it at
+   drawer width. It is on /product/matching at full size. */
+.workspace__drawer .concept__quote { display: none; }
+
+/* ---- ① ② ③ jobHeader --------------------------------------------------- */
+.jobhead {
+  display: grid;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+.jobhead__title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.jobhead__name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+/* The amber skill-review flag. The most valuable single element in the hero: the
+   parser escalating rather than guessing. It is styled as an affordance because
+   it IS one in the product — but it is a span here, so it carries no hover and
+   no focus ring. A control that looks operable and is not is worse than a static
+   image; a control that looks like a NOTICE and is not is honest. */
+.jobhead__review {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px var(--sp-3);
+  border: 1px solid var(--state-warn);
+  border-radius: var(--radius-pill);
+  background: var(--wash-warn);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--state-warn);
+  white-space: nowrap;
+}
+
+.jobhead__pills {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.jobhead__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+}
+.jobhead__stats > * { display: inline-flex; align-items: center; gap: 4px; }
+.jobhead__stats > * + *::before {
+  content: "·";
+  margin-right: var(--sp-2);
+  color: var(--border-strong);
+}
+/* The eye is a real control — "visible to candidates" — not an ornament. */
+.jobhead__eye { color: var(--state-info); flex: none; }
+.jobhead__age { color: var(--text-faint); }
+
+/* ---- ④ pulseStrip ------------------------------------------------------- */
+/* `JobPulseStrip`. Four tiles, exactly one featured, and the featured one is
+   `In pipeline` — enforced in product-demo.js, not here. No count-up: the
+   figure is a state, not an arrival. */
+.pulse {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-2);
+}
+.pulse__tile {
+  display: grid;
+  gap: 2px;
+  padding: var(--sp-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  min-width: 0;
+}
+.pulse__value {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-body);
+}
+.pulse__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The featured tile. An indigo ground and a larger numeral, because the whole
+   argument of the strip is that this is the tile you should be reading. */
+.pulse__tile--featured {
+  border-color: var(--c-indigo);
+  background: var(--wash-info);
+}
+.pulse__tile--featured .pulse__value {
+  font-size: 28px;
+  color: var(--c-indigo);
+}
+.pulse__tile--featured .pulse__label { color: var(--c-indigo); }
+
+/* ---- ⑤ ⑧ tabStrip ------------------------------------------------------ */
+/* Five tabs. The cheapest depth signal available, and it costs one line of
+   markup. Inert: spans with no tabindex, no role and no aria — this is a
+   picture of a tab strip, and `aria-hidden` on the container says so. */
+.tabstrip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabstrip::-webkit-scrollbar { display: none; }
+.tabstrip__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.tabstrip__tab.is-active {
+  border-bottom-color: var(--c-indigo);
+  color: var(--text-strong);
+}
+.tabstrip__glyph { color: var(--c-indigo); flex: none; }
+.tabstrip--drawer { gap: var(--sp-3); }
+.tabstrip--drawer .tabstrip__tab { font-size: 9px; letter-spacing: .08em; }
+
+/* ---- ⑥ listToolbar ----------------------------------------------------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: 0 clamp(12px, 1.6vw, 20px);
+}
+.toolbar__search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 5px var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.toolbar__search svg { flex: none; }
+.toolbar__count,
+.toolbar__sort {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+/* The segmented control, as a picture of one. Same class as the real control in
+   `requisition()` so the two cannot drift apart visually; `--static` only
+   restores the padding an inline span loses. */
+.segmented--static { flex: none; }
+.segmented--static .segmented__opt {
+  display: inline-block;
+  padding: 4px var(--sp-3);
+}
+
+/* ---- ⑧ drawerHead ------------------------------------------------------ */
+.dhead { display: grid; gap: var(--sp-2); min-width: 0; }
+.dhead__top {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.dhead__top .mono-disc { width: 40px; height: 40px; border-radius: 11px; }
+.dhead__ident { min-width: 0; }
+.dhead__name {
+  display: block;
+  font-size: var(--fs-body-lg);
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dhead__headline {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dhead__close { color: var(--text-faint); flex: none; }
+.dhead__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.dhead__profile {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--c-indigo);
+  white-space: nowrap;
+}
+
+/* ---- Responsive -------------------------------------------------------- */
+/* Below --bp-xl the hero has already stacked and the frame spans the viewport,
+   so the drawer stops being an overlay and becomes a sheet BELOW the list. Both
+   panes then get the full frame width, which is what keeps all five row tracks
+   and a readable drawer at the same time. An overlay at 768px would give the
+   list about 320px, and 320px is where `display: none` starts looking tempting
+   again. */
+@media (max-width: 1100px) {
+  .workspace__drawer {
+    position: static;
+    inset: auto;
+    margin-top: var(--sp-3);
+    box-shadow: none;
+    background: var(--surface-sunken);
+  }
+  /* Stacked, the drawer has the full frame width and no reason to crop — so the
+     panel runs to its end and the fade would be a lie about a cut that is not
+     there. */
+  .workspace__drawer::after { display: none; }
+}
+
+/* DEVIATION FROM § 3.4. The plan puts the pulse tiles two-up "at the 1100px
+   stack breakpoint". At 1100px the frame gets WIDER, not narrower — it goes from
+   ~800px in the bleed column to the full viewport — so four tiles are more
+   comfortable there, not less. Two-up happens where four tiles actually stop
+   fitting, which is around 560px. */
+/* At phone width the row does not fit and the honest answer is a scroll, not a
+   `display: none`. § 3.11 asks for exactly this: the workspace goes full-bleed,
+   and anything that cannot fit scrolls INSIDE the frame — `document.body` never
+   scrolls sideways, which tools/audit.mjs checks at 390.
+
+   This also has to OVERRIDE the generic tracked-row rule further up, which drops
+   the stage chip and the origin below --bp-md. That rule is right on
+   /product/hiring-operations, where the row is in normal page flow and there is
+   nothing to scroll inside. It is wrong here, for the reason the whole stream
+   exists: the five tracks are the row. */
+@media (max-width: 700px) {
+  .workspace__list { overflow-x: auto; }
+  .workspace__list .rank__list { min-width: 600px; }
+  .workspace__list .rank__row--tracked {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto minmax(0, 130px);
+  }
+  .workspace__list .rank__row--move {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto minmax(0, 130px) auto;
+  }
+  .workspace__list .rank__row--tracked .pill--stage,
+  .workspace__list .rank__origin { display: revert; }
+  /* The separators orphan a leading "·" onto the next line once the stats row
+     wraps, which it does below about 700px. The gap carries the separation. */
+  .jobhead__stats > * + *::before { content: none; margin: 0; }
+  .jobhead__stats { gap: var(--sp-2) var(--sp-4); }
+}
+
+@media (max-width: 560px) {
+  .pulse { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jobhead__name { font-size: var(--fs-body-lg); }
+}
+
+/* ==========================================================================
+   criticalGate — an exclusion that explains itself
+   --------------------------------------------------------------------------
+   Dimmed, struck, and named. No score, because the candidate never got one.
+   ========================================================================== */
+
+.gate {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+.gate__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--state-crit);
+}
+.gate__row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--sp-3);
+  opacity: .62;
+}
+.gate__row .mono-disc { background: var(--wash-none); color: var(--text-faint); }
+.gate__struck {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--text-faint);
+}
+.gate__verdict {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.gate__reason {
+  grid-column: 2 / -1;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--state-crit);
+}
+.gate__note {
+  font-size: var(--fs-micro);
+  color: var(--text-muted);
+}
+
+@media (max-width: 520px) {
+  .gate__row { grid-template-columns: 34px minmax(0, 1fr); }
+  .gate__struck { display: none; }
+  .gate__verdict { grid-column: 2; }
+}
+
+/* ==========================================================================
+   scoreModel — the arithmetic, published
+   --------------------------------------------------------------------------
+   ONE ORDERED BAR, not four meters. The proportion is the claim.
+   ========================================================================== */
+
+.model-wrap { display: grid; gap: 0; }
+.model {
+  display: grid;
+  gap: var(--sp-8);
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+.model__block { display: grid; gap: var(--sp-4); }
+
+.wbar {
+  display: flex;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+/* Each segment fills to its own share. P1: transform only, left origin. */
+.wbar__seg {
+  flex: 0 0 calc(var(--w) * 1%);
+  transform-origin: left center;
+  transition: transform var(--dur-slow) var(--ease-entrance) var(--meter-delay, 0ms);
+}
+.wbar__seg--skill      { background: var(--c-indigo-deep); }
+.wbar__seg--semantic   { background: var(--c-indigo-bright); }
+.wbar__seg--experience { background: var(--c-indigo-glow); }
+.wbar__seg--location   { background: var(--c-slate-soft); }
+
+html.js [data-sequence] .wbar__seg { transform: scaleX(0); }
+html.js [data-sequence].is-sequenced .wbar__seg { transform: scaleX(1); }
+
+.wbar__keys {
+  display: flex;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+.wbar__key { display: inline-flex; align-items: baseline; gap: var(--sp-2); }
+.wbar__keydot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+  transform: translateY(-1px);
+}
+.wbar__key--skill      .wbar__keydot { background: var(--c-indigo-deep); }
+.wbar__key--semantic   .wbar__keydot { background: var(--c-indigo-bright); }
+.wbar__key--experience .wbar__keydot { background: var(--c-indigo-glow); }
+.wbar__key--location   .wbar__keydot { background: var(--c-slate-soft); }
+.wbar__keylabel { font-size: var(--fs-micro); color: var(--text-body); }
+.wbar__keyvalue {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+/* The modifiers. A ROW, never a bar: they are multiplications, and a bar would
+   read as a fifth dimension — the exact defect this composition corrects. */
+.mods { display: grid; gap: var(--sp-3); }
+.modrow {
+  display: grid;
+  grid-template-columns: 48px minmax(0, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border-soft);
+}
+.modrow:last-child { border-bottom: 0; padding-bottom: 0; }
+.modrow__shape {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--state-info);
+}
+.modrow__label { font-size: var(--fs-body); color: var(--text-strong); }
+.modrow__note  { font-size: var(--fs-micro); color: var(--text-muted); }
+
+.gatebar {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border-left: 2px solid var(--state-crit);
+  background: var(--wash-crit);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.gatebar__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--state-crit);
+}
+.gatebar__line { font-size: var(--fs-micro); color: var(--text-body); }
+
+.bandkeys { display: flex; gap: var(--sp-6); flex-wrap: wrap; }
+.bandkey { display: inline-flex; align-items: baseline; gap: var(--sp-2); }
+.bandkey__min {
+  font-family: var(--font-mono);
+  font-size: var(--fs-body-lg);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+.bandkey__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.bandkey--strong    .bandkey__label { color: var(--state-ok); }
+.bandkey--good      .bandkey__label { color: var(--state-info); }
+.bandkey--potential .bandkey__label { color: var(--state-warn); }
+.bandkey--possible  .bandkey__label { color: var(--state-none); }
+
+@media (max-width: 700px) {
+  .modrow { grid-template-columns: 40px minmax(0, 1fr); }
+  .modrow__note { grid-column: 2; }
+}
+
+/* ==========================================================================
+   poolBands — the score distribution, as one ordered bar
+   --------------------------------------------------------------------------
+   EXPLICITLY NOT A DONUT. "A ring has no beginning, so 'strong' and 'weak' read
+   as two peer slices rather than the two ends of a scale." Ordinal data gets an
+   ordered bar — recorded as a general rule in docs/product-visualization.md.
+   ========================================================================== */
+
+.pbar-wrap {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4) clamp(12px, 1.6vw, 20px) var(--sp-5);
+  border-top: 1px solid var(--border);
+}
+.pbar {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+}
+.pbar__seg {
+  flex: 0 0 calc(var(--w) * 1%);
+  display: grid;
+  gap: 4px;
+  padding-top: var(--sp-2);
+  min-width: 0;
+  border-top: 3px solid var(--state-none);
+}
+.pbar__seg--strong    { border-top-color: var(--state-ok); }
+.pbar__seg--good      { border-top-color: var(--state-info); }
+.pbar__seg--potential { border-top-color: var(--state-warn); }
+.pbar__seg--possible  { border-top-color: var(--state-none); }
+.pbar__n {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+.pbar__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pbar__gate {
+  font-size: var(--fs-micro);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   missionConsole ★ — Always-On Sourcing
+   --------------------------------------------------------------------------
+   Models MissionHeader + MissionProgressStrip + StrategyHistoryPanel. Exactly
+   one featured tile, and the refusals stay in the history.
+   ========================================================================== */
+
+.mission {
+  display: grid;
+  gap: var(--sp-5);
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  min-width: 0;
+}
+.mission__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border);
+}
+.mission__job {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-body-lg);
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.mission__strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+.tile {
+  display: grid;
+  gap: var(--sp-1);
+  align-content: start;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  min-width: 0;
+}
+/* Exactly one featured tile — the headline metric is found against target. */
+.tile--featured {
+  border-color: var(--border-strong);
+  background: var(--surface-accent);
+}
+.tile__value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-h3);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-strong);
+  margin: 0;
+}
+.tile__of { font-size: var(--fs-body); color: var(--text-muted); }
+.tile__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 0;
+}
+.tile--featured .meter { margin-top: var(--sp-2); }
+
+.mission__history { display: grid; gap: var(--sp-3); }
+.strats { display: grid; gap: var(--sp-2); }
+.strat {
+  display: grid;
+  grid-template-columns: 16px auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-micro);
+}
+.strat:last-child { border-bottom: 0; padding-bottom: 0; }
+.strat__glyph { color: var(--state-ok); }
+.strat__kind {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.strat__detail { color: var(--text-body); min-width: 0; }
+.strat__new {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--state-ok);
+  white-space: nowrap;
+}
+.strat__note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+/* The declined row is not decoration: seeing "you turned this down" is what
+   makes the rest of the list credible. It is dimmed, never hidden. */
+.strat--declined { opacity: .72; }
+.strat--declined .strat__glyph { color: var(--state-crit); }
+.strat--declined .strat__detail { text-decoration: line-through; text-decoration-color: var(--border-strong); }
+.strat--awaiting .strat__glyph { color: var(--state-warn); }
+
+@media (max-width: 900px) {
+  .mission__strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile--featured { grid-column: 1 / -1; }
+}
+@media (max-width: 700px) {
+  .strat { grid-template-columns: 16px minmax(0, 1fr) auto; }
+  .strat__kind { grid-column: 2; }
+  .strat__detail { grid-column: 2; }
+}
+
+/* ==========================================================================
+   marketCovered — the terminal honest state
+   --------------------------------------------------------------------------
+   The row that changes nothing is the whole point, and it is styled to be as
+   legible as the two that do. A composition that showed only the wins would
+   misrepresent the feature.
+   ========================================================================== */
+
+.covered {
+  display: grid;
+  gap: var(--sp-4);
+  padding: clamp(18px, 2.4vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+}
+.covered__line {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+}
+.covered__list { display: grid; gap: var(--sp-3); }
+.covered__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border-soft);
+}
+.covered__row:last-child { border-bottom: 0; padding-bottom: 0; }
+.covered__change { font-size: var(--fs-micro); color: var(--text-strong); }
+.covered__gain {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--state-ok);
+  white-space: nowrap;
+}
+.covered__zero {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   structuralFairness — how a job description narrows the pool
+   --------------------------------------------------------------------------
+   The refusal to rate is the most persuasive part, so it gets the most
+   deliberate treatment on the panel rather than the least.
+   ========================================================================== */
+
+.fairness {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  align-content: start;
+  min-width: 0;
+}
+.fairness__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.fairness__head .panel__rule { margin: 0; }
+.fairness__line {
+  font-size: var(--fs-micro);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+.flags { display: grid; gap: var(--sp-3); }
+.flag {
+  display: grid;
+  grid-template-columns: 16px minmax(0, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--sp-3);
+  font-size: var(--fs-micro);
+}
+.flag__glyph { color: var(--state-warn); }
+.flag__term  { color: var(--text-strong); font-family: var(--font-mono); font-size: var(--fs-micro); }
+.flag__note  { color: var(--text-muted); }
+
+.insufficient {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+}
+.insufficient__glyph { color: var(--text-faint); }
+.insufficient__body {
+  font-size: var(--fs-micro);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+}
+
+@media (max-width: 520px) {
+  .flag { grid-template-columns: 16px minmax(0, 1fr); }
+  .flag__note { grid-column: 2; }
+}
+
+/* ==========================================================================
+   governanceLedger — what is logged
+   --------------------------------------------------------------------------
+   The least glamorous and most persuasive thing on /trust. Mono throughout: it
+   is a log, and it should look like one.
+   ========================================================================== */
+
+.ledger {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  align-content: start;
+  min-width: 0;
+}
+.ledger__list { display: grid; gap: 0; }
+.ledger__row {
+  display: grid;
+  grid-template-columns: 44px 76px minmax(0, 1fr) minmax(0, auto);
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+}
+.ledger__list > .ledger__row:last-child { border-bottom: 0; }
+.ledger__at    { color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.ledger__actor { color: var(--text-accent); overflow: hidden; text-overflow: ellipsis; }
+.ledger__action{ color: var(--text-body); min-width: 0; }
+/* A log wants width. Four columns of mono in a 490px sidebar wraps every row
+   onto three lines, which is the opposite of what a log is for — so this
+   composition is used full-width and never in a half-column. */
+.ledger__row { white-space: nowrap; }
+.ledger__action { overflow: hidden; text-overflow: ellipsis; }
+.ledger__ref   { color: var(--text-faint); text-align: right; }
+
+/* The match-audit row. A stored verdict is what makes a score reproducible a
+   month later, so it is the one row that is not quiet. */
+.ledger__row--strong .ledger__ref { color: var(--state-info); }
+.ledger__row--strong .ledger__action { color: var(--text-strong); }
+
+.ledger__foot {
+  font-size: var(--fs-micro);
+  color: var(--text-muted);
+}
+
+@media (max-width: 700px) {
+  .ledger__row { grid-template-columns: 44px minmax(0, 1fr); }
+  .ledger__actor { grid-column: 2; }
+  .ledger__action, .ledger__ref { grid-column: 2; text-align: left; }
+}
+
+/* ==========================================================================
+   funnelChart and scarcityTable — the insights views
+   ========================================================================== */
+
+.funnel {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  align-content: start;
+}
+.funnel__row {
+  display: grid;
+  grid-template-columns: minmax(0, 96px) minmax(0, 1fr) 40px 44px;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.funnel__stage {
+  font-size: var(--fs-micro);
+  color: var(--text-body);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.funnel__bar { min-width: 0; }
+.funnel__count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+  text-align: right;
+}
+.funnel__conv {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+  text-align: right;
+}
+
+.scarcity {
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  align-content: start;
+  overflow-x: auto;
+}
+.scarcity__table { width: 100%; border-collapse: collapse; }
+.scarcity__table caption { text-align: left; margin-bottom: var(--sp-4); }
+.scarcity__table th,
+.scarcity__table td {
+  text-align: left;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-micro);
+}
+.scarcity__table thead th {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: var(--fw-regular);
+}
+.scarcity__table tbody th { color: var(--text-strong); font-weight: var(--fw-medium); }
+.scarcity__cov { display: flex; align-items: center; gap: var(--sp-3); min-width: 120px; }
+.scarcity__cov .meter { flex: 1; }
+.scarcity__pct {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   candidateWorkspace — recruiter interest, and what would unlock more
+   --------------------------------------------------------------------------
+   Models `RecruiterInterest` and `SkillsUnlock`. The two strongest reasons to
+   build a profile, and neither was on /for-candidates.
+   ========================================================================== */
+
+.cwork {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-4);
+  padding: var(--sp-5) clamp(14px, 1.8vw, 24px);
+  align-content: start;
+}
+.cwork__panel {
+  display: grid;
+  gap: var(--sp-3);
+  align-content: start;
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  min-width: 0;
+}
+.cwork__figure {
+  font-family: var(--font-mono);
+  font-size: var(--fs-h3);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-strong);
+}
+.cwork__delta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--state-ok);
+}
+.cwork__foot {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* A sparkline as bars, not a line: seven daily counts are seven values, and a
+   line implies a continuum between them. */
+.spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 44px;
+}
+.spark__bar {
+  flex: 1;
+  height: var(--h);
+  min-height: 3px;
+  border-radius: 2px;
+  background: var(--state-info);
+  opacity: .55;
+  transform-origin: bottom center;
+  transition: transform var(--dur-slow) var(--ease-entrance) calc(var(--i) * var(--stagger-fast));
+}
+html.js [data-reveal] .spark__bar { transform: scaleY(0); }
+html.js [data-reveal].is-revealed .spark__bar { transform: none; }
+
+.unlock { display: grid; gap: var(--sp-3); }
+.unlock__row {
+  display: grid;
+  grid-template-columns: minmax(0, 84px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.unlock__skill { font-size: var(--fs-micro); color: var(--text-strong); }
+.unlock__bar { min-width: 0; }
+.unlock__n {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--text-accent);
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .cwork { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   Small shared additions
+   ========================================================================== */
+
+/* The importance tones, applied wherever a tier is named. One rule, four
+   tones, and the two most consequential tiers are finally distinguishable. */
+[data-tone="crit"] { color: var(--state-crit); }
+[data-tone="warn"] { color: var(--state-warn); }
+[data-tone="info"] { color: var(--state-info); }
+[data-tone="none"] { color: var(--text-muted); }
+
+/* All four tiers, in the product's own tones. `required` was grey before Phase 4
+   and is amber now — leaving it grey while critical went rose would have kept
+   the two most consequential tiers looking like one loud one and three quiet
+   ones, which is not the hierarchy the app has. */
+.req__tier--critical  .req__tierlabel { color: var(--state-crit); }
+.req__tier--required  .req__tierlabel { color: var(--state-warn); }
+.req__tier--preferred .req__tierlabel { color: var(--state-info); }
+.req__tier--bonus     .req__tierlabel { color: var(--text-muted); }
+
+/* "Not moving forward" is a real stage and a neutral one. */
+.pipeline__stage--quiet { opacity: .7; }
+.pipeline__stage--quiet .pipeline__name { color: var(--text-faint); }
+
+.composition-note--left { text-align: left; }
+
+/* ---- The fifth philosophy beat ----------------------------------------- */
+/* Phase 4 added a fifth beat whose line is three times the length of the other
+   four. A fifth equal column would set it at eleven characters a line, so it
+   spans the row instead — which is also the right rhetorical shape: it is the
+   newest claim and the heaviest, and it closes the row rather than joining it. */
+.beat--wide {
+  grid-column: 1 / -1;
+  border-top-color: var(--border-strong);
+}
+.beat--wide .beat__line {
+  font-size: var(--fs-card);
+  max-width: 68ch;
+}
+@media (max-width: 900px) {
+  .beat--wide { grid-column: 1 / -1; }
+}
+
+/* ---- Account status list ----------------------------------------------- */
+/* Models the account-status dot on the recruiter's candidate card. The product
+   is more transparent about the two candidate populations than the marketing
+   site was, and this list is the site catching up. */
+.statuses { display: grid; gap: var(--sp-4); }
+.status {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 96px) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border-soft);
+}
+.statuses > .status:last-child { border-bottom: 0; padding-bottom: 0; }
+.status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--state-none);
+  transform: translateY(-2px);
+}
+.status:nth-child(1) .status__dot { background: var(--state-none); }
+.status:nth-child(2) .status__dot { background: var(--state-warn); }
+.status:nth-child(3) .status__dot { background: var(--state-info); }
+.status:nth-child(4) .status__dot { background: var(--state-ok); }
+.status:nth-child(5) .status__dot { background: var(--state-crit); }
+.status__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--text-strong);
+}
+.status__note { font-size: var(--fs-micro); color: var(--text-muted); }
+
+@media (max-width: 520px) {
+  .status { grid-template-columns: 10px minmax(0, 1fr); }
+  .status__note { grid-column: 2; }
+}
+
+/* The pipeline stages on /product/hiring-operations: the same ruled list, one
+   pill per row and no dot. Without this the pill lands in the 10px dot track
+   and its wash shrinks to a sliver behind the label. */
+.statuses--pills .status { grid-template-columns: minmax(0, 1fr); }
+.statuses--pills .pill { justify-self: start; }
+
+/* ==========================================================================
+   PHASE 4 — layout corrections found by looking at the pages
+   --------------------------------------------------------------------------
+   `tools/check.mjs` and `tools/audit.mjs` both passed on everything below.
+   None of it is a structural or behavioural defect; all of it is the kind of
+   thing only opening the page finds, which is what CLAUDE.md § 6 step 6 means
+   when it says the audit is not a substitute for that.
+   ========================================================================== */
+
+/* 1 · A composition packs to the top of its frame.
+   `--ratio` is a reserved minimum, so a composition shorter than its ratio would
+   otherwise stretch its own grid rows to fill the box — which turns stat tiles
+   into tall empty rectangles. Packing to the top keeps every panel at its
+   content height and leaves the slack as padding at the bottom, where it reads
+   as padding. */
+.mission,
+.cwork,
+.ledger,
+.funnel,
+.scarcity { align-content: start; }
+
+/* 2 · DELETED IN PHASE 5. This is the block `docs/phase-5.md` § 3.1 calls the
+   bug, kept here as a comment because the reasoning is the lesson.
+
+   It switched off the stage chip, the score ring and the origin column in every
+   hero row, and its own comment explains why: the drawer covered the row from
+   38% of the frame's width and the tracks had nowhere to go. That was true. It
+   was a symptom. The composition was in a 560px column and the fix was the
+   column, not the tracks — so § 3.2 widened the layout, § 3.4 moved the drawer's
+   inset to 42%, and all five tracks render.
+
+       A composition's width is a design input, not a consequence.
+       If a layout forces `display: none` on a row track, the layout is wrong.
+
+   Recorded as a rule in docs/product-visualization.md so it does not recur. The
+   truncation below stays: a name still has to shorten gracefully under the
+   drawer's left edge. */
+.workspace__list .rank__name,
+.workspace__list .rank__headline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Rows the drawer's left edge crosses. The first row and the gate's row sit
+   clear of it; the ones between run under it and are clipped by it, which is
+   what the real application looks like. Right padding keeps the `Move to…`
+   affordance from colliding with the drawer's shadow. */
+.workspace__list .rank__row--tracked { padding-right: var(--sp-4); }
+
+/* Six tracks when the `Move to…` affordance is rendered. The origin column
+   gives up 20px for it rather than the name column: "Sourced, then applied · 3d"
+   truncates legibly and a truncated name does not. */
+.rank__row--move {
+  grid-template-columns:
+    34px minmax(0, 1fr) auto auto minmax(0, 130px) auto;
+}
+
+/* The gate's row, in the list. Dimmed and struck, no score, and the missing
+   requirement named — a refusal that explains itself, on the first screen,
+   directly beneath a ranking that does the same. */
+.rank__row--gate { background: var(--surface-sunken); }
+.rank__row--gate .rank__name,
+.rank__row--gate .rank__headline { color: var(--text-faint); }
+/* The reason spans the origin and `Move to…` tracks, because the WHOLE POINT of
+   this row is that the disqualifying requirement is NAMED. In the 130px origin
+   track it truncated to "Missing critical · …", which names nothing and turns an
+   explained refusal back into an unexplained one. There is no move affordance on
+   a candidate who was never scored, so the track is free. */
+.rank__row--gate .rank__origin {
+  grid-column: 5 / -1;
+  color: var(--state-crit);
+}
+
+/* The inert `Move to…` affordance. A span, so no hover and no focus stop. */
+.rank__move {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--sp-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .06em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.rank__move svg { flex: none; opacity: .7; }
+.rank__move--off { border-color: transparent; }
+
+/* 3 · A taller sparkline. Seven daily counts across three distinct values need
+   the height to be legible as a difference; at 44px the tallest bar and the
+   shortest were 44px and 15px, which reads as noise. */
+.spark { height: 72px; }
+.spark__bar { min-height: 4px; }
+
+/* ==========================================================================
+   PHASE 5 · the tool pages — docs/phase-5.md § 4.1, § 4.2
+   ========================================================================== */
+
+/* ---- The refused list -------------------------------------------------- */
+/* A checklist whose items are things the tool WILL NOT return. It reuses
+   `.checklist`'s positioned glyph and swaps the mask and the colour, because the
+   only difference between the two lists is what the glyph means — and a tick
+   beside "a pool size for your role" would say the opposite of the sentence.
+
+   Used twice, on both tool pages. /trust's "what we will not claim" list stays
+   as prose: those are paragraphs, not items, and the reasoning is the content. */
+.checklist--refused .checklist__item::before {
+  background: var(--state-crit);
+  -webkit-mask: var(--mask-cross) center / contain no-repeat;
+          mask: var(--mask-cross) center / contain no-repeat;
+}
+
+:root {
+  --mask-cross: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M3.5 3.5l7 7M10.5 3.5l-7 7' stroke='black' stroke-width='2.2' stroke-linecap='round' fill='none'/></svg>");
+}
+
+/* ---- An amber badge ---------------------------------------------------- */
+/* The default badge is indigo, which is the site's "new" and "not yet" tone. An
+   optimizer FINDING is neither — it is something to look at — so it borrows the
+   warn tone the product uses for the same thing. */
+.badge--warn {
+  border-color: rgba(217, 119, 6, .22);
+  background: var(--wash-warn);
+  color: var(--state-warn);
+}
+
+/* ---- tierExample() ----------------------------------------------------- */
+/* An extraction, as the tools page shows it: one row per importance tier, the
+   tier's own pill tone, and the skills as chips. Reads from JOB.tiers, so it
+   agrees with `requisition()` on the homepage and with /product/matching. */
+.tiers {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-4);
+  padding: var(--sp-5) var(--sp-6);
+}
+.tiers__row {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--sp-4);
+}
+/* Natural width, not the column's: a stretched pill reads as a field. */
+.tiers__row > .pill { justify-self: start; }
+.tiers__chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tiers__review {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.tiers__actions {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--text-faint);
+}
+
+@media (max-width: 520px) {
+  .tiers__row { grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); }
+}
+
+/* ==========================================================================
+   PHASE 6 — the landing page's components
+   --------------------------------------------------------------------------
+   The Stage 3 prototype (prototypes/STAGE-3.md § 13) ported into the system.
+   Everything in this block is a STAGING of data the site already renders — the
+   signature's six layer bodies, the weight rows, the skill rows, the evidence
+   card, the candidate card and the gate-capable tuner row. The scene layouts
+   are in sections.css; the
+   stage itself (P6) is in motion.css § 4b.
+
+   Every colour, size and face here is a token. The three raw pixel sizes are
+   the ones Stage 3 recorded as decisions: the 220px stage ring, its 84px
+   numeral, and the 11px composition floor.
+   ========================================================================== */
+
+/* ---- The visual system's four global corrections ------------------------- */
+
+/* Mono floor inside compositions: nothing below 11px anywhere on the site.
+   Production rendered pills at 10px and the pulse labels at 9px. */
+.pill,
+.jobhead__stats,
+.jobhead__review,
+.weight__scale,
+.tabstrip--drawer .tabstrip__tab,
+.toolbar__count,
+.toolbar__sort,
+.rank__origin,
+.pulse__label { font-size: 11px; }
+.pulse__label { letter-spacing: .08em; }
+.rank__meta, .concept__foot, .evidence__section { font-size: var(--fs-micro); }
+
+/* The data role: numbers read as numbers, not as chrome. */
+.ring__value,
+.score__value,
+.pulse__value,
+.concept__pct,
+.cview__value,
+.wbar__keyvalue { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+
+/* Cited evidence gets the highlighter. This is the one place the wash lives:
+   the quoted profile line, and nothing else. */
+.concept__quote,
+.evidence__quote {
+  background: var(--wash-evidence);
+  color: var(--text-evidence);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* Who did the thing: the engine in an indigo wash, the human in an ink
+   outline. A convention, not a hue. */
+.chip--engine { background: var(--wash-info); color: var(--state-info); border: 1px solid transparent; }
+.chip--human  { background: var(--surface); color: var(--text-strong); border: 1px solid var(--text-strong); }
+
+/* Frames lose the three dots. Chrome is the route line, which is what tells a
+   buyer this is real software; the dots tell them it is a screenshot. */
+.frame__dot { display: none; }
+.frame__chrome { padding-left: var(--sp-4); }
+
+/* ---- Weight rows — the four published weights as rows ------------------ */
+/* `--w` is the weight as a percentage, `--i` the row index (P6 fans the rows
+   down by it). Written once by weightRows() from DIMENSIONS. */
+.wrows { display: grid; gap: var(--sp-3); }
+.wrow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto; align-items: center; gap: var(--sp-3); }
+.wrow__label { font-size: var(--fs-small); color: var(--text-body); }
+.wrow__bar { height: 8px; border-radius: 2px; background: var(--wash-none); overflow: hidden; display: block; }
+.wrow__fill { display: block; height: 100%; width: calc(var(--w) * 1%); background: var(--state-none); transform-origin: left; }
+.wrow--skill .wrow__fill { background: var(--c-indigo-bright); }
+.wrow--semantic .wrow__fill { background: var(--c-indigo-glow); }
+.wrow--experience .wrow__fill { background: var(--c-indigo); }
+.wrow--location .wrow__fill { background: var(--c-slate); }
+.wrow__pct { font-family: var(--font-mono); font-size: var(--fs-data); font-variant-numeric: tabular-nums; color: var(--text-strong); min-width: 3.2ch; text-align: right; }
+.wrows--lg .wrow { grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr) auto; }
+.wrows--lg .wrow__label { font-size: var(--fs-body-lg); }
+.wrows--lg .wrow__bar { height: 14px; }
+.wrows--lg .wrow__pct { font-size: var(--fs-h3); }
+.wrow--lead .wrow__label { color: var(--text-strong); font-weight: var(--fw-medium); }
+
+/* ---- Skill rows — every requirement, matched ---------------------------- */
+/* covered · partial · missing, in that order, each with its glyph, the phrase
+   it matched, the relationship chip and the confidence. `--i` is the row
+   index (P6 arrives them in order). */
+.srows { display: grid; }
+.srow { display: grid; grid-template-columns: 24px minmax(0, 1fr) 20px minmax(0, 1.4fr) auto 5ch; gap: var(--sp-3); align-items: center; padding: var(--sp-3) 0; border-top: 1px solid var(--border); }
+.srow:last-child { border-bottom: 1px solid var(--border); }
+.srow__glyph { font-family: var(--font-mono); font-size: var(--fs-body-lg); }
+.srow--covered .srow__glyph { color: var(--state-ok); }
+.srow--partial .srow__glyph, .srow__glyph--partial { color: var(--state-info); }
+.srow--missing .srow__glyph { color: var(--state-none); }
+.srow__concept { font-weight: var(--fw-medium); color: var(--text-strong); }
+.srow__arrow { color: var(--text-faint); text-align: center; }
+.srow__matched { color: var(--text-body); font-size: var(--fs-body); }
+.srow__matched--none { color: var(--text-faint); }
+.srow__conf { font-family: var(--font-mono); font-size: var(--fs-data); text-align: right; color: var(--text-strong); font-variant-numeric: tabular-nums; }
+.srow--partial { background: var(--surface-raised); box-shadow: inset 3px 0 0 var(--state-info); padding-inline: var(--sp-3); }
+.relchip--none { color: var(--text-faint); border-color: var(--border); }
+
+/* ---- The six layer bodies of the signature ------------------------------ */
+/* 01 · the list: the production ranked list on a raised card. */
+.layer--1 .rank { background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-2) var(--sp-5); box-shadow: var(--shadow-card); }
+.layer--1 .rank__row[aria-current="true"] { box-shadow: inset 3px 0 0 var(--c-indigo-bright); }
+
+/* 02 · the score. 220px ring, 84px numeral: the Stage 3 sizes. */
+.sig-score { display: grid; justify-items: start; gap: var(--sp-3); }
+.sig-score .ring { --ring-size: 220px; }
+.sig-score .ring__value { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: 84px; letter-spacing: -0.04em; }
+.sig-score__of { margin: 0; font-family: var(--font-mono); font-size: var(--fs-data); color: var(--text-muted); }
+.sig-score__who { margin: var(--sp-2) 0 0; font-size: var(--fs-lede); color: var(--text-strong); }
+.sig-score__sep { color: var(--text-faint); }
+.sig-score__chips { margin: 0; display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* 03 · four weights, published. */
+.sig-weights { display: grid; gap: var(--sp-6); max-width: 720px; }
+.sig-weights__head { margin: 0; display: flex; align-items: baseline; gap: var(--sp-3); }
+.sig-weights__n { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-quote); letter-spacing: -0.03em; color: var(--text-strong); }
+.sig-weights__eq { font-family: var(--font-mono); color: var(--text-faint); }
+.sig-weights__sum { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h3); color: var(--text-accent); }
+.sig-weights__mods, .sig-weights__gate { margin: 0; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); line-height: 1.8; }
+.sig-weights__mods b { color: var(--text-strong); font-weight: var(--fw-regular); }
+.sig-weights__gate { border-top: 1px solid var(--border); padding-top: var(--sp-3); }
+
+/* 04 · every skill, matched. */
+.sig-skills { display: grid; gap: var(--sp-5); max-width: 760px; }
+.sig-skills__head { margin: 0; display: flex; align-items: baseline; gap: var(--sp-3); }
+.sig-skills__head .wrow__label { font-size: var(--fs-h3); font-family: var(--font-display); color: var(--text-strong); }
+.sig-skills__head .wrow__pct { font-size: var(--fs-h3); }
+.sig-skills__open { font-family: var(--font-serif); font-style: italic; color: var(--text-accent); font-size: var(--fs-h3); }
+
+/* 05 · every match, cited. The highlighter's one home on the stage. */
+.sig-evidence { display: grid; gap: var(--sp-4); max-width: 720px; }
+.sig-evidence__head { margin: 0; font-size: var(--fs-h3); font-family: var(--font-display); color: var(--text-strong); display: flex; gap: var(--sp-2); align-items: baseline; flex-wrap: wrap; }
+.sig-evidence__head .srow__matched { font-size: inherit; color: var(--state-info); }
+.sig-evidence__rel { margin: 0; display: flex; gap: var(--sp-3); align-items: center; flex-wrap: wrap; }
+.sig-evidence__edge { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); }
+.sig-evidence__edge em { font-style: normal; color: var(--text-accent); }
+.sig-evidence__reason { margin: 0; font-size: var(--fs-body-lg); color: var(--text-body); }
+.sig-evidence__source { margin: var(--sp-2) 0 0; padding: var(--sp-5); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-raised); display: grid; gap: var(--sp-3); }
+.sig-evidence__from { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; }
+.sig-evidence__quote { margin: 0; font-size: var(--fs-lede); line-height: 1.5; color: var(--text-strong); }
+.sig-evidence__quote mark { background: var(--wash-evidence); color: var(--text-evidence); padding: 2px 6px; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.sig-evidence__conf { margin: 0; display: flex; align-items: center; gap: var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); }
+.sig-evidence__conf .meter { width: 160px; }
+
+/* 06 · the same number, on her screen. */
+.sig-cand { max-width: 420px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-lift); overflow: hidden; }
+.sig-cand__route { margin: 0; padding: var(--sp-3) var(--sp-5); border-bottom: 1px solid var(--border-soft); font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: .06em; color: var(--text-muted); background: var(--surface-sunken); }
+.sig-cand__body { padding: var(--sp-5); display: grid; gap: var(--sp-5); }
+.sig-cand__score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-4); align-items: center; }
+.sig-cand__score .ring__value { font-family: var(--font-display); font-size: 30px; font-weight: var(--fw-medium); }
+.sig-cand__trail { margin: 0; }
+
+/* Phone: the bodies at 390, in the stack. The ring steps down, the skill row
+   becomes three lines, the list keeps four rows. */
+@media (max-width: 699px) {
+  .sig-score .ring { --ring-size: 160px; }
+  .sig-score .ring__value { font-size: 60px; }
+  .srow { grid-template-columns: 20px minmax(0, 1fr) auto; grid-template-areas: "g c conf" "g m m" "g r r"; row-gap: 4px; }
+  .srow__glyph { grid-area: g; } .srow__concept { grid-area: c; } .srow__arrow { display: none; }
+  .srow__matched { grid-area: m; } .srow .relchip { grid-area: r; justify-self: start; } .srow__conf { grid-area: conf; }
+  .layer--1 .rank { padding-inline: var(--sp-3); }
+  .layer--1 .rank__row:nth-child(n + 5) { display: none; }
+}
+
+/* ---- The gate-capable tuner row ----------------------------------------- */
+/* `.trow` extends `.rank__row`: a moved marker (▲ / ▼ for a beat after a
+   reorder) and a gate line that appears when a skill set to CRITICAL drops the
+   candidate before scoring. The score is hidden, not lowered: a candidate the
+   gate dropped has no score, and rendering one would misstate the single most
+   consequential thing the engine does. */
+.trow { grid-template-columns: var(--rank-score) minmax(0, 1fr) auto auto 48px; align-items: center; position: relative; }
+/* The tuner's list owns the columns and every row takes them as a subgrid.
+   Sized per row, the `auto` meta track was as wide as that row's own text, so
+   "4.9y · Chennai · Remote" started 17px right of the rows around it. Shared,
+   it is as wide as the widest row's and starts at one x down the list. The
+   reorder moves rows by transform only, so the subgrid does not see it.
+   A subgrid's padding comes out of its edge tracks, so the row's inline
+   padding is declared here, read by the rows, and added to the two FIXED edge
+   tracks; an `auto` track absorbs it on its own. */
+.rank--tuner .rank__list {
+  --trow-pad: clamp(12px, 1.6vw, 20px);
+  grid-template-columns: calc(var(--rank-score) + var(--trow-pad)) minmax(0, 1fr) auto auto calc(48px + var(--trow-pad));
+  column-gap: var(--sp-3);
+}
+.rank--tuner .trow { grid-column: 1 / -1; grid-template-columns: subgrid; padding-inline: var(--trow-pad); }
+.trow__moved { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); text-align: right; min-width: 40px; opacity: 0; transition: opacity var(--dur-fast) var(--ease-standard); }
+.trow__moved[data-moved="up"]   { color: var(--state-ok);   opacity: 1; }
+.trow__moved[data-moved="down"] { color: var(--state-crit); opacity: 1; }
+/* The gate line is every reorderable row's, not only `.trow`'s: RANKINGS
+   carries the product's gate, so the sub-pages' tuners drop rows too. */
+.rank__gate[hidden] { display: none; }
+.rank__gate { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text-muted); padding-top: var(--sp-2); }
+.rank__gate-why b { color: var(--state-crit); font-weight: var(--fw-regular); }
+.reorder__row.is-gated { grid-template-rows: auto auto; position: relative; }
+.reorder__row.is-gated .rank__score { visibility: hidden; height: 0; overflow: hidden; }
+.reorder__row.is-gated .rank__name, .reorder__row.is-gated .rank__headline { color: var(--text-faint); }
+.reorder__row.is-gated::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--state-crit); opacity: .5; }
+/* The what-if marks the rows it would touch: the ✗ count turns green. */
+.trow .is-missing.is-changed { color: var(--state-ok); }
+.rank__gatecount { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--state-crit); }
+.rank__gatecount:empty { display: none; }
+
+/* The tuner's sliders at a hand's size: 44px tall, 24px thumbs. */
+.weights--tuner { gap: var(--sp-6); }
+.weight--tuner input[type="range"] { height: 44px; }
+.weight--tuner input[type="range"]::-webkit-slider-runnable-track { height: 4px; }
+.weight--tuner input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; margin-top: -10px; }
+.weight--tuner input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; }
+.weight__tier[data-tone="crit"] { color: var(--state-crit); }
+.weight__tier[data-tone="warn"] { color: var(--state-warn); }
+.weight__tier[data-tone="none"] { color: var(--state-none); }
+.weights__hint { margin: 0; font-size: var(--fs-micro); color: var(--text-muted); display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+.weights__hint .chip { font-size: 11px; padding: 2px 8px; }

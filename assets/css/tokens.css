@@ -1,0 +1,361 @@
+/* ==========================================================================
+   Transpahire — Design tokens
+   --------------------------------------------------------------------------
+   The single source of visual truth. Nothing in this file selects a component;
+   it only declares values. Every other stylesheet consumes these.
+
+   Source of authority: ../../assets/brand/brand.json and the Transpahire Brand
+   System document (Stratum direction). Do not introduce a raw hex, font stack,
+   duration or easing anywhere else in the codebase — add it here first.
+
+   This file is deliberately framework-agnostic so it can be lifted wholesale
+   into a future build (see docs/architecture.md).
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------
+     1. Palette — raw pigments
+     One indigo system. Ink is the dark surface, indigo the intelligence,
+     the neutrals stay out of the way. See DESIGN.md § Colour.
+     ------------------------------------------------------------------ */
+  --c-ink:            #0B0B1F;  /* primary dark surface / primary text        */
+  --c-ink-raised:     #14142B;  /* raised panel on ink                        */
+  --c-indigo-deep:    #1E1B4B;  /* brand primary                              */
+  --c-indigo:         #312E81;  /* secondary                                  */
+  --c-indigo-bright:  #4F46E5;  /* accent on light                            */
+  --c-indigo-glow:    #6366F1;  /* accent on dark                             */
+  --c-indigo-tint:    #EEF0FE;  /* faintest indigo wash                       */
+
+  --c-white:          #FFFFFF;
+  /* PHASE 6 · Palette 01, "ink, indigo and the highlighter" — the Stage 3
+     visual system (prototypes/STAGE-3.md § 5), adopted site-wide because the
+     header and footer are shared and a page on one paper under a header on
+     another is a seam. Warm paper instead of a dashboard grey; a softer
+     display ink on it; and the tertiary text lifted to 4.8:1, because #9A9AB0
+     was 2.64:1 on paper and failed AA everywhere it carried a word. */
+  --c-paper:          #F7F6F2;  /* page ground — was #FAFAFB                  */
+  --c-bone:           #EFEDE7;  /* alternating section ground — was #F4F4F8   */
+  --c-platinum:       #E6E6EF;  /* primary text on ink                        */
+  --c-rule:           #E3E1DA;  /* hairline, warmed — was #E5E5EE             */
+  --c-rule-soft:      #ECEAE3;  /* hairline, quieter — was #EFEFF4            */
+  --c-ink-type:       #1A1A2E;  /* display ink on warm paper; grounds keep --c-ink */
+  --c-slate-dark:     #3A3A4C;  /* body copy on light, 10.3:1 — was #2A2A3D   */
+  --c-slate:          #6B6B7D;  /* secondary copy, 4.8:1 — was #64647A        */
+  --c-slate-soft:     #9A9AB0;  /* copy on ink ONLY — 2.64:1 on paper         */
+
+  /* Indigo at text size on ink. --c-indigo-glow stays for large type and
+     fills; at body size on #0B0B1F it needs the lighter step. */
+  --c-indigo-text-on-ink: #818CF8;
+
+  /* THE HIGHLIGHTER. Cited evidence only: the quoted profile line, the
+     provenance label, the "here is where it came from" moment. Never a
+     surface, never a hover, never a glow. 15:1 with the ink type on it. */
+  --wash-evidence:    #FFF1A8;
+  --text-evidence:    #1A1A2E;
+
+  /* Signals. Used for state, never for decoration. */
+  --c-ok:             #1F8A5B;
+  --c-warn:           #C58A2F;
+  --c-err:            #C0392B;
+
+  /* State inks and washes.
+     A signal colour used as TEXT needs more contrast than the same colour used
+     as a dot, and the same colour used as a SURFACE needs far less. So each
+     state carries three roles and a component never reaches for a pigment.
+
+     Added in Phase 3 for the product compositions: the four classifications
+     (Strong / Good / Potential / Weak) and the four skill states
+     (covered / partial / missing / bonus) both map onto this set, which is why
+     a chip and a skill glyph agree without either knowing about the other. */
+  --c-ok-ink:     #146B45;  /* --c-ok, darkened for text on paper   */
+  --c-warn-ink:   #8A5F1E;  /* --c-warn, darkened for text on paper */
+  --c-crit-ink:   #A32C3C;  /* rose, darkened for text on paper     */
+  --c-ok-glow:    #43C88A;  /* --c-ok, lifted for text on ink       */
+  --c-warn-glow:  #E0AC5B;  /* --c-warn, lifted for text on ink     */
+  --c-crit-glow:  #F2748A;  /* rose, lifted for text on ink         */
+
+  /* PHASE 4 added the fourth role, `crit`.
+
+     The product tones the four importance tiers CRITICAL rose · REQUIRED amber
+     · PREFERRED indigo · BONUS neutral, and uses the same rose for HIGH
+     scarcity (docs/phase-4.md §§ 1.9). The site had three state roles and
+     rendered critical in `warn` — which is the colour the app uses for the tier
+     BELOW it, so the two most consequential tiers were indistinguishable.
+
+     Rose, not red: --c-err is an error colour and a critical requirement is not
+     an error. It is deliberately a step quieter. */
+  --state-ok:   var(--c-ok-ink);
+  --state-info: var(--c-indigo-bright);
+  --state-warn: var(--c-warn-ink);
+  --state-crit: var(--c-crit-ink);
+  --state-none: var(--c-slate);
+
+  --wash-ok:   rgba( 20, 107,  69, .10);
+  --wash-info: rgba( 79,  70, 229, .09);
+  --wash-warn: rgba(138,  95,  30, .12);
+  --wash-crit: rgba(163,  44,  60, .10);
+  --wash-none: rgba(100, 100, 122, .09);
+
+  /* ------------------------------------------------------------------
+     2. Semantic surface + text roles
+     Components reference these, not the raw palette above, so a surface
+     can be re-pigmented in one place. Sections that flip to a dark ground
+     re-declare this same set (see base.css § inverted surfaces).
+     ------------------------------------------------------------------ */
+  --surface:          var(--c-paper);
+  --surface-raised:   var(--c-white);
+  --surface-sunken:   var(--c-bone);
+  --surface-accent:   var(--c-indigo-tint);
+
+  --text-strong:      var(--c-ink-type);
+  --text-body:        var(--c-slate-dark);
+  --text-muted:       var(--c-slate);
+  --text-faint:       var(--c-slate);          /* not --c-slate-soft: 2.64:1 on paper */
+  --text-accent:      var(--c-indigo-bright);
+
+  --border:           var(--c-rule);
+  --border-soft:      var(--c-rule-soft);
+  --border-strong:    var(--c-ink);
+
+  --focus-ring:       var(--c-indigo-bright);
+
+  /* ------------------------------------------------------------------
+     3. Typography
+     Four families, four jobs. Roles are documented in DESIGN.md § Type.
+     ------------------------------------------------------------------ */
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-sans:    "Manrope", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-serif:   "Instrument Serif", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Weights actually loaded — do not reference a weight not in this list. */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+
+  /* Fluid type scale. Every clamp() lives here so the ramp stays coherent.
+     PHASE 6 raised the top of the ramp (the Stage 3 type pass): the page is
+     carried by type, and 84px display was a headline that had run out of
+     room next to compositions this dense. */
+  --fs-display:  clamp(3rem, 1.6rem + 5.6vw, 6.5rem);       /*  48 → 104 */
+  --fs-h2:       clamp(2rem, 1.25rem + 3.2vw, 4rem);        /*  32 →  64 */
+  --fs-h3:       clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem); /*  22 → 30 */
+  --fs-card:     1.25rem;                                   /*  20      */
+  --fs-lede:     clamp(1.125rem, 1rem + 0.5vw, 1.375rem);   /*  18 → 22 */
+  --fs-body:     0.9375rem;                                 /*  15      */
+  --fs-body-lg:  1rem;                                      /*  16      */
+  --fs-small:    0.875rem;                                  /*  14      */
+  --fs-micro:    0.8125rem;                                 /*  13      */
+  --fs-label:    0.75rem;                                   /*  12 — the page floor; 11px inside compositions */
+  --fs-data:     clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem); /* 13 → 15, tabular numerals */
+  --fs-stat:     clamp(2.5rem, 1.5rem + 3.6vw, 4.5rem);     /*  40 → 72 */
+  --fs-quote:    clamp(2.25rem, 1.4rem + 3.8vw, 4.5rem);    /*  36 → 72 */
+  --fs-pullquote: clamp(1.375rem, 1.1rem + 1.4vw, 2rem);    /*  22 → 32 */
+
+  --lh-tight:   0.98;   /* display                                      */
+  --lh-heading: 1.12;   /* section + card headings                      */
+  --lh-lede:    1.45;   /* lede (sans since Phase 6; see base.css)      */
+  --lh-body:    1.55;   /* running copy                                 */
+
+  /* Tracking. Brand spec: −2.5% display, 0% body, −4.5% wordmark. */
+  --tr-display:  -0.03em;
+  --tr-heading:  -0.022em;
+  --tr-card:     -0.012em;
+  --tr-body:      0em;
+  --tr-wordmark: -0.045em;
+  --tr-label:     0.14em;  /* mono eyebrows / uppercase labels          */
+
+  /* ------------------------------------------------------------------
+     4. Space
+     A 4px-based ramp. Section rhythm is fluid; component space is fixed
+     so cards look identical at every viewport.
+     ------------------------------------------------------------------ */
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-14: 56px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+  --sp-24: 96px;
+
+  /* Vertical rhythm between sections — the page's breathing. */
+  --section-y:       clamp(4rem, 9vw, 8rem);     /*  64 → 128 */
+  --section-y-tight: clamp(3rem, 6vw, 5rem);     /*  48 →  80 */
+  --section-y-huge:  clamp(6rem, 12vw, 10rem);   /*  96 → 160 */
+
+  /* Gaps used by the grid systems. */
+  --gap-grid:  20px;
+  --gap-wide:  clamp(2.5rem, 6vw, 5rem);
+
+  /* ------------------------------------------------------------------
+     5. Layout
+     ------------------------------------------------------------------ */
+  --container:      1280px;
+  --container-text:  760px;   /* prose measure for future article pages  */
+  --page-pad:       clamp(20px, 4vw, 56px);
+  --header-h:       64px;
+  --rank-score:     84px;   /* a ranked row's score track: the ring over the
+                               longest classification chip, POTENTIAL (81px) */
+
+  /* Breakpoints exist as documentation — CSS cannot use vars in @media.
+     Keep every media query in the codebase aligned to these five values. */
+  --bp-sm:  520px;
+  --bp-md:  700px;
+  --bp-lg:  900px;
+  --bp-xl: 1100px;
+
+  /* ------------------------------------------------------------------
+     6. Radius, borders, elevation
+     ------------------------------------------------------------------ */
+  --radius-sm:   8px;
+  --radius:     14px;
+  --radius-lg:  22px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgba(11, 11, 31, .04),
+                 0 8px 24px -10px rgba(11, 11, 31, .08);
+  --shadow-lift: 0 2px 4px rgba(11, 11, 31, .05),
+                 0 18px 40px -18px rgba(11, 11, 31, .16);
+  --shadow-elev: 0 30px 60px -30px rgba(11, 11, 31, .25);
+  --shadow-float: 0 40px 80px -40px rgba(11, 11, 31, .35);
+
+  /* ------------------------------------------------------------------
+     7. Motion
+     The full rationale is in docs/motion-system.md. Two rules govern this
+     block: durations get slower as the moving object gets larger, and
+     everything decelerates (no ease-in on entrances).
+     ------------------------------------------------------------------ */
+
+  /* Easing. --ease-entrance is the house curve: a long, soft settle that
+     approximates the critically-damped spring the Myniq reference uses
+     (damping 80 / stiffness 400) without a physics runtime. */
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-inout:    cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Durations. */
+  --dur-instant: 120ms;  /* colour / opacity on a small control           */
+  --dur-fast:    180ms;  /* hover state                                   */
+  --dur-medium:  320ms;  /* tab crossfade, accordion, menu                */
+  --dur-slow:    620ms;  /* section reveal — text, cards                  */
+  --dur-slower:  820ms;  /* section reveal — large product compositions   */
+
+  /* Reveal travel. Distance scales with the object: a line of type moves
+     a little, a dashboard moves a lot. */
+  --travel-sm: 16px;
+  --travel-md: 28px;
+  --travel-lg: 48px;
+  --travel-xl: 64px;
+
+  /* Stagger step between siblings in a revealed group. */
+  --stagger-fast:   50ms;
+  --stagger-normal: 80ms;
+  --stagger-slow:  120ms;
+
+  /* Hover displacement primitives. */
+  --lift:       -3px;
+  --lift-small: -1px;
+  --nudge:       3px;   /* arrow / icon shift on hover                    */
+
+  /* Motion enable flag. Flipped to 0 under prefers-reduced-motion so a
+     single multiplication disables travel everywhere at once. */
+  --motion: 1;
+
+  /* PHASE 6 · P6, the staged layers. How many viewport heights the pinned
+     stage scrolls for. 2.6 is a Stage 3 decision (prototypes/STAGE-3.md § 4):
+     shorter makes six states too fast to read. */
+  --scene-length: 2.6;
+
+  /* ------------------------------------------------------------------
+     8. Z-index ladder — declared once, so stacking never becomes folklore.
+     ------------------------------------------------------------------ */
+  --z-base:      0;
+  --z-raised:    1;
+  --z-sticky:   50;
+  --z-header:  100;
+  --z-overlay: 200;
+  --z-modal:   300;
+}
+
+/* --------------------------------------------------------------------------
+   Inverted surface
+   Applied to any element that sits on ink or deep indigo. Re-points the
+   semantic roles rather than overriding every component — a card, button or
+   eyebrow inside `.on-ink` is correct without needing a dark variant class.
+   -------------------------------------------------------------------------- */
+.on-ink {
+  --surface:        var(--c-ink);
+  --surface-raised: var(--c-ink-raised);
+  --surface-sunken: var(--c-ink);
+  --surface-accent: rgba(255, 255, 255, .04);
+
+  --text-strong:    var(--c-white);
+  --text-body:      var(--c-platinum);
+  --text-muted:     var(--c-slate-soft);
+  --text-faint:     var(--c-slate-soft);
+  --text-accent:    var(--c-indigo-text-on-ink);
+
+  --wash-evidence:  rgba(255, 241, 168, .16);
+  --text-evidence:  #FFF1A8;
+
+  --border:         rgba(255, 255, 255, .10);
+  --border-soft:    rgba(255, 255, 255, .06);
+  --border-strong:  rgba(255, 255, 255, .28);
+
+  --state-ok:   var(--c-ok-glow);
+  --state-info: var(--c-indigo-glow);
+  --state-warn: var(--c-warn-glow);
+  --state-crit: var(--c-crit-glow);
+  --state-none: var(--c-slate-soft);
+
+  --wash-ok:   rgba( 67, 200, 138, .14);
+  --wash-info: rgba( 99, 102, 241, .16);
+  --wash-warn: rgba(224, 172,  91, .14);
+  --wash-crit: rgba(242, 116, 138, .14);
+  --wash-none: rgba(255, 255, 255, .06);
+
+  --focus-ring:     var(--c-indigo-glow);
+
+  --shadow-card:  0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -10px rgba(0, 0, 0, .5);
+  --shadow-lift:  0 18px 40px -18px rgba(0, 0, 0, .6);
+  --shadow-elev:  0 30px 60px -30px rgba(0, 0, 0, .7);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   Rule 4 of the motion system: this is not optional, and it is enforced here
+   at the token layer so no component can opt out by accident. Travel and
+   duration collapse; opacity crossfades survive because a hard cut between
+   states is more disorienting than a 1-frame fade.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0;
+
+    --dur-instant: 1ms;
+    --dur-fast:    1ms;
+    --dur-medium:  1ms;
+    --dur-slow:    1ms;
+    --dur-slower:  1ms;
+
+    --travel-sm: 0px;
+    --travel-md: 0px;
+    --travel-lg: 0px;
+    --travel-xl: 0px;
+
+    --stagger-fast:   0ms;
+    --stagger-normal: 0ms;
+    --stagger-slow:   0ms;
+
+    --lift:       0px;
+    --lift-small: 0px;
+    --nudge:      0px;
+  }
+}

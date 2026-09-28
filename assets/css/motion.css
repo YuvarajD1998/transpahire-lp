@@ -1,0 +1,876 @@
+/* ==========================================================================
+   Transpahire — Motion system
+   --------------------------------------------------------------------------
+   Every animation on the marketing site is composed from the primitives in
+   this file. Sections do not author their own keyframes; they declare intent
+   with a data attribute and inherit tuned timing.
+
+   Full rationale, including the Myniq reverse-engineering that informed the
+   timings, is in docs/motion-system.md. The four governing rules:
+
+     1. Motion communicates — hierarchy, product behaviour, relationship,
+        progression. Nothing animates just because it can.
+     2. Motion feels expensive — one direction, long decelerating settle,
+        restrained distance. No bounce, no spin, no constant idle movement.
+     3. Product visualisations may be more expressive than text.
+     4. prefers-reduced-motion is honoured, always. Enforced in tokens.css,
+        reinforced at the bottom of this file.
+
+   Only `transform`, `opacity` and `filter` are animated. Nothing here can
+   trigger layout.
+
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* ==========================================================================
+   1. REVEAL — entrance on scroll
+   --------------------------------------------------------------------------
+   Markup:  <div data-reveal="up">…</div>
+   JS (modules/reveal.js) adds `is-revealed` when the element enters the
+   viewport, once, then releases the compositor hint.
+
+   The hidden state is scoped to `html.js` so the page renders fully readable
+   with JavaScript unavailable, blocked, or still parsing — content is never
+   dependent on a script to become visible.
+   ========================================================================== */
+
+[data-reveal] {
+  /* Composed from two independently-set custom properties so a variant only
+     has to declare the axis it cares about. */
+  --reveal-y: 0px;
+  --reveal-x: 0px;
+  --reveal-scale: 1;
+  --reveal-blur: 0px;
+  --reveal-distance: var(--travel-md);
+  --reveal-duration: var(--dur-slow);
+  --reveal-delay: 0ms;
+
+  transition:
+    opacity   var(--reveal-duration) var(--ease-entrance) var(--reveal-delay),
+    transform var(--reveal-duration) var(--ease-entrance) var(--reveal-delay),
+    filter    var(--reveal-duration) var(--ease-entrance) var(--reveal-delay);
+}
+
+html.js [data-reveal] {
+  opacity: 0;
+  transform:
+    translate3d(var(--reveal-x), var(--reveal-y), 0)
+    scale(var(--reveal-scale));
+  filter: blur(var(--reveal-blur));
+  will-change: opacity, transform;
+}
+
+/* ---- Variants ---------------------------------------------------------- */
+/* `fade` is the default and declares no transform, so it is also the safe
+   choice for anything inside a container that is itself transformed. */
+html.js [data-reveal="up"]    { --reveal-y: var(--reveal-distance); }
+html.js [data-reveal="down"]  { --reveal-y: calc(var(--reveal-distance) * -1); }
+html.js [data-reveal="left"]  { --reveal-x: calc(var(--reveal-distance) * -1); }
+html.js [data-reveal="right"] { --reveal-x: var(--reveal-distance); }
+
+html.js [data-reveal="scale"] {
+  --reveal-scale: .94;
+  --reveal-duration: var(--dur-slower);
+}
+
+/* Blur is expensive and visually loud. Reserved for a single hero-weight
+   headline per view — never for a grid of cards. */
+html.js [data-reveal="blur"] {
+  --reveal-blur: 12px;
+  --reveal-y: var(--travel-sm);
+  --reveal-duration: var(--dur-slower);
+}
+
+/* The product composition entrance: rises further, settles slower, and lifts
+   very slightly out of the page. Rule 3 — this is the one place the marketing
+   site is allowed to be theatrical. */
+html.js [data-reveal="rise"] {
+  --reveal-y: var(--travel-xl);
+  --reveal-scale: .97;
+  --reveal-duration: var(--dur-slower);
+}
+
+/* ---- Distance override ------------------------------------------------- */
+[data-reveal-distance="sm"] { --reveal-distance: var(--travel-sm); }
+[data-reveal-distance="md"] { --reveal-distance: var(--travel-md); }
+[data-reveal-distance="lg"] { --reveal-distance: var(--travel-lg); }
+[data-reveal-distance="xl"] { --reveal-distance: var(--travel-xl); }
+
+/* ---- Revealed state ---------------------------------------------------- */
+html.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Compositor layers are released once the transition has finished — see
+   reveal.js. A permanent `will-change` on thirty elements is a memory cost
+   with no benefit after the animation runs. */
+html.js [data-reveal].is-settled { will-change: auto; }
+
+/* ==========================================================================
+   2. STAGGER — cascading a group of siblings
+   --------------------------------------------------------------------------
+   Markup:  <div data-reveal-group data-stagger="normal"> <child> … </div>
+
+   reveal.js writes `--i` (0-based sibling index) onto each child and reveals
+   the whole group with one observer. Unlike an :nth-child ladder this has no
+   upper bound — a 24-card grid staggers correctly.
+
+   Stagger is a hierarchy device: it tells the eye there is an order to read
+   things in. A group whose items have no order should reveal together.
+   ========================================================================== */
+
+[data-reveal-group] {
+  --stagger-step: var(--stagger-normal);
+  --stagger-max: 8;          /* cap so late items are not left behind */
+}
+
+[data-reveal-group][data-stagger="fast"]   { --stagger-step: var(--stagger-fast); }
+[data-reveal-group][data-stagger="normal"] { --stagger-step: var(--stagger-normal); }
+[data-reveal-group][data-stagger="slow"]   { --stagger-step: var(--stagger-slow); }
+
+[data-reveal-group] > * {
+  --i: 0;
+  --stagger-delay: calc(min(var(--i), var(--stagger-max)) * var(--stagger-step));
+  transition:
+    opacity   var(--dur-slow) var(--ease-entrance) var(--stagger-delay),
+    transform var(--dur-slow) var(--ease-entrance) var(--stagger-delay);
+}
+
+html.js [data-reveal-group] > * {
+  opacity: 0;
+  transform: translate3d(0, var(--travel-md), 0);
+  will-change: opacity, transform;
+}
+
+html.js [data-reveal-group].is-revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+html.js [data-reveal-group].is-settled > * { will-change: auto; }
+
+/* ==========================================================================
+   3. HOVER — pointer feedback
+   --------------------------------------------------------------------------
+   Applied as classes because hover is a property of a component, not of a
+   moment in the page. All are gated behind a fine pointer: a touch device
+   fires :hover on tap and would otherwise leave elements stuck mid-state.
+   ========================================================================== */
+
+@media (hover: hover) and (pointer: fine) {
+
+  /* Lift — the card gesture. Movement is small; the shadow does the work. */
+  .hover-lift {
+    transition:
+      transform    var(--dur-fast) var(--ease-standard),
+      box-shadow   var(--dur-fast) var(--ease-standard),
+      border-color var(--dur-fast) var(--ease-standard);
+  }
+  .hover-lift:hover { transform: translate3d(0, var(--lift), 0); }
+
+  /* Scale — for media only. Never scale text; it re-renders every glyph. */
+  .hover-scale { overflow: hidden; }
+  .hover-scale > img,
+  .hover-scale > picture,
+  .hover-scale > video,
+  .hover-scale .hover-scale__target {
+    transition: transform var(--dur-medium) var(--ease-standard);
+  }
+  .hover-scale:hover > img,
+  .hover-scale:hover > picture,
+  .hover-scale:hover > video,
+  .hover-scale:hover .hover-scale__target {
+    transform: scale(calc(1 + .03 * var(--motion)));
+  }
+
+  /* Icon shift — the arrow that leans toward where it will take you. The
+     single most legible micro-interaction on a marketing site. */
+  .hover-icon .icon-shift {
+    transition: transform var(--dur-fast) var(--ease-standard);
+  }
+  .hover-icon:hover .icon-shift,
+  .hover-icon:focus-visible .icon-shift {
+    transform: translate3d(var(--nudge), 0, 0);
+  }
+  .hover-icon .icon-shift--down { }
+  .hover-icon:hover .icon-shift--down {
+    transform: translate3d(0, var(--nudge), 0);
+  }
+
+  /* Border shift — for outline-only surfaces where a lift would be too much. */
+  .hover-border {
+    transition: border-color var(--dur-fast) var(--ease-standard),
+                background   var(--dur-fast) var(--ease-standard);
+  }
+  .hover-border:hover { border-color: var(--border-strong); }
+
+  /* Background shift — quiet row highlight, table and list rows. */
+  .hover-bg { transition: background var(--dur-fast) var(--ease-standard); }
+  .hover-bg:hover { background: var(--surface-sunken); }
+}
+
+/* Press feedback is not gated — it is the only affordance a touch user gets. */
+.press { transition: transform var(--dur-instant) var(--ease-standard); }
+.press:active { transform: scale(calc(1 - .01 * var(--motion))); }
+
+/* ==========================================================================
+   4. PRODUCT — motion reserved for product visualisations
+   --------------------------------------------------------------------------
+   Rule 3 territory. These exist to make a static mockup read as a live
+   product surface. Use at most one per composition.
+   ========================================================================== */
+
+/* Float — a slow, near-imperceptible drift. Amplitude is 6px over 7 seconds:
+   below the threshold where the eye tracks it as animation, above the
+   threshold where the panel reads as inert. Never apply to more than two
+   elements in one viewport. */
+@keyframes tp-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -6px, 0); }
+}
+
+/* No will-change: an infinite transform animation is promoted by the compositor
+   on its own, so declaring it buys nothing and holds a layer for the life of the
+   page. */
+.float {
+  animation: tp-float 7s var(--ease-inout) infinite;
+}
+.float--delayed { animation-delay: -2.4s; }
+.float--slow    { animation-duration: 11s; }
+
+/* Parallax — scroll-linked depth. modules/parallax.js writes `--parallax`
+   (a px offset) on rAF. Depth is capped low: a marketing page that slides
+   apart under the reader is a distraction, not a device. */
+/* will-change is set by parallax.js, inline, only while the element is on screen
+   AND the effect is enabled — so an offscreen parallax element, a coarse pointer
+   and a reduced-motion visitor all hold no layer at all. */
+[data-parallax] {
+  transform: translate3d(0, var(--parallax, 0px), 0);
+}
+
+/* Layer reveal — a stack of panels that assembles itself. Communicates
+   "these things are related and built up in order", which is exactly what a
+   scoring breakdown or a pipeline is. */
+[data-layers] > * {
+  --i: 0;
+  transition:
+    opacity   var(--dur-slower) var(--ease-entrance) calc(var(--i) * var(--stagger-slow)),
+    transform var(--dur-slower) var(--ease-entrance) calc(var(--i) * var(--stagger-slow));
+}
+html.js [data-layers] > * {
+  opacity: 0;
+  transform: translate3d(0, var(--travel-md), 0) scale(.98);
+}
+html.js [data-layers].is-revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   4b. PRODUCT PRIMITIVES — P1 … P4
+   --------------------------------------------------------------------------
+   The four primitives Phase 3 added, specified in
+   docs/phase-2/07-MOTION_STORYBOARD.md § 5 and documented in
+   docs/motion-system.md § 3. Each is demonstrated in isolation on
+   motion-lab.html § 4b before being used anywhere.
+
+   They live here rather than in components.css because they are movement, not
+   appearance: the meter's bar, the graph's line and the ranked row all draw
+   themselves from tokens in components.css and borrow only their behaviour
+   from this file.
+   ========================================================================== */
+
+/* ---- P2 · Sequenced reveal with per-beat offsets ------------------------ */
+/* Communicates: these parts assemble in this order, and THIS part is separate.
+   `data-layers` alone gives a fixed 120ms cadence. Section 06 needs specific
+   beats, because its 200ms and 400ms pauses are the entire point (`07 § 4`):
+   the partial chip arriving alone at 1400ms is the single most important moment
+   on the homepage, and a fixed cadence cannot express it.
+
+   Markup:
+     <div data-sequence>                     the composition
+       <p data-beat="0">…</p>                a beat, at an absolute offset
+       <span data-beat="1400">…</span>       … at any depth
+     </div>
+
+   Two deviations from `07 § 5`'s sketch, both deliberate:
+
+   1. ABSOLUTE, not additive. `07 § 5` proposes `data-layer-delay="200"` adding
+      to a computed cadence offset. The storyboard it serves is specified as an
+      absolute beat table, and expressing an absolute table as a chain of
+      relative offsets makes every beat depend on the one before it — which is
+      how a sequence silently drifts when one beat is edited. `data-beat` takes
+      the storyboard's own number.
+
+   2. ANY DEPTH, not direct children. `[data-layers] > *` can only reach direct
+      children; the explanation panel's beats sit three levels down (a skill
+      chip inside a row inside a block). A sequence that can only address the
+      top level would have forced the panel's structure to follow the animation,
+      which is backwards.
+
+   `--beat-delay` inherits, which is what lets a meter or an SVG path inside a
+   beat pick up that beat's timing without being told about it separately. */
+
+[data-beat] {
+  --beat-delay: 0ms;
+  transition:
+    opacity   var(--dur-slower) var(--ease-entrance) var(--beat-delay),
+    transform var(--dur-slower) var(--ease-entrance) var(--beat-delay);
+}
+
+html.js [data-sequence] [data-beat] {
+  opacity: 0;
+  will-change: opacity, transform;
+  /* --beat-y lets one beat travel further, or in the other direction, without
+     a bespoke keyframe: section 07's payoff row rises three row-heights while
+     the rows it overtakes move one row down. Travel still collapses to zero
+     under reduced motion, because --travel-sm is the fallback and every custom
+     value is expressed in terms of a token. */
+  transform: translate3d(0, var(--beat-y, var(--travel-sm)), 0);
+}
+
+/* A beat that only fades. SVG text and dashed strokes sit ON geometry: moving
+   them 16px would slide a label off the line it names, and a dash pattern is
+   the one thing a dash offset already animates. */
+html.js [data-sequence] [data-beat][data-beat-fade] { transform: none; }
+html.js [data-sequence].is-sequenced [data-beat] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Released once the longest beat has settled — see sequence.js. */
+html.js [data-sequence].is-settled [data-beat] { will-change: auto; }
+
+/* ---- P1 · Meter fill ---------------------------------------------------- */
+/* Communicates: this quantity has a magnitude relative to a whole.
+   `scaleX` from a left origin, so it is transform-only and cannot trigger
+   layout. Used by C2's five dimensions, C8's candidate-side dimensions, C10's
+   résumé quality and C1's coverage — the most reused of the four.
+
+   `--meter-v` is a unitless 0–1 fraction, written once by whoever renders the
+   meter. The bar is armed only under `html.js`: with no JavaScript it renders
+   at its true width immediately, because the value IS the content. */
+
+.meter__fill {
+  transform-origin: left center;
+  transition: transform var(--dur-slow) var(--ease-entrance)
+              var(--meter-delay, var(--beat-delay, 0ms));
+}
+
+html.js .meter__fill { transform: scaleX(0); }
+
+/* Any revealed ancestor releases the meters inside it: a plain reveal, a layer
+   stack, a running sequence, or an explicit class for a meter that is filled
+   by a control rather than by scroll. */
+html.js [data-reveal].is-revealed .meter__fill,
+html.js [data-reveal-group].is-revealed .meter__fill,
+html.js [data-layers].is-revealed .meter__fill,
+html.js [data-sequence].is-sequenced .meter__fill,
+html.js [data-drawer-reveal].is-open .meter__fill,
+html.js [data-signature] .meter__fill,
+html.js .meter__fill.is-filled {
+  transform: scaleX(var(--meter-v, 1));
+}
+/* PHASE 6 added the two selectors above P1's own: a drawer released on
+   `is-open` (the hero, which has no reveal ancestor on purpose) fills the
+   meters inside it, and the P6 stage's meters are simply full — the stage is
+   its own primitive and a bar growing inside a layer that is itself arriving
+   would be two animations describing one value. */
+
+/* ---- P3 · List reorder -------------------------------------------------- */
+/* Communicates: your priorities changed the answer. The one animation on the
+   site that IS the information rather than a decoration of it.
+
+   modules/tuner.js measures each row, writes a `--shift`, lets the rows
+   translate to their new positions, then reorders the DOM and clears the
+   transforms — a FLIP, with no absolute positioning and nothing animating a
+   layout property. Under reduced motion the DOM is reordered with no transform
+   at all, which repositions instantly. */
+
+.reorder__row { transform: translate3d(0, var(--shift, 0px), 0); }
+
+.reorder.is-reordering .reorder__row {
+  transition: transform var(--dur-medium) var(--ease-standard);
+  will-change: transform;
+}
+.reorder.is-reordering { position: relative; }
+
+/* ---- P4 · Path draw ---------------------------------------------------- */
+/* Communicates: these two things are connected, and here is the connection.
+   Used once, by C3's skill-relationship graph in section 07.
+
+   DOCUMENTED EXCEPTION. `stroke-dashoffset` is not in the
+   transform / opacity / filter allowlist CLAUDE.md § 3 rule 6 sets, and there
+   is no transform that draws a line along itself. The exception is therefore
+   deliberate and bounded:
+
+     · SIX PATHS MAXIMUM on a page. Section 07 draws one; a second edge fades
+       rather than draws, because a dashed line cannot animate a dash offset.
+     · This primitive only. Nothing else on the site may animate a property
+       outside the allowlist.
+     · Short, simple paths only — a long complex path is where the cost stops
+       being negligible.
+
+   Recorded as an exception in docs/motion-system.md § 3. */
+
+.edge__path {
+  stroke-dasharray: var(--len, 240);
+  stroke-dashoffset: var(--len, 240);
+  transition: stroke-dashoffset var(--dur-slow) var(--ease-entrance)
+              var(--edge-delay, var(--beat-delay, 0ms));
+}
+
+html.js [data-sequence].is-sequenced .edge__path,
+.edge__path.is-drawn { stroke-dashoffset: 0; }
+
+/* No JavaScript, no observer: the line is simply there. A relationship the
+   reader cannot see is a relationship the page did not state. */
+html:not(.js) .edge__path { stroke-dashoffset: 0; }
+
+/* ---- P6 · Staged layers — the score, taken apart ------------------------ */
+/* Communicates: one object has six layers, and the scroll takes it apart in
+   order — verdict, mechanism, evidence, source, shared result.
+   Specified in prototypes/STAGE-3.md § 8, documented in docs/motion-system.md § 3.
+
+   THE SCROLL IS THE CLOCK. `--p` runs 0 → 1 across a stage --scene-length
+   viewports tall whose sticky box is (viewport − header) tall. Where the
+   browser supports a view() scroll timeline, CSS drives --p itself (§ TIMELINE
+   below); everywhere else assets/js/modules/scene.js writes it from one passive,
+   rAF-throttled scroll listener. Either way scene.js writes `data-state` (1–6)
+   and the rail's is-current / is-passed. Everything else is this mapping, and
+   the mapping touches only opacity and transform.
+
+   THE WINDOWS DO NOT OVERLAP. Each boundary t has the outgoing layer leaving
+   over [t − w, t] and the incoming layer arriving over [t, t + w]. At t the
+   stage holds one caption and, in states 4–5, the small 87. Two layers are
+   never on screen together; "can I tell what changed?" is structural.
+
+   THE STACK IS THE BASE. Without JavaScript, under reduced motion, below 700px
+   wide or 620px tall, the six layers are six frames in reading order with
+   sticky captions — the same markup, nothing hidden, nothing microscopic. The
+   pin is an enhancement scoped to html.js and :not(.sig--static); scene.js
+   sets .sig--static where it must not pin, and the media queries below are the
+   backstop for the frames before it runs.
+
+   CAP: ONE PER PAGE, enforced by tools/check.mjs. Two stages on one page is a
+   scrolljacked site; one is a signature.
+
+   Markup (compositions.mjs signature()):
+     <div class="sig sig--pinned" data-signature data-thresholds="0.14,0.31,0.48,0.65,0.82" data-state="1">
+       <div class="sig__stage">
+         <div class="sig__persist">…38px ring…</div>
+         <ol class="srail">…six items…</ol>
+         <div class="sig__layers">
+           <div class="layer layer--1" data-layer="1"><p class="layer__cap">…</p><div class="layer__body">…</div></div>
+           … ×6
+         </div>
+       </div>
+     </div> */
+
+/* The stack — the base state, and the whole composition in every fallback. */
+.sig { position: relative; height: auto; }
+.sig__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-inline: var(--page-pad);
+  max-width: var(--container);
+  margin-inline: auto;
+}
+.sig__layers { display: grid; gap: var(--sp-16); min-width: 0; }
+.layer {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  column-gap: var(--gap-wide);
+  row-gap: var(--sp-6);
+  align-items: start;
+  min-width: 0;
+}
+.layer__body { min-width: 0; }
+.srail, .sig__persist { display: none; }
+
+/* The caption: number, key line, one sentence. Present in every mode. In the
+   stack it is the first column and sticks beside its layer. */
+.layer__cap { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 var(--sp-3); align-items: baseline; max-width: 64ch; position: sticky; top: calc(var(--header-h) + var(--sp-6)); }
+.layer__n { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: var(--tr-label); color: var(--text-accent); }
+.layer__k { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h3); letter-spacing: var(--tr-heading); color: var(--text-strong); }
+.layer__s { font-size: var(--fs-body-lg); color: var(--text-muted); margin-top: 2px; }
+
+@media (max-width: 899px) {
+  .layer { grid-template-columns: minmax(0, 1fr); }
+  .layer__cap { position: static; }
+}
+@media (max-width: 699px) {
+  .sig__layers { gap: var(--sp-12); }
+  .layer { row-gap: var(--sp-4); }
+}
+
+/* The pin — html.js, and only where scene.js has not said "static". */
+html.js .sig--pinned:not(.sig--static) { height: calc(var(--scene-length) * 100vh); }
+html.js .sig--pinned:not(.sig--static) .sig__stage {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  grid-template-columns: 200px minmax(0, 1fr);
+  column-gap: var(--gap-wide);
+  align-items: start;
+  overflow: hidden;
+}
+/* Every layer starts at the same y: caption, then body, top-aligned. The
+   800px cap is on the layer area, not the sticky box, so the box can match
+   the native timeline's contain range exactly. */
+html.js .sig--pinned:not(.sig--static) .sig__layers { position: relative; display: block; height: min(calc(100vh - var(--header-h)), 800px); }
+html.js .sig--pinned:not(.sig--static) .layer {
+  position: absolute;
+  inset: 0;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--sp-8);
+  padding-top: var(--sp-8);
+  pointer-events: none;
+}
+/* Six promoted layers is the cost of the signature — and only while the stage
+   is within a viewport of its pin. scene.js sets `is-near`; off screen the
+   hint is released, as every other primitive on the site releases its own. */
+html.js .sig--pinned:not(.sig--static).is-near .layer { will-change: opacity, transform; }
+html.js .sig--pinned:not(.sig--static) .layer__cap { position: static; grid-template-columns: auto minmax(0, 1fr); }
+html.js .sig--pinned:not(.sig--static) .layer__s { grid-column: 2; }
+html.js .sig--pinned:not(.sig--static) .layer__body { display: grid; align-content: start; min-height: 0; padding-bottom: var(--sp-6); }
+
+/* The rail: six steps, the current one ink, the passed ones indigo. A pin
+   never feels like a trap when the progress is visible. */
+html.js .sig--pinned:not(.sig--static) .srail { list-style: none; margin: 0; padding: var(--sp-8) 0 0; display: grid; gap: var(--sp-4); align-content: start; }
+.srail__item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--sp-2); align-items: baseline; font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: .06em; color: var(--text-faint); transition: color var(--dur-medium) var(--ease-standard); }
+.srail__n { position: relative; }
+.srail__n::after { content: ""; position: absolute; left: 0; top: -4px; width: 100%; height: 1px; background: currentColor; transform-origin: left; transform: scaleX(0); transition: transform var(--dur-medium) var(--ease-standard); }
+.srail__item.is-passed { color: var(--text-accent); }
+.srail__item.is-passed .srail__n::after { transform: scaleX(1); }
+.srail__item.is-current { color: var(--text-strong); }
+.srail__item.is-current .srail__n::after { transform: scaleX(1); background: var(--text-accent); }
+.srail__k { font-family: var(--font-sans); font-size: var(--fs-small); letter-spacing: 0; }
+
+/* The persistent 87 — states 4 and 5 only, since state 3's own head is
+   "87 = four weights, published". */
+html.js .sig--pinned:not(.sig--static) .sig__persist { display: block; position: absolute; right: var(--page-pad); top: var(--sp-8); z-index: 3; opacity: 0; transform: translateY(-8px); transition: opacity var(--dur-medium) var(--ease-entrance), transform var(--dur-medium) var(--ease-entrance); pointer-events: none; }
+html.js .sig--pinned:not(.sig--static)[data-state="4"] .sig__persist,
+html.js .sig--pinned:not(.sig--static)[data-state="5"] .sig__persist { opacity: 1; transform: none; }
+.sig__persist .ring { --ring-size: 56px; }
+.sig__persist .ring__value { font-size: var(--fs-body-lg); }
+
+/* Tablet: the pin keeps its full width; the rail is a desktop affordance. */
+@media (max-width: 899px) {
+  html.js .sig--pinned:not(.sig--static) .sig__stage { grid-template-columns: minmax(0, 1fr); }
+  html.js .sig--pinned:not(.sig--static) .srail { display: none; }
+}
+
+/* ---- The mapping. Boundaries 0.14 · 0.31 · 0.48 · 0.65 · 0.82; window 0.055.
+   Must agree with data-thresholds on the stage (tools/check.mjs asserts it). */
+html.js .sig--pinned:not(.sig--static) { --w: 0.055; }
+html.js .sig--pinned:not(.sig--static) .layer--1 { --a: 1;                                                  --d: clamp(0, (var(--p) - (0.14 - var(--w))) / var(--w), 1); }
+html.js .sig--pinned:not(.sig--static) .layer--2 { --a: clamp(0, (var(--p) - 0.14) / var(--w), 1);          --d: clamp(0, (var(--p) - (0.31 - var(--w))) / var(--w), 1); }
+html.js .sig--pinned:not(.sig--static) .layer--3 { --a: clamp(0, (var(--p) - 0.31) / var(--w), 1);          --d: clamp(0, (var(--p) - (0.48 - var(--w))) / var(--w), 1); }
+html.js .sig--pinned:not(.sig--static) .layer--4 { --a: clamp(0, (var(--p) - 0.48) / var(--w), 1);          --d: clamp(0, (var(--p) - (0.65 - var(--w))) / var(--w), 1); }
+html.js .sig--pinned:not(.sig--static) .layer--5 { --a: clamp(0, (var(--p) - 0.65) / var(--w), 1);          --d: clamp(0, (var(--p) - (0.82 - var(--w))) / var(--w), 1); }
+html.js .sig--pinned:not(.sig--static) .layer--6 { --a: clamp(0, (var(--p) - 0.82) / var(--w), 1);          --d: 0; }
+
+/* The base: arrive rising 48px from 0.96; leave receding 40px to 0.95. */
+html.js .sig--pinned:not(.sig--static) .layer {
+  opacity: calc(var(--a) * (1 - var(--d)));
+  transform:
+    translate3d(0, calc((1 - var(--a)) * 48px - var(--d) * 40px), 0)
+    scale(calc(0.96 + var(--a) * 0.04 - var(--d) * 0.05));
+  transform-origin: 50% 40%;
+}
+/* State 1: the unselected rows go first; the selected row is the last thing
+   on screen, and it is the thing the next layer is about. */
+html.js .sig--pinned:not(.sig--static) .layer--1 .rank__row:not([aria-current="true"]) { opacity: calc(1 - var(--d)); }
+/* 2 → 3, the one borrowed moment: the 87 grows past itself as it goes … */
+html.js .sig--pinned:not(.sig--static) .layer--2 {
+  transform: translate3d(0, calc((1 - var(--a)) * 48px), 0) scale(calc(0.96 + var(--a) * 0.04 + var(--d) * 0.35));
+  transform-origin: 18% 42%;
+}
+/* … and the weights come out of where it was: the layer arrives from above,
+   the bars grow from zero, and the rows fan down. */
+html.js .sig--pinned:not(.sig--static) .layer--3 {
+  transform: translate3d(0, calc((1 - var(--a)) * -32px - var(--d) * 40px), 0) scale(calc(1 - var(--d) * 0.05));
+}
+html.js .sig--pinned:not(.sig--static) .layer--3 .wrow { transform: translate3d(0, calc((1 - var(--a)) * (var(--i) * 18px + 8px)), 0); }
+html.js .sig--pinned:not(.sig--static) .layer--3 .wrow__fill { transform: scaleX(var(--a)); }
+/* State 4: the skill rows arrive in order, because they assemble in order:
+   exact, equivalent, transferable, missing. */
+html.js .sig--pinned:not(.sig--static) .layer--4 .srow { opacity: clamp(0, calc(var(--a) * 2.4 - var(--i, 0) * 0.28), 1); transform: translate3d(calc((1 - var(--a)) * 16px), 0, 0); }
+
+/* ---- TIMELINE — where the browser can drive the clock, it does. ----------
+   --p is registered as a number and animated 0 → 1 across the stage's contain
+   range, inset by the header. The listener in scene.js sees the same support
+   flag and stops writing --p. Verified equal in tools/audit.mjs.
+
+   THE ONE HARD-CODED VALUE ON THE SITE: view(block 64px 0px) is --header-h,
+   because animation-timeline cannot read a custom property. tools/check.mjs
+   asserts this number equals --header-h in tokens.css; scene.js reads the
+   token at run time, so the listener cannot drift. Change the header height
+   and the check fails until this line follows. */
+@property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
+@keyframes sig-progress { from { --p: 0; } to { --p: 1; } }
+@supports (animation-timeline: view()) {
+  html.js .sig--pinned:not(.sig--static) {
+    animation: sig-progress linear both;
+    animation-timeline: view(block 64px 0px);   /* = --header-h — see above */
+    animation-range: contain 0% contain 100%;
+  }
+}
+
+/* Backstops: the frames before scene.js runs, and the preferences it honours.
+   Reduced motion, a viewport under 700px wide or under 620px tall: the stack. */
+@media (prefers-reduced-motion: reduce), (max-width: 699px), (max-height: 619px) {
+  html.js .sig--pinned:not(.sig--static) { height: auto; animation: none; }
+  html.js .sig--pinned:not(.sig--static) .sig__stage { position: static; height: auto; grid-template-columns: minmax(0, 1fr); overflow: visible; }
+  html.js .sig--pinned:not(.sig--static) .srail, html.js .sig--pinned:not(.sig--static) .sig__persist { display: none; }
+  html.js .sig--pinned:not(.sig--static) .sig__layers { display: grid; height: auto; }
+  html.js .sig--pinned:not(.sig--static) .layer { position: static; opacity: 1; transform: none; padding-top: 0; gap: var(--sp-6); grid-template-rows: none; pointer-events: auto; will-change: auto; }
+  html.js .sig--pinned:not(.sig--static) .layer * { opacity: 1; transform: none; }
+  html.js .sig--pinned:not(.sig--static) .layer__cap { grid-template-columns: minmax(0, 1fr); }
+  html.js .sig--pinned:not(.sig--static) .layer__s { grid-column: auto; }
+}
+@media (max-width: 699px) {
+  html.js .sig--pinned:not(.sig--static) .layer { row-gap: var(--sp-4); }
+}
+@media (prefers-reduced-motion: reduce) and (min-width: 900px), (max-height: 619px) and (min-width: 900px) {
+  html.js .sig--pinned:not(.sig--static) .layer { grid-template-columns: 200px minmax(0, 1fr); }
+  html.js .sig--pinned:not(.sig--static) .layer__cap { position: sticky; }
+}
+
+/* ==========================================================================
+   5. UTILITY — component-level state transitions
+   ========================================================================== */
+
+/* ---- Tab panel crossfade ---------------------------------------------- */
+/* Panels are hidden with the `hidden` attribute (real, announced to AT) and
+   the incoming panel fades up. No height animation: the frame is a fixed
+   aspect ratio, so there is nothing to reflow. */
+@keyframes tp-panel-in {
+  from { opacity: 0; transform: translate3d(0, calc(8px * var(--motion)), 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tab-panel:not([hidden]) {
+  animation: tp-panel-in var(--dur-medium) var(--ease-entrance) both;
+}
+
+/* ---- Accordion --------------------------------------------------------- */
+/* Height is animated with grid-template-rows 0fr → 1fr. This animates to the
+   panel's natural height with no JS measurement, no max-height guesswork, and
+   no jump when the content reflows at a different breakpoint. */
+.accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-medium) var(--ease-inout);
+}
+/* The direct child is a bare clipping wrapper with no padding of its own:
+   padding on the grid child survives `min-height: 0` and would leave every
+   collapsed panel holding its bottom padding open. The padded element is
+   .accordion__content, one level deeper. */
+.accordion__panel > * {
+  overflow: hidden;
+  min-height: 0;
+  padding: 0;
+}
+.accordion__item[data-open="true"] .accordion__panel {
+  grid-template-rows: 1fr;
+}
+
+.accordion__marker {
+  transition: transform var(--dur-medium) var(--ease-inout);
+}
+.accordion__item[data-open="true"] .accordion__marker {
+  transform: rotate(180deg);
+}
+
+/* ---- Count-up ---------------------------------------------------------- */
+/* The element reserves its final width before counting so the surrounding
+   layout never shifts (CLS). modules/counter.js sets --count-ch. */
+[data-count] {
+  display: inline-block;
+  min-width: var(--count-ch, auto);
+}
+
+/* ---- Navigation -------------------------------------------------------- */
+/* `visibility` is delayed to the end of the close transition but flips
+   instantly on open. Without this the drawer is still visibility:hidden when
+   the open handler tries to move focus into it, and focus silently fails. */
+.nav-scrim {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-medium) var(--ease-standard),
+              visibility 0s linear var(--dur-medium);
+}
+.nav-scrim[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-medium) var(--ease-standard),
+              visibility 0s linear 0s;
+}
+
+.nav-drawer {
+  transform: translate3d(0, -12px, 0);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform  var(--dur-medium) var(--ease-entrance),
+    opacity    var(--dur-medium) var(--ease-standard),
+    visibility 0s linear var(--dur-medium);
+}
+.nav-drawer[data-open="true"] {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform  var(--dur-medium) var(--ease-entrance),
+    opacity    var(--dur-medium) var(--ease-standard),
+    visibility 0s linear 0s;
+}
+
+/* Drawer links cascade in behind the panel. */
+.nav-drawer__link {
+  --i: 0;
+  opacity: 0;
+  transform: translate3d(0, calc(10px * var(--motion)), 0);
+  transition:
+    opacity   var(--dur-medium) var(--ease-entrance) calc(60ms + var(--i) * var(--stagger-fast)),
+    transform var(--dur-medium) var(--ease-entrance) calc(60ms + var(--i) * var(--stagger-fast));
+}
+.nav-drawer[data-open="true"] .nav-drawer__link {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   6. REDUCED MOTION — final backstop
+   --------------------------------------------------------------------------
+   tokens.css already zeroes every distance and duration, which neutralises
+   the transitions above. These rules additionally stop the two things a
+   token cannot reach: infinite animations, and scroll-linked transforms.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .float,
+  .tab-panel:not([hidden]) {
+    animation: none !important;
+  }
+
+  [data-parallax] { transform: none !important; }
+
+  /* Reveal targets are shown immediately, with no transition to run. */
+  html.js [data-reveal],
+  html.js [data-reveal-group] > *,
+  html.js [data-layers] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .nav-drawer,
+  .nav-drawer__link,
+  .nav-scrim {
+    transition-duration: 1ms !important;
+  }
+
+  /* The four Phase 3 primitives render at their end state, complete and
+     static. A meter at zero width, an undrawn edge or an unsorted list is not
+     a calmer version of the information — it is the information missing.
+     Verified on motion-lab.html § 4b with the toggle on. */
+  html.js .meter__fill {
+    transform: scaleX(var(--meter-v, 1)) !important;
+    transition: none !important;
+  }
+
+  .edge__path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+  .edge__label {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  /* Rows are repositioned by reordering the DOM, with nothing to animate. */
+  .reorder__row,
+  .reorder.is-reordering .reorder__row {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  html.smooth-scroll { scroll-behavior: auto; }
+}
+
+/* ---- P5 · Drawer reveal ------------------------------------------------- */
+/* Communicates: a row is selected and the view opens into it.
+   Specified in `docs/phase-4.md` § 3.1, documented in docs/motion-system.md § 3.
+
+   NOT A NEW KEYFRAME. P5 composes two primitives the site already had — the
+   nav drawer's translate-and-fade and the tp-panel-in entrance — applied to the
+   one composition whose subject is a drawer opening over a list. That is why it
+   is documented as a composition of primitives rather than as a fifth
+   animation: nothing here is a new behaviour, only a new application of two.
+
+   Markup:
+     <div class="workspace" data-drawer-reveal>   inside a [data-reveal] ancestor
+       <div class="workspace__list">   …          present on load
+       <div class="workspace__drawer"> …          slides in over it
+
+   WHY IT IS ALLOWED ABOVE THE FOLD. `CLAUDE.md` and the hero's own comment both
+   say above-the-fold content reveals immediately and the hero must not ask for
+   work. This is a one-shot entrance on load that completes inside --dur-medium,
+   not an interaction, and there is deliberately no click-to-open behaviour in
+   the hero. The interaction stays in § 06, where the switcher already lives.
+
+   CAP: ONE PER PAGE, enforced by tools/check.mjs. A page with two drawers
+   sliding in has an animation, not a statement.
+
+   The trigger is an ancestor's reveal, exactly like P1's meter fill — so there
+   is no new JavaScript module, and with JavaScript unavailable the drawer is
+   simply there. */
+
+[data-drawer-reveal] .workspace__drawer {
+  transition:
+    opacity   var(--dur-medium) var(--ease-entrance) 120ms,
+    transform var(--dur-medium) var(--ease-entrance) 120ms;
+}
+
+html.js [data-drawer-reveal] .workspace__drawer {
+  opacity: 0;
+  transform: translate3d(calc(24px * var(--motion)), 0, 0);
+  will-change: opacity, transform;
+}
+
+html.js [data-reveal].is-revealed [data-drawer-reveal] .workspace__drawer,
+html.js [data-drawer-reveal].is-open .workspace__drawer {
+  opacity: 1;
+  transform: none;
+}
+
+html.js [data-reveal].is-settled [data-drawer-reveal] .workspace__drawer,
+html.js [data-drawer-reveal].is-settled .workspace__drawer {
+  will-change: auto;
+}
+
+/* Reduced motion: present, static, complete. An absent drawer is not a calmer
+   version of the composition — it is half the composition missing. */
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-drawer-reveal] .workspace__drawer {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  html.js [data-sequence] .wbar__seg,
+  html.js [data-reveal] .spark__bar {
+    transform: none !important;
+    transition: none !important;
+  }
+}

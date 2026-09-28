@@ -1,0 +1,46 @@
+{
+  "name": "Transpahire — Stratum",
+  "version": "1.0.0",
+  "generated": "2026-05-27",
+  "palette": {
+    "ink": "#0B0B1F",
+    "indigoDeep": "#1E1B4B",
+    "indigo": "#312E81",
+    "indigoBright": "#4F46E5",
+    "indigoGlow": "#6366F1",
+    "platinum": "#E6E6EF",
+    "bone": "#F4F4F8",
+    "paper": "#FAFAFB",
+    "white": "#FFFFFF"
+  },
+  "typography": {
+    "display": {
+      "family": "Space Grotesk",
+      "weight": 500,
+      "tracking": "-2.5%"
+    },
+    "body": {
+      "family": "Manrope",
+      "weight": 400,
+      "tracking": "0%"
+    },
+    "serif": {
+      "family": "Instrument Serif",
+      "weight": 400,
+      "style": "italic"
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "weight": 400
+    }
+  },
+  "wordmark": {
+    "family": "Manrope",
+    "weight": 500,
+    "tracking": "-4.5%",
+    "color": {
+      "onLight": "#0B0B1F",
+      "onDark": "#E6E6EF"
+    }
+  }
+}

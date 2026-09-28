@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>See why you match — Transpahire for candidates</title>
+<meta name="description" content="Roles scored for you out of 100, with where you fit and where you don’t. What your résumé is missing, in specifics. Which skills would open more roles. Who has been looking at your profile. And where your application stands.">
+<link rel="canonical" href="https://transpahire.com/for-candidates/">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/for-candidates/">
+<meta property="og:title" content="See why you match — Transpahire for candidates">
+<meta property="og:description" content="Roles scored for you out of 100, with where you fit and where you don’t. What your résumé is missing, in specifics. Which skills would open more roles. Who has been looking at your profile. And where your application stands.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="See why you match — Transpahire for candidates">
+<meta name="twitter:description" content="Roles scored for you out of 100, with where you fit and where you don’t. What your résumé is missing, in specifics. Which skills would open more roles. Who has been looking at your profile. And where your application stands.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <!-- Sign in is commented out of the header, on request (28 Sep 2026).
+             The mobile drawer still carries it. Uncomment to restore; the
+             ≤900px rule in sections.css that hides it is still in place.
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+        -->
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="page-head">
+  <div class="container">
+    <div class="page-head__inner">
+      <p class="eyebrow">For candidates</p>
+      <h1 class="h-display" data-reveal="up">The recruiter sees <em>the same score you do.</em></h1>
+      <p class="lede" data-reveal="up">Not a tier, not a badge, not a softened version. The same number and the same breakdown, on the same record — including the parts that count against you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why you match ────────────────────────────────────────────────────── -->
+<section class="section section--tight-top" data-content="provisional">
+  <div class="container pair">
+    <div data-reveal="left">
+      <p class="eyebrow">Why you match</p>
+      <h2 class="h-section mt-6">Where you fit, <em>and where you don&rsquo;t.</em></h2>
+      <p class="body-copy body-copy--lg measure mt-8">
+        Every role you are matched to is scored out of 100. Four things are weighted, and skill
+        coverage is 65% of it — so a role you have the
+        skills for does not lose to a role you happen to live closer to. Salary alignment is not
+        one of the four; it adjusts the total by up to a tenth, either way.
+      </p>
+      <p class="body-copy measure mt-6">
+        A skill you do not list is not automatically a miss. If the platform knows a skill you
+        do have leads to it, it says so — and it names which one, and quotes the line in your
+        own profile it read it from.
+      </p>
+      <p class="body-copy measure mt-6">
+        You see where your application stands — applied, reviewed, shortlisted, interview scheduled, offer out —
+        and you are told when it moves. You choose which of those are worth an email.
+      </p>
+    </div>
+    <div data-reveal="right">
+
+<div class="frame frame--elevated float float--delayed" style="--ratio: 3 / 4">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / recommended</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="cview">
+    <div>
+      <h3 class="cview__job">Senior Backend Engineer, Payments</h3>
+      <p class="cview__meta">Payments · Bengaluru · Hybrid</p>
+    </div>
+
+    <div class="cview__score">
+      <p class="score score--lg">
+      <span class="score__value" data-count="87">87</span>
+      <span class="score__scale" aria-hidden="true">/100</span>
+      <span class="chip chip--mono chip--strong">Strong Match</span>
+      <span class="sr-only">Match score 87 out of 100. Classification: strong match.</span>
+    </p>
+      <p class="cview__same">the same score the recruiter sees</p>
+    </div>
+
+    <div class="panel__block">
+      <p class="panel__rule">Where you fit</p>
+      <dl class="cview__rows">
+        <div class="cview__row">
+          <dt class="cview__label">Skill coverage <span class="cview__weight">65%</span></dt>
+          <dd class="cview__value"><span aria-hidden="true">84</span><span class="sr-only">Skill coverage, 65 per cent of the weight: 84 out of 100.</span></dd>
+        </div>
+        <div class="cview__row">
+          <dt class="cview__label">Semantic similarity <span class="cview__weight">25%</span></dt>
+          <dd class="cview__value"><span aria-hidden="true">93</span><span class="sr-only">Semantic similarity, 25 per cent of the weight: 93 out of 100.</span></dd>
+        </div>
+        <div class="cview__row">
+          <dt class="cview__label">Experience curve <span class="cview__weight">7%</span></dt>
+          <dd class="cview__value"><span aria-hidden="true">91</span><span class="sr-only">Experience curve, 7 per cent of the weight: 91 out of 100.</span></dd>
+        </div>
+        <div class="cview__row">
+          <dt class="cview__label">Location &amp; work mode <span class="cview__weight">3%</span></dt>
+          <dd class="cview__value"><span aria-hidden="true">100</span><span class="sr-only">Location &amp; work mode, 3 per cent of the weight: 100 out of 100.</span></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="panel__block">
+      <p class="panel__rule">Where you don't</p>
+      <dl class="cview__rows">
+        <div class="cview__row">
+          <dt class="cview__label">Salary alignment <span class="cview__shape">±10%</span></dt>
+          <dd class="cview__value"><span aria-hidden="true">76</span><span class="sr-only">Salary alignment: 76 out of 100. Moves the total by at most a tenth, either way.</span></dd>
+        </div>
+      </dl>
+      <div class="skillrow skillrow--partial">
+        <span class="skillrow__glyph" aria-hidden="true">≈</span>
+        <span class="skillrow__state" aria-hidden="true">Partial</span>
+        <ul class="skillrow__items">
+          <li class="skill">Kubernetes</li>
+          <li class="skill__transfer">your Docker experience transfers</li>
+        </ul>
+        <span class="sr-only">Kubernetes: partial match — your Docker experience transfers.</span>
+      </div>
+    </div>
+
+    <div class="panel__block">
+      <p class="panel__rule">Your application</p>
+      <ol class="trail">
+        <li class="trail__step trail__step--done">Applied</li>
+        <li class="trail__step trail__step--done">Viewed</li>
+        <li class="trail__step trail__step--current">Shortlisted<span class="sr-only"> — current status</span></li>
+      </ol>
+    </div>
+  </div>
+  </div>
+</div>
+      <p class="composition-note">Illustrative data · invented people and companies</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Your dashboard ───────────────────────────────────────────────────── -->
+<section class="section section--sunken" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Your dashboard</p>
+      <h2 class="h-section">Who&rsquo;s looking, <em>and what would open more doors.</em></h2>
+      <p class="lede">Two things a job board will not tell you: how many recruiters opened your profile this week, and which single skill would put you above the line on the most roles.</p>
+    </div>
+    <div data-reveal="rise">
+
+<div class="frame frame--elevated" style="--ratio: 16 / 5">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / dashboard</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="cwork">
+    <div class="cwork__panel">
+      <p class="panel__rule">Who’s viewing your profile</p>
+      <p class="cwork__figure"><span data-count="12">12</span> profile views</p>
+      <p class="cwork__delta">▲ +4 vs last week</p>
+      <div class="spark" role="img" aria-label="Profile views over the last 7 days: 1, 2, 1, 3, 2, 2, 1.">
+          <span class="spark__bar" style="--h: 33%; --i: 0"><span class="sr-only">Day 1: 1 views.</span></span>
+          <span class="spark__bar" style="--h: 67%; --i: 1"><span class="sr-only">Day 2: 2 views.</span></span>
+          <span class="spark__bar" style="--h: 33%; --i: 2"><span class="sr-only">Day 3: 1 views.</span></span>
+          <span class="spark__bar" style="--h: 100%; --i: 3"><span class="sr-only">Day 4: 3 views.</span></span>
+          <span class="spark__bar" style="--h: 67%; --i: 4"><span class="sr-only">Day 5: 2 views.</span></span>
+          <span class="spark__bar" style="--h: 67%; --i: 5"><span class="sr-only">Day 6: 2 views.</span></span>
+          <span class="spark__bar" style="--h: 33%; --i: 6"><span class="sr-only">Day 7: 1 views.</span></span>
+      </div>
+      <p class="cwork__foot">last 7 days</p>
+    </div>
+
+    <div class="cwork__panel">
+      <p class="panel__rule">Skills that would unlock roles</p>
+      <div class="unlock">
+        <div class="unlock__row">
+          <span class="unlock__skill">Kubernetes</span>
+          <span class="unlock__bar"><span class="meter " aria-hidden="true"><span class="meter__fill" style="--meter-v: 1.00"></span></span></span>
+          <span class="unlock__n">+8 roles</span>
+        </div>
+        <div class="unlock__row">
+          <span class="unlock__skill">Kafka</span>
+          <span class="unlock__bar"><span class="meter " aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.63"></span></span></span>
+          <span class="unlock__n">+5 roles</span>
+        </div>
+        <div class="unlock__row">
+          <span class="unlock__skill">Go</span>
+          <span class="unlock__bar"><span class="meter " aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.38"></span></span></span>
+          <span class="unlock__n">+3 roles</span>
+        </div>
+      </div>
+      <p class="cwork__foot">Based on roles you already score above 52 on.</p>
+    </div>
+  </div>
+  </div>
+</div>
+      <p class="composition-note">Illustrative data · invented people and companies · example figures</p>
+    </div>
+
+    <div class="pair mt-16">
+      <div data-reveal="left">
+        <p class="body-copy body-copy--lg measure">
+          The unlock counts are computed against roles you already score above 52 on, which is
+          the difference between “learn Kubernetes” and “Kubernetes would put you over the line
+          on 8 roles you are otherwise close on”. One of those is advice.
+        </p>
+      </div>
+      <div data-reveal="right">
+        <p class="body-copy measure">
+          There is also an application-velocity panel — how many you sent in
+          30 days, and what fraction were shortlisted. It is a
+          mirror, not a scoreboard, and if the number is bad the useful response is to change
+          what you apply to rather than to apply to more.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Your matches ─────────────────────────────────────────────────────── -->
+<section class="section" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Your matches</p>
+      <h2 class="h-section">Scored <em>before you apply.</em></h2>
+      <p class="lede">Roles are matched to your profile and ranked the same way candidates are ranked for a recruiter — which means you find out whether it is worth the application before you write one.</p>
+    </div>
+    <div data-reveal="up">
+<div class="feed">
+  <div class="feed__row">
+    <div>
+      <p class="feed__job">Senior Backend Engineer, Payments</p>
+      <p class="feed__meta">Payments · Bengaluru · Hybrid</p>
+    </div>
+    <p class="score score--sm">
+      <span class="score__value" data-count="87">87</span>
+      <span class="score__scale" aria-hidden="true">/100</span>
+      <span class="chip chip--mono chip--strong">Strong Match</span>
+      <span class="sr-only">Match score 87 out of 100, Strong Match.</span>
+    </p>
+  </div>
+  <div class="feed__row">
+    <div>
+      <p class="feed__job">Backend Engineer, Platform</p>
+      <p class="feed__meta">Infrastructure · Bengaluru · Hybrid</p>
+    </div>
+    <p class="score score--sm">
+      <span class="score__value" data-count="81">81</span>
+      <span class="score__scale" aria-hidden="true">/100</span>
+      <span class="chip chip--mono chip--strong">Strong Match</span>
+      <span class="sr-only">Match score 81 out of 100, Strong Match.</span>
+    </p>
+  </div>
+  <div class="feed__row">
+    <div>
+      <p class="feed__job">Senior Engineer, Data Platform</p>
+      <p class="feed__meta">Data · Bengaluru · Remote</p>
+    </div>
+    <p class="score score--sm">
+      <span class="score__value" data-count="74">74</span>
+      <span class="score__scale" aria-hidden="true">/100</span>
+      <span class="chip chip--mono chip--strong">Strong Match</span>
+      <span class="sr-only">Match score 74 out of 100, Strong Match.</span>
+    </p>
+  </div>
+</div>
+    </div>
+
+    <div class="grid grid--3 mt-16" data-reveal-group data-stagger="normal">
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Job alerts</h3>
+        <p class="body-copy card__body">Save a search and get told when something matches it — daily, weekly, instant. Your choice, per alert, and you can turn any of them off.</p>
+        <p class="card__benefit">The search runs even when you are not looking.</p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Saved jobs</h3>
+        <p class="body-copy card__body">Keep the ones you are thinking about, with your score on each still attached.</p>
+        <p class="card__benefit">A shortlist of your own, for once.</p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Compare them</h3>
+        <p class="body-copy card__body">Two or three roles side by side, with the score, the requirements and where you fall short on each. The comparison is the decision.</p>
+        <p class="card__benefit">Not “which sounds better”. Which fits better.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Your résumé ──────────────────────────────────────────────────────── -->
+<section class="section section--sunken" data-content="provisional">
+  <div class="container pair pair--lead">
+    <div data-reveal="left">
+      <p class="eyebrow">Your résumé</p>
+      <h2 class="h-section mt-6">You are told what is wrong with it. <em>In specifics.</em></h2>
+      <p class="body-copy body-copy--lg measure mt-8">
+        A quality score, and 5 named things to change — “add measurable
+        outcomes”, “reduce generic language” — rather than a grade with no instructions.
+      </p>
+      <p class="body-copy measure mt-6">
+        Then the gaps: which skills would open more roles, roughly how many, and how much
+        demand there is for each. It is the most useful thing a rejection can turn into.
+      </p>
+      <p class="body-copy measure mt-6">
+        A gap in your history is recorded as a fact about a timeline, not as a mark against
+        you. It is a thing a recruiter can ask about, which is better than a thing they quietly
+        assume.
+      </p>
+    </div>
+    <div data-reveal="right">
+
+<div class="frame " style="--ratio: 1 / 1">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / profile / resume</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div>
+    <div class="quality">
+      <p class="panel__rule">Résumé quality</p>
+      <div class="quality__head">
+        <p class="score score--sm">
+          <span class="score__value" data-count="62">62</span>
+          <span class="score__scale" aria-hidden="true">/100</span>
+          <span class="sr-only">Résumé quality score 62 out of 100.</span>
+        </p>
+        <p class="quality__count">5 suggestions</p>
+      </div>
+      <div class="meter meter--warn" aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.62"></span></div>
+      <ul class="quality__list">
+        <li class="quality__item">add measurable outcomes</li>
+        <li class="quality__item">reduce generic language</li>
+      </ul>
+    </div>
+
+    <div class="gaps">
+      <p class="panel__rule">Skills that would open more roles</p>
+      <div class="gaps__row">
+        <span class="gaps__skill">Kubernetes</span>
+        <span class="gaps__unlock">+8 roles</span>
+        <span class="gaps__demand">High demand</span>
+      </div>
+      <div class="gaps__row">
+        <span class="gaps__skill">Kafka</span>
+        <span class="gaps__unlock">+5 roles</span>
+        <span class="gaps__demand">High demand</span>
+      </div>
+      <div class="gaps__row">
+        <span class="gaps__skill">Go</span>
+        <span class="gaps__unlock">+3 roles</span>
+        <span class="gaps__demand">Medium demand</span>
+      </div>
+      <p class="composition-note" style="text-align:left"><span class="example-tag">example figures — unlock counts are illustrative</span></p>
+    </div>
+  </div>
+  </div>
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Your data ────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Your profile, your terms</p>
+      <h2 class="h-section">You decide <em>who can see you.</em></h2>
+      <p class="lede">A profile is built from your own résumé, and nothing extracted from it is saved until you have reviewed it.</p>
+    </div>
+    <div class="grid grid--3" data-reveal-group data-stagger="normal">
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Review before save</h3>
+        <p class="body-copy card__body">Everything the parser pulls out of your résumé is shown to you with a confidence indicator. You accept, edit or reject each item.</p>
+        <p class="card__benefit">A profile you agreed to, not one assembled about you.</p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Three visibility levels</h3>
+        <p class="body-copy card__body">Public, limited or private. It controls whether an organisation that did not source you can find you at all.</p>
+        <p class="card__benefit">Searchable is a choice, and it is yours.</p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Export or delete</h3>
+        <p class="body-copy card__body">Both are real routes in the product, not an address to write to. A request goes into a queue, gets reviewed, and gets done — and the completion is logged.</p>
+        <p class="card__benefit"><a class="link hover-icon" href="/trust/#data-rights">What we hold, and what you can ask for <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Preferences that count</h3>
+        <p class="body-copy card__body">Salary, location, notice period and work style are fields on your profile, and they are scored into the match rather than guessed at.</p>
+        <p class="card__benefit">What you want is part of the answer.</p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">A profile you did not make</h3>
+        <p class="body-copy card__body">A recruiter can add you to their own pool from a list they already had. Until you claim it, that profile is marked unclaimed and is visible only inside their organisation. You can take it over, or opt out of it.</p>
+        <p class="card__benefit"><a class="link hover-icon" href="/product/sourcing/#consent">The two consent bases <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </article>
+      <article class="card hover-lift">
+        <h3 class="h-card card__title">Review the employer</h3>
+        <p class="body-copy card__body">If you actually applied, you can review the company. One review per role, anonymous, moderated — and they get one public reply and no delete button.</p>
+        <p class="card__benefit">The transparency runs both ways or it is just a dashboard.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cta cta--tight on-ink">
+  <div class="container cta__inner" data-reveal="scale">
+    <h2 class="h-section cta__title">Find out <em>why you match.</em></h2>
+    <p class="lede cta__lede">Build a profile from your résumé, see the roles you score against, and read the reasoning behind each one.</p>
+    <div class="cluster cluster--center">
+      <a class="btn btn--primary hover-icon press" href="https://app.transpahire.com/">
+        Create a profile
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

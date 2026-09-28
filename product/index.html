@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>The hiring intelligence platform — Transpahire</title>
+<meta name="description" content="Six capabilities, in the order they depend on each other: sourcing, explainable matching, skill intelligence, candidate intelligence, recruiter control and hiring operations.">
+<link rel="canonical" href="https://transpahire.com/product/">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/product/">
+<meta property="og:title" content="The hiring intelligence platform — Transpahire">
+<meta property="og:description" content="Six capabilities, in the order they depend on each other: sourcing, explainable matching, skill intelligence, candidate intelligence, recruiter control and hiring operations.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The hiring intelligence platform — Transpahire">
+<meta name="twitter:description" content="Six capabilities, in the order they depend on each other: sourcing, explainable matching, skill intelligence, candidate intelligence, recruiter control and hiring operations.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <!-- Sign in is commented out of the header, on request (28 Sep 2026).
+             The mobile drawer still carries it. Uncomment to restore; the
+             ≤900px rule in sections.css that hides it is still in place.
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+        -->
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="page-head">
+  <div class="container">
+    <div class="page-head__inner">
+      <p class="eyebrow">Product</p>
+      <h1 class="h-display" data-reveal="up">An intelligent hiring platform <em>built for modern talent teams.</em></h1>
+      <p class="lede" data-reveal="up">Transpahire is a single platform for transparent, AI-native recruitment. It helps talent teams see candidates clearly, match precisely, and hire with the structured trust that an applicant-tracking system alone cannot give them.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight-top" aria-label="One view of the product">
+  <div class="container">
+    <div data-reveal="rise">
+
+<div class="frame frame--elevated" style="--ratio: 1856 / 934">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com</span>
+  </div>
+  <div class="frame__body">
+    <img src="/assets/images/image.png" alt="The Transpahire recruiter app. A DevOps Engineer role’s ranked candidate pool, with one candidate’s drawer open: a match score of 68 ranking first of twenty, the AI rationale naming the skills covered and missing, and a seven-dimension match breakdown." width="1856" height="934" decoding="async">
+  </div>
+</div>
+      <p class="composition-note">Screenshot · the running product</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--sunken" aria-label="The six capabilities" data-content="provisional">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">In dependency order</p>
+      <h2 class="h-section">Six capabilities. <em>Each one needs the one before it.</em></h2>
+      <p class="lede">The skill graph is what makes the explanation possible; sourcing and candidate intelligence feed it; recruiter control governs it; hiring operations acts on it.</p>
+    </div>
+
+    <article class="segment">
+      <div class="segment__text" data-reveal="left" data-reveal-distance="lg">
+        <p class="pillar__index">01 · Sourcing &amp; Discovery</p>
+        <h2 class="h-section pillar__title">Two ways to find <em>the same person.</em></h2>
+        <p class="body-copy body-copy--lg">Filter by skills, experience, location, availability, notice period and expected salary — or describe who you need in a sentence. Same tool, either way. Then Always-On Sourcing keeps watching after you stop, and tells you when someone new becomes a strong match.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/sourcing/">Sourcing <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="right" data-reveal-distance="lg">
+
+<div class="frame frame--elevated" style="--ratio: 5 / 2">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / sourcing</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="mission" data-sequence>
+    <div class="mission__head">
+      <h3 class="mission__job">Senior Backend Engineer, Payments</h3>
+      <span class="pill pill--info pill--status" data-beat="0">
+        <span class="pill__dot" aria-hidden="true"></span>Watching
+      </span>
+    </div>
+
+    <div class="mission__strip">
+      <div class="tile tile--featured" data-beat="160">
+        <p class="tile__value"><span data-count="14">14</span> <span class="tile__of">/ 20</span></p>
+        <p class="tile__label">Matching this role</p>
+        <span class="meter meter--ok" aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.70"></span></span>
+      </div>
+        <div class="tile" data-beat="240">
+          <p class="tile__value">47</p>
+          <p class="tile__label">Pool</p>
+        </div>
+        <div class="tile" data-beat="310">
+          <p class="tile__value">14</p>
+          <p class="tile__label">Strong</p>
+        </div>
+        <div class="tile" data-beat="380">
+          <p class="tile__value">11</p>
+          <p class="tile__label">Good</p>
+        </div>
+        <div class="tile" data-beat="450">
+          <p class="tile__value">9</p>
+          <p class="tile__label">Surfaced</p>
+        </div>
+    </div>
+
+    <div class="mission__history">
+      <p class="panel__rule" data-beat="640">Every approach tried</p>
+      <ul class="strats">
+        <li class="strat strat--done" data-beat="700">
+          <span class="strat__glyph" aria-hidden="true">✓</span>
+          <span class="strat__kind">Structured:</span>
+          <span class="strat__detail">Python + distributed systems, Bengaluru</span>
+          <span class="strat__new">9 new</span>
+        </li>
+        <li class="strat strat--done" data-beat="810">
+          <span class="strat__glyph" aria-hidden="true">✓</span>
+          <span class="strat__kind">Described:</span>
+          <span class="strat__detail">“payments backend, 5+ yrs, Kafka”</span>
+          <span class="strat__new">4 new</span>
+        </li>
+        <li class="strat strat--done" data-beat="920">
+          <span class="strat__glyph" aria-hidden="true">✓</span>
+          <span class="strat__kind">Widened:</span>
+          <span class="strat__detail">notice period to 90 days</span>
+          <span class="strat__new">1 new</span>
+        </li>
+        <li class="strat strat--declined" data-beat="1030">
+          <span class="strat__glyph" aria-hidden="true">⊘</span>
+          <span class="strat__kind">Proposed:</span>
+          <span class="strat__detail">drop the Kubernetes requirement</span>
+          <span class="strat__note">you declined this</span>
+        </li>
+        <li class="strat strat--awaiting" data-beat="1140">
+          <span class="strat__glyph" aria-hidden="true">⧗</span>
+          <span class="strat__kind">Proposed:</span>
+          <span class="strat__detail">widen to Hyderabad</span>
+          <span class="strat__note">awaiting approval</span>
+        </li>
+      </ul>
+    </div>
+
+    <span class="sr-only">Mission status: Watching. 14 of 20 matching this role at the target band. 3 approaches run, one declined by the recruiter, one awaiting approval. Every count is people this mission had not seen before.</span>
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+
+    <article class="segment segment--flip">
+      <div class="segment__text" data-reveal="right" data-reveal-distance="lg">
+        <p class="pillar__index">02 · Explainable Matching</p>
+        <h2 class="h-section pillar__title">Every ranking <em>comes apart.</em></h2>
+        <p class="body-copy body-copy--lg">A score out of 100 from four weighted dimensions — skill coverage carries 65% of it — with every requirement matched to a phrase in the profile, the relationship named, and the section it was drawn from cited. The weights are published.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/matching/">Explainable matching <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="left" data-reveal-distance="lg">
+
+<div class="frame frame--elevated" style="--ratio: 4 / 3">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / matches / sneha-iyer</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="panel panel--crop" id="product-panel">
+    <div class="panel__head">
+      <div class="panel__ident">
+        <h3 class="panel__name" data-field="name">Sneha Iyer</h3>
+        <p class="panel__meta" data-field="meta">Staff Engineer · PhonePe · Bengaluru</p>
+      </div>
+      <div class="panel__verdict">
+        <span class="ring ring--strong" style="--ring-size: 52px" data-row-ring data-ring-c="147.7">
+        <svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="26" cy="26" r="23.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="26" cy="26" r="23.5" fill="none" stroke-width="5"
+                  stroke-dasharray="128.5 19.2" stroke-linecap="round"
+                  transform="rotate(-90 26 26)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="87" data-row-score data-field="score">87</span>
+      </span>
+        <span class="panel__pills">
+          <span class="pill pill--ai">AI</span>
+          <span class="pill pill--ok" data-field="confidence">High confidence</span>
+        </span>
+      </div>
+    </div>
+    <p class="panel__summary" data-field="summary">Six years on payment infrastructure covering both critical requirements, with distributed-systems depth evidenced in their own words. No direct Kubernetes and a salary expectation above the band are the two things working against them.</p>
+    <p class="sr-only" data-field="sr-verdict">Match score 87 out of 100, Strong Match. Explanation confidence: high. AI-generated.</p>
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+
+    <article class="segment">
+      <div class="segment__text" data-reveal="left" data-reveal-distance="lg">
+        <p class="pillar__index">03 · Skill Intelligence</p>
+        <h2 class="h-section pillar__title">It understands skills, <em>not words.</em></h2>
+        <p class="body-copy body-copy--lg">Skills are typed, hierarchical and related to one another by 9 weighted relationship types — Docker leads to Kubernetes, React transfers to Vue — with a second graph over job titles on top of it. That relationship is why adjacent experience counts instead of being discarded, and it is what hidden-talent detection is made of. Aligned to ESCO and O*NET, and versioned.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/matching/#adjacency">How the skill graph works <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="right" data-reveal-distance="lg">
+
+<div class="frame frame--elevated" style="--ratio: 16 / 10">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / matches</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="stack">
+  <div class="rank">
+    <div class="rank__head">
+      <p class="rank__title">Senior Backend Engineer, Payments · Bengaluru · Hybrid · 5–8 yrs</p>
+      <div class="rank__controls">
+        <div class="rank__filters" data-pool-filter="pool-list" role="group" aria-label="Filter by classification">
+          <button type="button" class="rank__filter" data-band="all" aria-pressed="true">all 47</button>
+          <button type="button" class="rank__filter" data-band="strong" aria-pressed="false">strong 14</button>
+          <button type="button" class="rank__filter" data-band="good" aria-pressed="false">good 11</button>
+        </div>
+        <span class="rank__sort">sort: match score</span>
+      </div>
+    </div>
+    <p class="sr-only" id="pool-list-summary">6 candidates, ordered by match score. Every candidate in the database is scored against the role.</p>
+    <ul class="rank__list" id="pool-list" aria-describedby="pool-list-summary" data-layers>
+      <li class="rank__row" data-row="c1" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="87" data-row-score>87</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Sneha Iyer</span>
+          <span class="rank__headline">Staff Engineer · PhonePe</span>
+        </span>
+        <span class="rank__meta">6.2y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Sneha Iyer: match score 87 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c2" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="84.0 19.7" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="81" data-row-score>81</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rahul Verma</span>
+          <span class="rank__headline">SDE III · Razorpay</span>
+        </span>
+        <span class="rank__meta">5.4y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓4</span>
+        <span class="is-partial">≈0</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rahul Verma: match score 81 out of 100, Strong Match. 4 skills covered, 0 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c3" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="80.9 22.8" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="78" data-row-score>78</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Priya Nair</span>
+          <span class="rank__headline">Backend Engineer · Zoho</span>
+        </span>
+        <span class="rank__meta">4.9y · Chennai · Remote</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Priya Nair: match score 78 out of 100, Strong Match. 2 skills covered, 2 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c4" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="74" data-row-score>74</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rishav Ranjan</span>
+          <span class="rank__headline">SDE II · Flipkart</span>
+        </span>
+        <span class="rank__meta">4.1y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rishav Ranjan: match score 74 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c5" data-classification="good">
+        <span class="rank__score">
+          <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="68" data-row-score>68</span>
+      </span>
+          <span class="chip chip--mono chip--good" data-row-chip>Good</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Meera Krishnan</span>
+          <span class="rank__headline">Platform Engineer · Swiggy</span>
+        </span>
+        <span class="rank__meta">3.6y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Meera Krishnan: match score 68 out of 100, Good Match. 2 skills covered, 2 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c6" data-classification="good">
+        <span class="rank__score">
+          <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="63.2 40.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="61" data-row-score>61</span>
+      </span>
+          <span class="chip chip--mono chip--good" data-row-chip>Good</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Vikram Singh</span>
+          <span class="rank__headline">SDE I · Myntra</span>
+        </span>
+        <span class="rank__meta">2.3y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Vikram Singh: match score 61 out of 100, Good Match. 2 skills covered, 2 partial, 1 missing.</span>
+
+      </li>
+    </ul>
+    <p class="sr-only" role="status" data-pool-count></p>
+    <p class="rank__foot">every candidate in the database · profiles people created, and profiles recruiters brought in</p>
+  </div>
+  <div class="pbar-wrap">
+    <div class="pbar" role="img" aria-label="47 candidates scored against this role: 14 strong, 11 good, 15 potential, 7 possible.">
+      <span class="pbar__seg pbar__seg--strong" style="--w: 29.8; --meter-delay: 0ms">
+        <span class="pbar__n">14</span>
+        <span class="pbar__label">Strong</span>
+      </span>
+      <span class="pbar__seg pbar__seg--good" style="--w: 23.4; --meter-delay: 90ms">
+        <span class="pbar__n">11</span>
+        <span class="pbar__label">Good</span>
+      </span>
+      <span class="pbar__seg pbar__seg--potential" style="--w: 31.9; --meter-delay: 180ms">
+        <span class="pbar__n">15</span>
+        <span class="pbar__label">Potential</span>
+      </span>
+      <span class="pbar__seg pbar__seg--possible" style="--w: 14.9; --meter-delay: 270ms">
+        <span class="pbar__n">7</span>
+        <span class="pbar__label">Possible</span>
+      </span>
+    </div>
+    <p class="pbar__gate">6 more were dropped by the critical gate and never scored.</p>
+  </div>
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+
+    <article class="segment segment--flip">
+      <div class="segment__text" data-reveal="right" data-reveal-distance="lg">
+        <p class="pillar__index">04 · Candidate Intelligence</p>
+        <h2 class="h-section pillar__title">A profile, <em>not a document.</em></h2>
+        <p class="body-copy body-copy--lg">Résumés become structured profiles, with per-item confidence and the candidate&rsquo;s own review before anything is saved. Then the signals a CV will not give you: seniority alignment, career trajectory, potential, responsiveness and drop-off risk.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/candidate-intelligence/">Candidate intelligence <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="left" data-reveal-distance="lg">
+
+<div class="frame " style="--ratio: 1 / 1">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / profile / resume</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div>
+    <div class="quality">
+      <p class="panel__rule">Résumé quality</p>
+      <div class="quality__head">
+        <p class="score score--sm">
+          <span class="score__value" data-count="62">62</span>
+          <span class="score__scale" aria-hidden="true">/100</span>
+          <span class="sr-only">Résumé quality score 62 out of 100.</span>
+        </p>
+        <p class="quality__count">5 suggestions</p>
+      </div>
+      <div class="meter meter--warn" aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.62"></span></div>
+      <ul class="quality__list">
+        <li class="quality__item">add measurable outcomes</li>
+        <li class="quality__item">reduce generic language</li>
+      </ul>
+    </div>
+
+    <div class="gaps">
+      <p class="panel__rule">Skills that would open more roles</p>
+      <div class="gaps__row">
+        <span class="gaps__skill">Kubernetes</span>
+        <span class="gaps__unlock">+8 roles</span>
+        <span class="gaps__demand">High demand</span>
+      </div>
+      <div class="gaps__row">
+        <span class="gaps__skill">Kafka</span>
+        <span class="gaps__unlock">+5 roles</span>
+        <span class="gaps__demand">High demand</span>
+      </div>
+      <div class="gaps__row">
+        <span class="gaps__skill">Go</span>
+        <span class="gaps__unlock">+3 roles</span>
+        <span class="gaps__demand">Medium demand</span>
+      </div>
+      <p class="composition-note" style="text-align:left"><span class="example-tag">example figures — unlock counts are illustrative</span></p>
+    </div>
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+
+    <article class="segment">
+      <div class="segment__text" data-reveal="left" data-reveal-distance="lg">
+        <p class="pillar__index">05 · Recruiter Control</p>
+        <h2 class="h-section pillar__title">You set <em>what matters.</em></h2>
+        <p class="body-copy body-copy--lg">Mark each skill critical, required, preferred or a bonus. Move one and the ranking follows. Simulate a change before you make it, and see how many more qualified people a relaxed requirement would reach.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/matching/#control">Tuning and simulation <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="right" data-reveal-distance="lg">
+
+<div class="frame frame--elevated" style="--ratio: 16 / 10">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / matches</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="rank">
+    <div class="rank__head">
+      <p class="rank__title">Senior Backend Engineer, Payments · Bengaluru · Hybrid · 5–8 yrs</p>
+      <div class="rank__controls">
+        <span></span>
+        <span class="rank__sort">sort: match score</span>
+      </div>
+    </div>
+    <p class="sr-only" id="pillar-tuning-list-summary">5 candidates, ordered by match score. Every candidate in the database is scored against the role.</p>
+    <ul class="rank__list" id="pillar-tuning-list" aria-describedby="pillar-tuning-list-summary">
+      <li class="rank__row" data-row="c1" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="87" data-row-score>87</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Sneha Iyer</span>
+          <span class="rank__headline">Staff Engineer · PhonePe</span>
+        </span>
+        <span class="rank__meta">6.2y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Sneha Iyer: match score 87 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c2" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="84.0 19.7" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="81" data-row-score>81</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rahul Verma</span>
+          <span class="rank__headline">SDE III · Razorpay</span>
+        </span>
+        <span class="rank__meta">5.4y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓4</span>
+        <span class="is-partial">≈0</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rahul Verma: match score 81 out of 100, Strong Match. 4 skills covered, 0 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c3" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="80.9 22.8" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="78" data-row-score>78</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Priya Nair</span>
+          <span class="rank__headline">Backend Engineer · Zoho</span>
+        </span>
+        <span class="rank__meta">4.9y · Chennai · Remote</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Priya Nair: match score 78 out of 100, Strong Match. 2 skills covered, 2 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c4" data-classification="strong">
+        <span class="rank__score">
+          <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="74" data-row-score>74</span>
+      </span>
+          <span class="chip chip--mono chip--strong" data-row-chip>Strong</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Rishav Ranjan</span>
+          <span class="rank__headline">SDE II · Flipkart</span>
+        </span>
+        <span class="rank__meta">4.1y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓3</span>
+        <span class="is-partial">≈1</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Rishav Ranjan: match score 74 out of 100, Strong Match. 3 skills covered, 1 partial, 1 missing.</span>
+
+      </li>
+      <li class="rank__row" data-row="c5" data-classification="good">
+        <span class="rank__score">
+          <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-count="68" data-row-score>68</span>
+      </span>
+          <span class="chip chip--mono chip--good" data-row-chip>Good</span>
+        </span>
+        <span class="rank__ident">
+          <span class="rank__name">Meera Krishnan</span>
+          <span class="rank__headline">Platform Engineer · Swiggy</span>
+        </span>
+        <span class="rank__meta">3.6y · Bengaluru · Hybrid</span>
+        <span class="rank__cover" aria-hidden="true">
+        <span class="is-covered">✓2</span>
+        <span class="is-partial">≈2</span>
+        <span class="is-missing">✗1</span>
+      </span>
+        <span class="sr-only" data-row-sr>Meera Krishnan: match score 68 out of 100, Good Match. 2 skills covered, 2 partial, 1 missing.</span>
+
+      </li>
+    </ul>
+
+
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+
+    <article class="segment segment--flip">
+      <div class="segment__text" data-reveal="right" data-reveal-distance="lg">
+        <p class="pillar__index">06 · Hiring Operations</p>
+        <h2 class="h-section pillar__title">Move the right people <em>forward.</em></h2>
+        <p class="body-copy body-copy--lg">Approvals before a job goes live, a job lifecycle with version history, stages you name and order yourself, screener questions, interviews with times and links, structured feedback — and funnel, bottleneck and pool reporting to see whether it worked.</p>
+        <p class="pillar__link"><a class="link hover-icon" href="/product/hiring-operations/">Hiring operations <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+      </div>
+      <div class="segment__visual" data-reveal="left" data-reveal-distance="lg">
+
+<div class="frame " style="--ratio: 4 / 1">
+  <div class="frame__chrome">
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__dot" aria-hidden="true"></span>
+    <span class="frame__meta">app.transpahire.com / jobs / 1042 / pipeline</span>
+  </div>
+  <div class="frame__body frame__body--content ">
+  <div class="pipeline">
+    <p class="sr-only" id="pipeline-summary">Hiring pipeline stages, with the number of candidates in each: Sourced 47, Reviewed 23, Shortlisted 9, Interviewing 4, Offer out 1, Hired 0, Not moving forward 12.</p>
+    <ul class="pipeline__stages" aria-describedby="pipeline-summary">
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Sourced</p>
+          <p class="pipeline__count">47</p>
+          <div class="pipeline__card">
+            <span>Vikram Singh</span>
+            <span class="chip chip--mono chip--good">Good</span>
+          </div>
+        </li>
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Reviewed</p>
+          <p class="pipeline__count">23</p>
+          <div class="pipeline__card">
+            <span>Rishav Ranjan</span>
+            <span class="chip chip--mono chip--strong">Strong</span>
+          </div>
+        </li>
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Shortlisted</p>
+          <p class="pipeline__count">9</p>
+          <div class="pipeline__card pipeline__card--advancing">
+            <span>Sneha Iyer</span>
+            <span class="chip chip--mono chip--strong">Strong</span>
+          </div>
+        </li>
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Interviewing</p>
+          <p class="pipeline__count">4</p>
+          <div class="pipeline__card">
+            <span>Rahul Verma</span>
+            <span class="chip chip--mono chip--strong">Strong</span>
+          </div>
+        </li>
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Offer out</p>
+          <p class="pipeline__count">1</p>
+
+        </li>
+        <li class="pipeline__stage">
+          <p class="pipeline__name">Hired</p>
+          <p class="pipeline__count">0</p>
+
+        </li>
+        <li class="pipeline__stage pipeline__stage--quiet">
+          <p class="pipeline__name">Not moving forward</p>
+          <p class="pipeline__count">12</p>
+
+        </li>
+    </ul>
+    <p class="pipeline__caption">your stages, your names, your order</p>
+  </div>
+  </div>
+</div>
+      </div>
+    </article>
+    <p class="composition-note">Illustrative data · invented people and companies</p>
+  </div>
+</section>
+
+<section class="section" aria-label="Also in the platform">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <p class="eyebrow">Also in the platform</p>
+      <h2 class="h-section">Beyond the six, <em>already running.</em></h2>
+      <p class="lede">The parts a team uses every week that do not need a section of their own. Every one of them is live today.</p>
+    </div>
+
+    <div class="grid grid--2" data-reveal-group data-stagger="fast">
+      <ul class="checklist checklist--ruled">
+        <li class="checklist__item">Recruiter outreach, with interest tracking.</li>
+        <li class="checklist__item">In-platform messaging with candidates, without leaving Transpahire.</li>
+        <li class="checklist__item">Notifications across twenty-two event types, with per-type preferences.</li>
+        <li class="checklist__item">Calendar sync for scheduled interviews.</li>
+        <li class="checklist__item">Talent pools, an import wizard and import history.</li>
+      </ul>
+      <ul class="checklist checklist--ruled">
+        <li class="checklist__item">Saved searches, with their own audit history.</li>
+        <li class="checklist__item">A match audit log: the weights, the per-skill scores and the verdict, stored at the time of computation.</li>
+        <li class="checklist__item">Structural fairness reporting on a job description.</li>
+        <li class="checklist__item">Public company pages, with public, unlisted and private visibility.</li>
+        <li class="checklist__item">Employer reviews behind a verified-application gate, with moderation and a right of reply.</li>
+      </ul>
+    </div>
+
+    <p class="mt-12 text-center"><a class="link hover-icon" href="/changelog/">Everything that has shipped <svg class="icon-shift" width="13" height="13" aria-hidden="true" focusable="false" style="display:inline-block;vertical-align:-1px"><use href="#i-arrow-right"/></svg></a></p>
+  </div>
+</section>
+
+<section class="cta cta--tight on-ink">
+  <div class="container cta__inner" data-reveal="scale">
+    <h2 class="h-section cta__title">Bring a role <em>you&rsquo;re struggling to fill.</em></h2>
+    <p class="lede cta__lede">Thirty minutes. We run one of your open roles through the engine and you read the reasoning yourself.</p>
+    <div class="cluster cluster--center">
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <a class="btn btn--secondary press" href="/product/matching/">See how matching works</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

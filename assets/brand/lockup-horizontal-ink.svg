@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80">
+  <title>Transpahire — horizontal lockup</title>
+  <defs></defs>
+  <g transform="translate(0,8)">
+    <rect x="6" y="10" width="52" height="8" fill="#0B0B1F"></rect>
+    <rect x="28" y="22" width="8" height="9" fill="#0B0B1F" opacity="0.28"></rect>
+    <rect x="28" y="33" width="8" height="9" fill="#0B0B1F" opacity="0.58"></rect>
+    <rect x="28" y="44" width="8" height="12" fill="#0B0B1F"></rect>
+  </g>
+  <text x="84" y="58" font-family="Manrope, -apple-system, system-ui, sans-serif" font-weight="500" font-size="48" fill="#0B0B1F" letter-spacing="-2.16">Transpahire</text>
+</svg>

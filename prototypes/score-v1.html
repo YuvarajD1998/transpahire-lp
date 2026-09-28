@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>Score V1 — subtle — Transpahire · Stage 2 prototype</title>
+<meta name="description" content="Stage 2 creative exploration. Not the live site.">
+<link rel="canonical" href="https://transpahire.com/prototypes/score-v1.html">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/prototypes/score-v1.html">
+<meta property="og:title" content="Score V1 — subtle — Transpahire · Stage 2 prototype">
+<meta property="og:description" content="Stage 2 creative exploration. Not the live site.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Score V1 — subtle — Transpahire · Stage 2 prototype">
+<meta name="twitter:description" content="Stage 2 creative exploration. Not the live site.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+
+<!-- ===== STAGE 2 PROTOTYPE LAYER — loads after production, overrides tokens ===== -->
+<link rel="stylesheet" href="/prototypes/css/proto-tokens.css">
+<link rel="stylesheet" href="/prototypes/css/proto.css">
+<link rel="stylesheet" href="/prototypes/css/signature.css">
+<script type="module" src="/prototypes/js/proto.js"></script>
+</head>
+
+<body class="proto proto--score">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="scene proto-intro"><div class="container">
+  <p class="eyebrow">Prototype B · V1</p>
+  <h1 class="h-section">The score, <em>taken apart.</em> <span class="proto-intro__v">Subtle: an editorial page turning.</span></h1>
+  <p class="lede">Scroll. Six layers of one object: the list, the 87, four weights, the matched skills, one cited line, and the candidate's own view of the same number. Below 700px, with reduced motion, or without JavaScript, the same six layers stack.</p>
+</div></section><section class="scene scene--signature" id="score" data-content="provisional">
+
+  <div class="sig sig--pinned" data-signature data-execution="v1" style="--p: 0" data-state="1">
+    <div class="sig__stage">
+      <div class="sig__persist" aria-hidden="true">
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+      </div>
+      <ol class="srail" aria-hidden="true">
+        <li class="srail__item" data-for="1"><span class="srail__n">01</span><span class="srail__k">Ranked.</span></li>
+        <li class="srail__item" data-for="2"><span class="srail__n">02</span><span class="srail__k">The score.</span></li>
+        <li class="srail__item" data-for="3"><span class="srail__n">03</span><span class="srail__k">Four weights, published.</span></li>
+        <li class="srail__item" data-for="4"><span class="srail__n">04</span><span class="srail__k">Every skill, matched.</span></li>
+        <li class="srail__item" data-for="5"><span class="srail__n">05</span><span class="srail__k">Every match, cited.</span></li>
+        <li class="srail__item" data-for="6"><span class="srail__n">06</span><span class="srail__k">The same number, on her screen.</span></li>
+      </ol>
+      <div class="sig__layers">
+      <div class="layer layer--1" data-layer="1">
+        <p class="layer__cap"><span class="layer__n">01</span> <span class="layer__k">Ranked.</span> <span class="layer__s">47 people scored against the role. Sneha Iyer first, at 87.</span></p>
+        <div class="layer__body">
+  <div class="rank rank--tracked">
+
+    <p class="sr-only" id="sig-list-summary">Everyone tracked against this job — whether they applied or you found them.</p>
+    <ul class="rank__list" id="sig-list" aria-describedby="sig-list-summary">
+      <li class="rank__row rank__row--tracked" data-row="c1" data-classification="strong" aria-current="true">
+        <span class="mono-disc" aria-hidden="true">SI</span>
+        <span class="rank__ident">
+          <span class="rank__name">Sneha Iyer</span>
+          <span class="rank__headline">Staff Engineer · PhonePe</span>
+        </span>
+        <span class="pill pill--info pill--stage">Shortlisted</span>
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="90.2 13.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+        <span class="rank__origin">Applied <span class="rank__when">· 2d</span></span>
+
+        <span class="sr-only" data-row-sr>Sneha Iyer, Staff Engineer · PhonePe: Shortlisted, match score 87 out of 100, Strong Match. Applied 2d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c2" data-classification="strong">
+        <span class="mono-disc" aria-hidden="true">RV</span>
+        <span class="rank__ident">
+          <span class="rank__name">Rahul Verma</span>
+          <span class="rank__headline">SDE III · Razorpay</span>
+        </span>
+        <span class="pill pill--info pill--stage">Interviewing</span>
+        <span class="ring ring--strong" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="84.0 19.7" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>81</span>
+      </span>
+        <span class="rank__origin">Sourced, then applied <span class="rank__when">· 3d</span></span>
+
+        <span class="sr-only" data-row-sr>Rahul Verma, SDE III · Razorpay: Interviewing, match score 81 out of 100, Strong Match. Sourced, then applied 3d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c3" data-classification="good">
+        <span class="mono-disc" aria-hidden="true">PN</span>
+        <span class="rank__ident">
+          <span class="rank__name">Priya Nair</span>
+          <span class="rank__headline">Backend Engineer · Zoho</span>
+        </span>
+        <span class="pill pill--none pill--stage">Reviewed</span>
+        <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="80.9 22.8" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>78</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 4d</span></span>
+
+        <span class="sr-only" data-row-sr>Priya Nair, Backend Engineer · Zoho: Reviewed, match score 78 out of 100, Good Match. Sourced 4d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c4" data-classification="good">
+        <span class="mono-disc" aria-hidden="true">RR</span>
+        <span class="rank__ident">
+          <span class="rank__name">Rishav Ranjan</span>
+          <span class="rank__headline">SDE II · Flipkart</span>
+        </span>
+        <span class="pill pill--none pill--stage">Reviewed</span>
+        <span class="ring ring--good" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="76.7 27.0" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>74</span>
+      </span>
+        <span class="rank__origin">Applied <span class="rank__when">· 6d</span></span>
+
+        <span class="sr-only" data-row-sr>Rishav Ranjan, SDE II · Flipkart: Reviewed, match score 74 out of 100, Good Match. Applied 6d ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c5" data-classification="potential">
+        <span class="mono-disc" aria-hidden="true">MK</span>
+        <span class="rank__ident">
+          <span class="rank__name">Meera Krishnan</span>
+          <span class="rank__headline">Platform Engineer · Swiggy</span>
+        </span>
+        <span class="pill pill--none pill--stage">Sourced</span>
+        <span class="ring ring--potential" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="70.5 33.2" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>68</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 1w</span></span>
+
+        <span class="sr-only" data-row-sr>Meera Krishnan, Platform Engineer · Swiggy: Sourced, match score 68 out of 100, Potential Match. Sourced 1w ago.</span>
+      </li>
+      <li class="rank__row rank__row--tracked" data-row="c6" data-classification="potential">
+        <span class="mono-disc" aria-hidden="true">VS</span>
+        <span class="rank__ident">
+          <span class="rank__name">Vikram Singh</span>
+          <span class="rank__headline">SDE I · Myntra</span>
+        </span>
+        <span class="pill pill--none pill--stage">Sourced</span>
+        <span class="ring ring--potential" style="--ring-size: 38px" data-row-ring data-ring-c="103.7">
+        <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="19" cy="19" r="16.5" fill="none" stroke-width="5"
+                  stroke-dasharray="63.2 40.5" stroke-linecap="round"
+                  transform="rotate(-90 19 19)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>61</span>
+      </span>
+        <span class="rank__origin">Sourced <span class="rank__when">· 2w</span></span>
+
+        <span class="sr-only" data-row-sr>Vikram Singh, SDE I · Myntra: Sourced, match score 61 out of 100, Potential Match. Sourced 2w ago.</span>
+      </li>
+    </ul>
+
+
+  </div>
+        </div>
+      </div>
+      <div class="layer layer--2" data-layer="2">
+        <p class="layer__cap"><span class="layer__n">02</span> <span class="layer__k">The score.</span> <span class="layer__s">87 out of 100. Strong Match, high confidence.</span></p>
+        <div class="layer__body">
+<div class="sig-score">
+      <span class="ring ring--strong" style="--ring-size: 220px" data-row-ring data-ring-c="675.4">
+        <svg width="220" height="220" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="110" cy="110" r="107.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="110" cy="110" r="107.5" fill="none" stroke-width="5"
+                  stroke-dasharray="587.6 87.8" stroke-linecap="round"
+                  transform="rotate(-90 110 110)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+      <p class="sig-score__of" aria-hidden="true">/ 100</p>
+      <p class="sig-score__who">Sneha Iyer <span class="sig-score__sep">·</span> Staff Engineer · PhonePe</p>
+      <p class="sig-score__chips">
+        <span class="chip chip--mono chip--strong">Strong Match</span>
+        <span class="pill pill--ai">AI</span>
+        <span class="pill pill--ok">High confidence</span>
+      </p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--3" data-layer="3">
+        <p class="layer__cap"><span class="layer__n">03</span> <span class="layer__k">Four weights, published.</span> <span class="layer__s">Skill coverage carries 65% of it. Salary is a ±10% adjustment after, not a fifth weight.</span></p>
+        <div class="layer__body">
+<div class="sig-weights">
+      <p class="sig-weights__head"><span class="sig-weights__n">87</span> <span class="sig-weights__eq">=</span> <span class="sig-weights__sum">four weights, published</span></p>
+      <div class="wrows wrows--lg">
+      <div class="wrow wrow--skill wrow--lead" style="--i: 0">
+        <span class="wrow__label">Skill coverage</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 65"></span></span>
+        <span class="wrow__pct">65%</span>
+      </div>
+      <div class="wrow wrow--semantic" style="--i: 1">
+        <span class="wrow__label">Semantic similarity</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 25"></span></span>
+        <span class="wrow__pct">25%</span>
+      </div>
+      <div class="wrow wrow--experience" style="--i: 2">
+        <span class="wrow__label">Experience curve</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 7"></span></span>
+        <span class="wrow__pct">7%</span>
+      </div>
+      <div class="wrow wrow--location" style="--i: 3">
+        <span class="wrow__label">Location &amp; work mode</span>
+        <span class="wrow__bar" aria-hidden="true"><span class="wrow__fill" style="--w: 3"></span></span>
+        <span class="wrow__pct">3%</span>
+      </div>
+      </div>
+      <p class="sig-weights__mods">then, in this order: <span><b>±10%</b> Salary alignment</span> <span><b>×</b> Skill rarity</span> <span><b>×</b> Seniority</span></p>
+      <p class="sig-weights__gate">before any of it: A candidate missing a critical skill never reaches the scorer.</p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--4" data-layer="4">
+        <p class="layer__cap"><span class="layer__n">04</span> <span class="layer__k">Every skill, matched.</span> <span class="layer__s">3 exact or equivalent, 1 transferable, 1 not found.</span></p>
+        <div class="layer__body">
+<div class="sig-skills">
+      <p class="sig-skills__head"><span class="wrow__label">Skill coverage</span> <span class="wrow__pct">65%</span> <span class="sig-skills__open">opens into</span></p>
+      <div class="srows">
+      <div class="srow srow--covered" data-concept="Python">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">Python</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">Python</span>
+        <span class="relchip">exact</span>
+        <span class="srow__conf">96%</span>
+        <span class="sr-only">Python: covered, matched to “Python” (exact), 96% confidence.</span>
+      </div>
+      <div class="srow srow--covered" data-concept="Distributed Systems">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">Distributed Systems</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">ledger sharded across three regions</span>
+        <span class="relchip">≈ equivalent</span>
+        <span class="srow__conf">91%</span>
+        <span class="sr-only">Distributed Systems: covered, matched to “ledger sharded across three regions” (≈ equivalent), 91% confidence.</span>
+      </div>
+      <div class="srow srow--covered" data-concept="PostgreSQL">
+        <span class="srow__glyph" aria-hidden="true">✓</span>
+        <span class="srow__concept">PostgreSQL</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">PostgreSQL</span>
+        <span class="relchip">exact</span>
+        <span class="srow__conf">94%</span>
+        <span class="sr-only">PostgreSQL: covered, matched to “PostgreSQL” (exact), 94% confidence.</span>
+      </div>
+      <div class="srow srow--partial" data-concept="Kubernetes">
+        <span class="srow__glyph" aria-hidden="true">≈</span>
+        <span class="srow__concept">Kubernetes</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched">container orchestration</span>
+        <span class="relchip">transferable</span>
+        <span class="srow__conf">78%</span>
+        <span class="sr-only">Kubernetes: partial match, matched to “container orchestration” (transferable), 78% confidence.</span>
+      </div>
+      <div class="srow srow--missing">
+        <span class="srow__glyph" aria-hidden="true">✗</span>
+        <span class="srow__concept">Kafka</span>
+        <span class="srow__arrow" aria-hidden="true">→</span>
+        <span class="srow__matched srow__matched--none">not found in profile</span>
+        <span class="relchip relchip--none">preferred</span>
+        <span class="srow__conf">—</span>
+        <span class="sr-only">Kafka: missing; a preferred requirement.</span>
+      </div>
+      </div>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--5" data-layer="5">
+        <p class="layer__cap"><span class="layer__n">05</span> <span class="layer__k">Every match, cited.</span> <span class="layer__s">Kubernetes is Docker experience transfers, and here is the line it came from.</span></p>
+        <div class="layer__body">
+<div class="sig-evidence">
+      <p class="sig-evidence__head">
+        <span class="srow__glyph srow__glyph--partial" aria-hidden="true">≈</span>
+        <span class="srow__concept">Kubernetes</span> <span class="srow__arrow" aria-hidden="true">→</span> <span class="srow__matched">container orchestration</span>
+      </p>
+      <p class="sig-evidence__rel"><span class="relchip">transferable</span> <span class="sig-evidence__edge">Docker → Kubernetes · <em>requires</em> · 0.9</span></p>
+      <p class="sig-evidence__reason">Deep Docker work, and the taxonomy holds Docker as a prerequisite for Kubernetes.</p>
+      <figure class="sig-evidence__source">
+        <figcaption class="sig-evidence__from"><span class="label">from the profile · Experience</span> <span class="concept__verified">✓ verified against the candidate's own words</span></figcaption>
+        <blockquote class="sig-evidence__quote"><mark>Containerised the settlement services and ran them under Docker Compose in staging.</mark></blockquote>
+      </figure>
+      <p class="sig-evidence__conf"><span class="meter meter--thin" aria-hidden="true"><span class="meter__fill" style="--meter-v: 0.78"></span></span> <span>78% confidence</span></p>
+    </div>
+        </div>
+      </div>
+      <div class="layer layer--6" data-layer="6">
+        <p class="layer__cap"><span class="layer__n">06</span> <span class="layer__k">The same number, on her screen.</span> <span class="layer__s">The candidate sees 87, with the same breakdown.</span></p>
+        <div class="layer__body">
+<div class="sig-cand">
+      <p class="sig-cand__route">app.transpahire.com / jobs / recommended</p>
+      <div class="sig-cand__body">
+        <div>
+          <p class="cview__job">Senior Backend Engineer, Payments</p>
+          <p class="cview__meta">Payments · Bengaluru · Hybrid</p>
+        </div>
+        <div class="sig-cand__score">
+          <span class="ring ring--strong" style="--ring-size: 88px" data-row-ring data-ring-c="260.8">
+        <svg width="88" height="88" viewBox="0 0 88 88" aria-hidden="true" focusable="false">
+          <circle class="ring__track" cx="44" cy="44" r="41.5" fill="none" stroke-width="5"/>
+          <circle class="ring__arc" cx="44" cy="44" r="41.5" fill="none" stroke-width="5"
+                  stroke-dasharray="226.9 33.9" stroke-linecap="round"
+                  transform="rotate(-90 44 44)" data-ring-arc/>
+        </svg>
+        <span class="ring__value" data-row-score>87</span>
+      </span>
+          <p class="cview__same">the same score the recruiter sees</p>
+        </div>
+        <dl class="cview__rows sig-cand__rows">
+        <div class="cview__row"><dt class="cview__label">Skill coverage <span class="cview__weight">65%</span></dt><dd class="cview__value">84</dd></div>
+        <div class="cview__row"><dt class="cview__label">Semantic similarity <span class="cview__weight">25%</span></dt><dd class="cview__value">93</dd></div>
+        <div class="cview__row"><dt class="cview__label">Experience curve <span class="cview__weight">7%</span></dt><dd class="cview__value">91</dd></div>
+        <div class="cview__row"><dt class="cview__label">Location &amp; work mode <span class="cview__weight">3%</span></dt><dd class="cview__value">100</dd></div>
+        </dl>
+        <ol class="trail sig-cand__trail"><li class="trail__step trail__step--done">Applied</li><li class="trail__step trail__step--done">Viewed</li><li class="trail__step trail__step--current">Shortlisted</li></ol>
+      </div>
+    </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="container"><p class="composition-note">Illustrative data · invented people and companies · every value from the product data module</p></div>
+</section>
+
+<aside class="proto-tag" aria-label="Prototype navigation">
+  <span class="proto-tag__label">Stage 2 prototype</span>
+  <span class="proto-tag__here">Score · V1 subtle</span>
+  <a class="proto-tag__link" href="/prototypes/">Final</a> <a class="proto-tag__link" href="/prototypes/stage-2.html">Board</a>
+</aside>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+      <span>Made in India</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

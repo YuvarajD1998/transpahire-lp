@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Transpahire — Base
+   --------------------------------------------------------------------------
+   Reset, document defaults, typography scale, layout primitives and the
+   accessibility floor. Everything here is unconditional: it applies to every
+   page in the marketing site.
+
+   Consumes: tokens.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html,
+body { margin: 0; padding: 0; }
+
+html {
+  /* Anchor scrolling stops clear of the fixed header instead of underneath it.
+     This replaces the JS scroll interception the previous build used, which
+     broke focus for keyboard users. */
+  scroll-padding-top: calc(var(--header-h) + var(--sp-4));
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth scrolling is opt-in via JS (see modules/prefs.js) so it can be
+   withdrawn for reduced-motion users without fighting a global declaration. */
+html.smooth-scroll { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface);
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-lg);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure, blockquote { margin: 0; }
+ul, ol { margin: 0; padding: 0; }
+li { list-style: none; }
+
+img, svg, video, canvas, picture {
+  display: block;
+  max-width: 100%;
+}
+img, video { height: auto; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Tabular figures everywhere a number is compared against another number. */
+.tnum,
+[data-count],
+.stat__value,
+.price { font-variant-numeric: tabular-nums lining-nums; }
+
+::selection {
+  background: var(--c-indigo-bright);
+  color: var(--c-white);
+}
+
+/* --------------------------------------------------------------------------
+   Focus
+   One visible ring, on every interactive element, in both light and inverted
+   contexts. Never removed — Rule: accessibility is not traded for polish.
+   -------------------------------------------------------------------------- */
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Skip link — first tab stop on every page. */
+.skip-link {
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: var(--z-modal);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--c-ink);
+  color: var(--c-white);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  transform: translateY(-200%);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* Screen-reader-only, still focusable. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbar — quiet, matches the paper ground.
+   -------------------------------------------------------------------------- */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--c-paper); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--c-rule);
+    border: 2px solid var(--c-paper);
+    border-radius: var(--radius-pill);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--c-slate-soft); }
+}
+
+/* ==========================================================================
+   Layout primitives
+   ========================================================================== */
+
+/* Container — the one horizontal measure for the whole site. */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+.container--text { max-width: var(--container-text); }
+
+/* Section — the one vertical rhythm. Modifiers change ground and density. */
+.section { padding-block: var(--section-y); }
+.section--tight { padding-block: var(--section-y-tight); }
+.section--huge  { padding-block: var(--section-y-huge); }
+
+.section--sunken { background: var(--c-bone); }
+.section--ink    { background: var(--c-ink); color: var(--text-body); }
+.section--indigo { background: var(--c-indigo-deep); color: var(--text-body); }
+
+/* A hairline between two same-ground sections. */
+.rule {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* Stack — vertical flow with a single spacing decision. */
+.stack { display: flex; flex-direction: column; }
+.stack > * { margin-block: 0; }
+.stack--2 { gap: var(--sp-2); }
+.stack--3 { gap: var(--sp-3); }
+.stack--4 { gap: var(--sp-4); }
+.stack--6 { gap: var(--sp-6); }
+.stack--8 { gap: var(--sp-8); }
+
+/* Cluster — horizontal group that wraps. Used for CTA pairs, chips, logos. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.cluster--center { justify-content: center; }
+.cluster--between { justify-content: space-between; }
+
+/* Grid — the shared column system. Collapses at --bp-lg unless told otherwise. */
+.grid { display: grid; gap: var(--gap-grid); }
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 900px) {
+  .grid--3, .grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .grid--2, .grid--3, .grid--4 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Split — the asymmetric two-column used by hero and segments. */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-wide);
+  align-items: center;
+}
+.split--lead { grid-template-columns: 1.05fr 1fr; }
+
+@media (max-width: 900px) {
+  .split, .split--lead { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   Typography primitives
+   Roles, not sizes. A `.h-display` is the page's single loudest voice
+   regardless of which element carries it.
+   ========================================================================== */
+
+.h-display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-display);
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.h-section {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h2);
+  line-height: 1.04;
+  letter-spacing: var(--tr-heading);
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.h-sub {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--tr-heading);
+  color: var(--text-strong);
+}
+
+.h-card {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  line-height: 1.2;
+  letter-spacing: var(--tr-card);
+  color: var(--text-strong);
+}
+
+/* The editorial accent. An <em> inside any display-family heading becomes
+   Instrument Serif italic in accent colour — this single rule is the most
+   recognisable thing about the Transpahire voice. Do not reimplement it
+   inline; wrap the phrase in <em> and it is handled. */
+.h-display em,
+.h-section em,
+.h-sub em,
+.quote em,
+.lede em,
+blockquote em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--fw-regular);
+  color: var(--text-accent);
+  letter-spacing: 0;
+}
+
+/* PHASE 6. The lede is SANS. DESIGN.md § 3 reserves the serif for the accent
+   phrase and forbids serif paragraphs, and the site's own lede broke that rule
+   for five phases. The serif survives only on the <em> inside it. */
+.lede {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-lede);
+  line-height: var(--lh-lede);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.body-copy {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.body-copy--muted { color: var(--text-muted); }
+.body-copy--lg { font-size: var(--fs-body-lg); }
+
+/* The measure guard. Long-form copy should not exceed a comfortable line. */
+.measure    { max-width: 56ch; }
+.measure--narrow { max-width: 40ch; }
+.measure--wide   { max-width: 68ch; }
+
+/* Eyebrow — mono, tracked-out, with the leading rule that signs every
+   Transpahire section. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-regular);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: .5;
+  flex: none;
+}
+.eyebrow--accent { color: var(--text-accent); }
+.eyebrow--bare::before { display: none; }
+
+/* Mono label — data captions, timestamps, fine print. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Section header
+   The recurring "eyebrow in the left rail, headline in the right" composition.
+   `--center` collapses it to a centred stack. Previously this was eight inline
+   style attributes per usage; it is now one modifier.
+   -------------------------------------------------------------------------- */
+.section-head {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: var(--sp-10);
+  align-items: baseline;
+  margin-bottom: var(--sp-14);
+}
+.section-head > .lede {
+  grid-column: 2;
+  margin-top: var(--sp-4);
+  max-width: 56ch;
+}
+
+.section-head--center {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  text-align: center;
+  gap: var(--sp-4);
+}
+.section-head--center > .lede {
+  grid-column: 1;
+  margin-inline: auto;
+}
+
+@media (max-width: 800px) {
+  .section-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-10);
+  }
+  .section-head > .lede { grid-column: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   Utilities — deliberately few. If you reach for a fifth utility, the pattern
+   probably wants to be a component instead.
+   -------------------------------------------------------------------------- */
+.text-center { text-align: center; }
+.mt-4  { margin-top: var(--sp-4); }
+.mt-6  { margin-top: var(--sp-6); }
+.mt-8  { margin-top: var(--sp-8); }
+.mt-12 { margin-top: var(--sp-12); }
+.mt-16 { margin-top: var(--sp-16); }
+.mx-auto { margin-inline: auto; }

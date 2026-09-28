@@ -1,0 +1,125 @@
+/* ==========================================================================
+   STAGE 3 — the final page's consolidation layer
+   --------------------------------------------------------------------------
+   Loads after proto-tokens, proto and signature, on the final page only
+   (body.proto--final). Every rule here is a REFINEMENT of a Stage 2 rule,
+   found by opening the built Variation 02 and looking; the reasons are in
+   prototypes/STAGE-3.md § 3. No raw value except where the rule is itself the
+   decision, and those are commented as candidates for tokens.css.
+
+   If the direction is adopted, this file and proto.css fold into
+   sections.css; proto-tokens.css becomes the tokens.css diff; signature.css
+   becomes the P6 section of motion.css.
+   ========================================================================== */
+
+/* ---- 01 · THE CLAIM ---------------------------------------------------------- */
+/* The one-screen test at 1440×900 and 1280×800 is a design input: the head is
+   compact so the route line, job header, pulse strip, tabs and the first
+   ranked row are on the first screen with the drawer opening on it. */
+.proto--final .claim { padding-top: calc(var(--header-h) + var(--sp-6)); }
+.proto--final .claim__head--compact .claim__title { margin-bottom: var(--sp-5); font-size: clamp(2.75rem, 1.4rem + 3.8vw, 4.75rem); }
+.proto--final .bleed { margin-top: var(--sp-6); }
+.proto--final .bleed__route { padding-block: var(--sp-2); }
+/* The mono floor (STAGE-2.md § 9) reaches the pulse labels: 9px → 11px. */
+.proto--final .pulse__label { font-size: 11px; letter-spacing: .08em; }
+/* At 1920 the bleed stops growing: rows 1,800px wide are not a product screen. */
+@media (min-width: 1700px) {
+  .proto--final .bleed {
+    margin-inline: auto;
+    max-width: 1600px;
+    border-inline: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+}
+/* Phone: the pulse strip is 2×2 at the 11px floor, replacing the 8px crop
+   exception recorded in STAGE-2.md § 12. Costs one row of the list on the
+   first screen; keeps the system's floor. */
+@media (max-width: 699px) {
+  .proto--final .pulse { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
+  .proto--final .pulse__tile { padding: 8px 10px; }
+}
+
+/* ---- 01 → 02 · the bridge -------------------------------------------------- */
+/* The head arrives sooner after the workspace, and its lede names the object
+   the stage is about to open: the same row, the same 87. */
+.proto--final .scene--signature { padding-top: var(--section-y-tight); padding-bottom: var(--section-y-tight); }
+.proto--final .scene--signature .scene__head { margin-bottom: var(--sp-8); }
+.proto--final .scene--signature .composition-note { margin-top: var(--sp-4); }
+
+/* ---- 02 · THE SCORE — stage geometry ----------------------------------------- */
+/* Every layer starts at the same y: caption, then body, top-aligned. A body
+   that centres itself moves between states, and a moving anchor is the first
+   thing that makes "what changed?" hard to answer. The 800px cap moves from
+   the sticky box to the layer area so the box can match the native scroll
+   timeline's contain range exactly (see signature.css § TIMELINE).
+
+   Scoped to html.js and :not(.sig--static): without JavaScript, and under
+   reduced motion (where scene.js sets .sig--static), none of this applies and
+   signature.css § STATIC is the whole composition. */
+html.js .proto--final .sig--pinned:not(.sig--static) .sig__stage {
+  height: calc(100vh - var(--header-h));
+  max-height: none;
+  align-items: start;
+}
+html.js .proto--final .sig--pinned:not(.sig--static) .sig__layers { height: min(calc(100vh - var(--header-h)), 800px); }
+html.js .proto--final .sig--pinned:not(.sig--static) .layer { align-content: start; gap: var(--sp-8); padding-top: var(--sp-8); }
+html.js .proto--final .sig--pinned:not(.sig--static) .layer__body { align-content: start; padding-bottom: var(--sp-6); }
+/* Tablet: the pin keeps its full width. The rail is a desktop affordance;
+   at 768 it cost the ranked rows their name column. */
+@media (max-width: 899px) {
+  html.js .proto--final .sig--pinned:not(.sig--static) .sig__stage { grid-template-columns: minmax(0, 1fr); }
+  html.js .proto--final .sig--pinned:not(.sig--static) .srail { display: none; }
+}
+/* Phone: the stack is the design; its gaps are the reading rhythm, not a pin's. */
+@media (max-width: 699px) {
+  .proto--final .sig--static .sig__layers, html:not(.js) .proto--final .sig .sig__layers { gap: var(--sp-12); }
+  .proto--final .sig--static .layer, html:not(.js) .proto--final .sig .layer { row-gap: var(--sp-4); }
+}
+
+/* ---- 02 → 03 · a cut, not a gap ----------------------------------------------- */
+.proto--final .scene--problem { padding-block: var(--section-y); }
+
+/* ---- 04 · THE POOL — phone: one cited line per row ---------------------------- */
+@media (max-width: 699px) {
+  .proto--final .pool .rank__evidence .evidence:nth-child(n + 2) { display: none; }
+}
+
+/* ---- 06 · THE CONTROL — sticky column, no pin ------------------------------------ */
+/* The control column is sticky so the sliders stay beside the list while it
+   scrolls; there is no scroll track, so it costs nothing. */
+.decision {
+  margin: var(--sp-8) auto 0;
+  max-width: 72ch;
+  padding: var(--sp-5) var(--sp-6);
+  border: 1px dashed var(--state-crit);
+  border-radius: var(--radius-sm);
+  background: var(--wash-crit);
+}
+.decision__label { margin: 0 0 var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: var(--tr-label); text-transform: uppercase; color: var(--state-crit); }
+.decision__list { margin: 0; padding-left: 1.2em; display: grid; gap: var(--sp-3); font-size: var(--fs-small); line-height: 1.6; color: var(--text-body); }
+.decision__list b { color: var(--text-strong); font-weight: var(--fw-medium); }
+
+/* ---- 07 · THE SYSTEM — the beats as a column, so the two columns end together --- */
+.proto--final .system__beats { grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); }
+.proto--final .beat--wide { grid-column: auto; }
+@media (max-width: 899px) {
+  .proto--final .system__beats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proto--final .beat--wide { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .proto--final .system__beats { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- 07 → 08 · two ink scenes need an edge ----------------------------------- */
+.proto--final .scene--system { padding-bottom: var(--section-y-tight); }
+.proto--final .scene--close { padding-top: var(--section-y); border-top: 1px solid rgba(230, 230, 239, .14); }
+/* The candidate's screen hugs its content: an open box under a phone screen
+   is not a product state. */
+.proto--final .close__frame .frame__body--content { min-height: 0; }
+.proto--final .close__frame { --ratio: auto; }
+@media (min-width: 900px) {
+  .proto--final .close__ask { position: sticky; top: calc(var(--header-h) + var(--sp-8)); }
+}
+
+/* ---- prototype furniture ------------------------------------------------------ */
+.proto--final .proto-tag__label { color: var(--c-indigo-text-on-ink); }

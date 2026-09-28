@@ -1,0 +1,41 @@
+# Transpahire — marketing site
+#
+# Indexing is closed on purpose. Not because the content is fabricated — Phase 4
+# reconciled every claim on the site against the shipped product source, and
+# Phase 5 rebuilt the hero from it — but because a named list of inputs is
+# outstanding and none of them is an engineering decision.
+#
+# THE GATE, as of 31 Aug 2026. docs/content-integrity.md § 5 is the authority and
+# docs/phase-5.md § 9 names the owner of each:
+#
+#   1. four legal drafts are unsigned, [COUNSEL] markers still visible
+#   2. /about is named (28 Sep 2026) and publishes no contact, by decision;
+#      its founder paragraph awaits the maintainer's OK on the wording
+#   3. the demo form has no destination and no reader
+#   4. registered company name, number and address are unfilled
+#   5. screenshots: all three screenshotSlot() instances filled with the running
+#      app (28 Sep 2026); the real people in them are not yet cleared to appear
+#   6. NEW IN PHASE 5 — /check/job-description/ and /check/resume/ accept a
+#      document, which is a processing activity, and the privacy policy has no
+#      paragraph about it yet. Both pages ship saying they are not switched on;
+#      opening the site to search while they say that is fine, but switching THEM
+#      on before the policy names them is not.
+#
+# To open the site, BOTH of these, on the same day:
+#
+#   1. delete the `Disallow: /` line below
+#   2. change `noindex, nofollow` to `index, follow` in src/lib/layout.mjs and
+#      rebuild, so all twenty-three pages change together
+#
+# One without the other leaves the site invisible. tools/check.mjs asserts the
+# meta tag is present on every page today; that assertion has to be INVERTED
+# deliberately — with the date and the reason in a comment — rather than quietly
+# dropped. A dropped assertion is how a site silently half-opens.
+
+User-agent: *
+Disallow: /
+
+# Never index the internal motion reference, whatever happens above.
+Disallow: /motion-lab.html
+
+Sitemap: https://transpahire.com/sitemap.xml

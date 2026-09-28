@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Arms the pre-reveal hidden states before first paint. Without this the
+     page would render revealed and then hide, because the module script that
+     normally sets this class is deferred. The only inline script on the site. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<title>Stage 2 — creative exploration board — Transpahire · Stage 2 prototype</title>
+<meta name="description" content="Stage 2 creative exploration. Not the live site.">
+<link rel="canonical" href="https://transpahire.com/prototypes/stage-2.html">
+
+<!-- The site is deliberately closed to search engines until the content
+     integrity gate clears: docs/content-integrity.md § 5. Both this tag and
+     robots.txt have to change, on every page — both, or the site stays
+     invisible. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Transpahire">
+<meta property="og:url" content="https://transpahire.com/prototypes/stage-2.html">
+<meta property="og:title" content="Stage 2 — creative exploration board — Transpahire · Stage 2 prototype">
+<meta property="og:description" content="Stage 2 creative exploration. Not the live site.">
+<!-- og:image does not exist yet — CONTENT REQUIRED, and on the indexing gate
+     (see docs/phase-2/10-CONTENT_REQUIREMENTS.md, R13). It should render the section 06 explanation panel rather than
+     a logo card: it is the one asset that explains the product at thumbnail
+     size. No og:image is better than a broken one. -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stage 2 — creative exploration board — Transpahire · Stage 2 prototype">
+<meta name="twitter:description" content="Stage 2 creative exploration. Not the live site.">
+
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B1F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon-180.png" sizes="180x180">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Fonts. Only the weights the design system declares are requested.
+     display=swap renders fallback text immediately rather than blocking. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Cascade order is load order. tokens → base → motion → components → sections. -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/motion.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/sections.css">
+
+<script type="module" src="/assets/js/main.js"></script>
+
+<!-- Organisation only. No Product, Offer, Review, AggregateRating or FAQ schema
+     is emitted while any claim is unvalidated: emitting Review or Offer schema
+     for unverified content would place invented claims into search results. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Transpahire, Inc.",
+  "url": "https://transpahire.com/",
+  "logo": "https://transpahire.com/assets/brand/symbol-ink.svg",
+  "description": "Hiring intelligence for teams that care about quality."
+}
+</script>
+
+<!-- ===== STAGE 2 PROTOTYPE LAYER — loads after production, overrides tokens ===== -->
+<link rel="stylesheet" href="/prototypes/css/proto-tokens.css">
+<link rel="stylesheet" href="/prototypes/css/proto.css">
+<link rel="stylesheet" href="/prototypes/css/signature.css">
+<script type="module" src="/prototypes/js/proto.js"></script>
+</head>
+
+<body class="proto proto--board">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <!-- Stratum brand mark: a T whose stem accumulates from translucent to
+         solid — "transparency in layers". Vector source of truth lives in
+         assets/brand/; this symbol mirrors it for inline use. -->
+    <symbol id="stratum" viewBox="0 0 64 64">
+      <rect x="6" y="10" width="52" height="8" fill="currentColor"/>
+      <rect x="28" y="22" width="8" height="9" fill="currentColor" opacity="0.28"/>
+      <rect x="28" y="33" width="8" height="9" fill="currentColor" opacity="0.58"/>
+      <rect x="28" y="44" width="8" height="12" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 20 20"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-network" viewBox="0 0 20 20"><circle cx="10" cy="4" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="4" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6v4M10 10l-5 5M10 10l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 17c0-3 2.2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="14" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12.5 17c.2-2 2-3.5 4.2-3.5" stroke="currentColor" stroke-width="1.4" fill="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 20 20"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h11M17 15h0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="7" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="15" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 20 20"><path d="M3 14a7 7 0 1 1 14 0" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 14L13.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2 6l8 6 8-6" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5 14V9a5 5 0 1 1 10 0v5l1.5 1.5h-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M8.5 17a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="13" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M2.5 8h15M7 2v4M13 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="7" y="2" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+
+    <!-- PHASE 5. Three symbols the job detail surface needs, and no more:
+         i-alert is the amber skill-review flag, i-radar is the glyph the
+         product puts on its Sourcing tab, and i-close is the drawer's dismiss.
+         All three are drawn from the product's own affordances rather than
+         added because an icon set had them. -->
+    <symbol id="i-alert" viewBox="0 0 20 20"><path d="M10 2.5l8 14H2l8-14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M10 8v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".45"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/><path d="M10 10l5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-close" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="Transpahire — home">
+      <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+      <span>Transpahire</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-product">
+          Product
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-product" data-open="false">
+          <a class="navmenu__link" href="/product/">
+            <span class="navmenu__link-title">Overview</span>
+            <span class="navmenu__link-note">The whole platform, six pillars, one page</span>
+          </a>
+          <a class="navmenu__link" href="/product/matching/">
+            <span class="navmenu__link-title">Explainable matching</span>
+            <span class="navmenu__link-note">How a score comes apart, and the weights behind it</span>
+          </a>
+          <a class="navmenu__link" href="/product/sourcing/">
+            <span class="navmenu__link-title">Sourcing</span>
+            <span class="navmenu__link-note">Two ways to search, and an agent that keeps going</span>
+          </a>
+          <a class="navmenu__link" href="/product/candidate-intelligence/">
+            <span class="navmenu__link-title">Candidate intelligence</span>
+            <span class="navmenu__link-note">What the platform knows, and how it got there</span>
+          </a>
+          <a class="navmenu__link" href="/product/hiring-operations/">
+            <span class="navmenu__link-title">Hiring operations</span>
+            <span class="navmenu__link-note">From an approved requisition to a signed offer</span>
+          </a>
+          <a class="navmenu__link" href="/product/analytics/">
+            <span class="navmenu__link-title">Reporting</span>
+            <span class="navmenu__link-note">Funnel, bottlenecks and what is scarce in your pool</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-who-it-s-for">
+          Who it's for
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-who-it-s-for" data-open="false">
+          <a class="navmenu__link" href="/for-teams/">
+            <span class="navmenu__link-title">Recruiters &amp; talent teams</span>
+            <span class="navmenu__link-note">Read six arguments instead of forty CVs</span>
+          </a>
+          <a class="navmenu__link" href="/for-hiring-managers/">
+            <span class="navmenu__link-title">Hiring managers</span>
+            <span class="navmenu__link-note">Come to the meeting with the reasoning</span>
+          </a>
+          <a class="navmenu__link" href="/for-candidates/">
+            <span class="navmenu__link-title">Candidates</span>
+            <span class="navmenu__link-note">The same score the recruiter sees</span>
+          </a>
+        </div>
+      </div>
+      <div class="navmenu" data-navmenu>
+        <button type="button" class="navmenu__button" aria-expanded="false" aria-controls="menu-tools">
+          Tools
+          <svg class="navmenu__caret" width="12" height="12" aria-hidden="true" focusable="false"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="navmenu__panel" id="menu-tools" data-open="false">
+          <a class="navmenu__link" href="/check/job-description/">
+            <span class="navmenu__link-title">Check a job description</span>
+            <span class="navmenu__link-note">Tiered skills, shape findings and the language flags — no account</span>
+          </a>
+          <a class="navmenu__link" href="/check/resume/">
+            <span class="navmenu__link-title">Check a résumé</span>
+            <span class="navmenu__link-note">The quality score, the suggestions, and the skills that open more roles</span>
+          </a>
+        </div>
+      </div>
+      <a class="site-nav__link" href="/trust/">Trust</a>
+      <a class="site-nav__link" href="/about/">About</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__utility">
+        <!-- The candidate audience never competes: a quiet link, never a
+             button, never in a hero: 02 section 4. -->
+        <a class="site-header__candidate" href="/for-candidates/">Looking for a role?</a>
+        <a class="btn btn--ghost" href="https://app.transpahire.com/">Sign in</a>
+      </div>
+      <a class="btn btn--primary hover-icon press" href="/demo/">
+        Book a demo
+        <svg class="btn__icon icon-shift" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button class="nav-toggle" data-nav-toggle type="button"
+              aria-controls="nav-drawer" aria-expanded="false" aria-label="Open menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-scrim" data-nav-scrim aria-hidden="true"></div>
+
+<div class="nav-drawer" id="nav-drawer">
+  <nav aria-label="Mobile">
+    <ul class="nav-drawer__list">
+      <li><a class="nav-drawer__link" href="/trust/">Trust <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+      <li><a class="nav-drawer__link" href="/about/">About <svg width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-arrow-right"/></svg></a></li>
+    </ul>
+  </nav>
+
+  <!-- The disclosure group flattens to a labelled list here. A nested
+       accordion inside a drawer is two disclosures deep for no gain. -->
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Product</p>
+    <a class="nav-drawer__sublink" href="/product/">Overview</a>
+    <a class="nav-drawer__sublink" href="/product/matching/">Explainable matching</a>
+    <a class="nav-drawer__sublink" href="/product/sourcing/">Sourcing</a>
+    <a class="nav-drawer__sublink" href="/product/candidate-intelligence/">Candidate intelligence</a>
+    <a class="nav-drawer__sublink" href="/product/hiring-operations/">Hiring operations</a>
+    <a class="nav-drawer__sublink" href="/product/analytics/">Reporting</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Who it's for</p>
+    <a class="nav-drawer__sublink" href="/for-teams/">Recruiters &amp; talent teams</a>
+    <a class="nav-drawer__sublink" href="/for-hiring-managers/">Hiring managers</a>
+    <a class="nav-drawer__sublink" href="/for-candidates/">Candidates</a>
+  </div>
+  <div class="nav-drawer__group">
+    <p class="nav-drawer__grouplabel">Tools</p>
+    <a class="nav-drawer__sublink" href="/check/job-description/">Check a job description</a>
+    <a class="nav-drawer__sublink" href="/check/resume/">Check a résumé</a>
+  </div>
+
+  <div class="nav-drawer__actions mt-6">
+    <a class="btn btn--primary btn--block" href="/demo/">Book a demo</a>
+    <a class="btn btn--secondary btn--block" href="https://app.transpahire.com/">Sign in</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="scene proto-intro board__intro"><div class="container">
+  <p class="eyebrow">Stage 2 · creative exploration, visual directions and interactive prototyping</p>
+  <h1 class="h-display board__title">The score is <em>the protagonist.</em></h1>
+  <p class="lede board__lede">Eleven prototypes of one direction, "the brief", built from the real product data and the production compositions. Open each one; the floating tag brings you back here. The written deliverable is <code>prototypes/STAGE-2.md</code>.</p>
+  <div class="board__groups">
+
+    <div class="board__group">
+      <p class="eyebrow">A · Hero</p>
+      <p class="board__note">Three compositions inside the recommended direction, not three cosmetic variations.</p>
+      <ul class="board__links">
+        <li><a class="board__link" href="/prototypes/hero-a1.html">Editorial product</a></li>
+        <li><a class="board__link" href="/prototypes/hero-a2.html">Evidence first</a></li>
+        <li><a class="board__link" href="/prototypes/hero-a3.html">Product as hero</a></li>
+      </ul>
+    </div>
+
+    <div class="board__group">
+      <p class="eyebrow">B · The score, taken apart</p>
+      <p class="board__note">Three motion executions of the signature, and the static composition every one of them falls back to.</p>
+      <ul class="board__links">
+        <li><a class="board__link" href="/prototypes/score-v1.html">V1 subtle</a></li>
+        <li><a class="board__link" href="/prototypes/score-v2.html">V2 cinematic</a></li>
+        <li><a class="board__link" href="/prototypes/score-v3.html">V3 experimental</a></li>
+        <li><a class="board__link" href="/prototypes/score-static.html">static fallback</a></li>
+      </ul>
+    </div>
+
+    <div class="board__group">
+      <p class="eyebrow">C · The tuner</p>
+      <p class="board__note">The proposed fixture: the advertised move reorders, and a critical tier gates.</p>
+      <ul class="board__links">
+        <li><a class="board__link" href="/prototypes/tuner.html">Tuner</a></li>
+      </ul>
+    </div>
+
+    <div class="board__group">
+      <p class="eyebrow">D · The complete page</p>
+      <p class="board__note">Eight scenes, three tempos, three visual executions.</p>
+      <ul class="board__links">
+        <li><a class="board__link" href="/prototypes/page-v1.html">01 Editorial</a></li>
+        <li><a class="board__link" href="/prototypes/page-v2.html">02 Product editorial</a></li>
+        <li><a class="board__link" href="/prototypes/page-v3.html">03 Experimental</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="board__how"><span class="label">How to run</span> <code>node tools/serve.mjs</code> then <code>http://localhost:4321/prototypes/</code>. Edit <code>prototypes/lib/</code> and rebuild with <code>node prototypes/build.mjs</code>. Nothing in production is touched.</p>
+</div></section>
+
+<section class="scene board__viewer" id="responsive"><div class="container">
+  <p class="eyebrow">Responsive views</p>
+  <h2 class="h-section">Four widths, <em>one page.</em></h2>
+  <p class="lede">Each frame is a live copy of the chosen prototype at a real device width, scaled to fit. Scroll inside a frame. Reduced motion follows your system setting.</p>
+  <p class="board__pick"><label for="board-page">Prototype</label> <select id="board-page" data-board-pick><option value="/prototypes/hero-a1.html">Hero A1 · Editorial product</option><option value="/prototypes/hero-a2.html">Hero A2 · Evidence first</option><option value="/prototypes/hero-a3.html">Hero A3 · Product as hero</option><option value="/prototypes/score-v1.html">Score · V1 subtle</option><option value="/prototypes/score-v2.html">Score · V2 cinematic</option><option value="/prototypes/score-v3.html">Score · V3 experimental</option><option value="/prototypes/score-static.html">Score · static fallback</option><option value="/prototypes/tuner.html">Tuner</option><option value="/prototypes/page-v1.html">Page · 01 Editorial</option><option value="/prototypes/page-v2.html" selected>Page · 02 Product editorial</option><option value="/prototypes/page-v3.html">Page · 03 Experimental</option></select></p>
+  <div class="frames">
+    <figure class="devframe devframe--390"><figcaption><span class="label">390 × 844</span></figcaption><div class="devframe__crop"><iframe title="390 wide" loading="lazy" data-board-frame></iframe></div></figure>
+    <figure class="devframe devframe--768"><figcaption><span class="label">768 × 1024</span></figcaption><div class="devframe__crop"><iframe title="768 wide" loading="lazy" data-board-frame></iframe></div></figure>
+    <figure class="devframe devframe--1280"><figcaption><span class="label">1280 × 800</span></figcaption><div class="devframe__crop"><iframe title="1280 wide" loading="lazy" data-board-frame></iframe></div></figure>
+    <figure class="devframe devframe--1440"><figcaption><span class="label">1440 × 900</span></figcaption><div class="devframe__crop"><iframe title="1440 wide" loading="lazy" data-board-frame></iframe></div></figure>
+  </div>
+</div></section>
+
+<section class="scene board__compare" id="compare"><div class="container">
+  <p class="eyebrow">Comparison board</p>
+  <h2 class="h-section">Three executions, <em>no score.</em></h2>
+  <p class="lede">The differences, so the decision can be made on them. The recommendation follows the checklist.</p>
+  <div class="cmp__wrap"><table class="cmp">
+  <thead><tr><th scope="col"></th><th scope="col"><a href="/prototypes/page-v1.html">01 · Editorial</a></th><th scope="col"><a href="/prototypes/page-v2.html">02 · Product editorial</a></th><th scope="col"><a href="/prototypes/page-v3.html">03 · Experimental editorial</a></th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Design thesis</th><td>A publication that argues in type and shows the product at reading size. Nothing pins; the page turns.</td><td>The same publication, but the product is the spectacle: the site opens into the workspace, the score comes apart on a pinned stage, and the tuner is pinned while it re-ranks.</td><td>Push scale and layering: the evidence chain is the hero, the score becomes structure on scroll, and the interface rearranges itself around what is being examined.</td></tr>
+    <tr><th scope="row">Visual personality</th><td>Calm, paper, generous rests, hairlines. The quietest of the three.</td><td>Editorial type, product density, one cinematic moment. Confident rather than loud.</td><td>Diagrammatic, larger, more spatial. The most "designed" of the three.</td></tr>
+    <tr><th scope="row">Hero behaviour</th><td>A1: headline at 104px with the support sentence in the right column; the workspace full width beneath, three rows above the fold.</td><td>A3: compact headline, then the workspace edge to edge with only a route line for chrome. The fold cuts the list mid-row.</td><td>A2: the claim, then the chain (row → 87 → four weights → cited line) as one static diagram. The product appears as its argument, not its chrome.</td></tr>
+    <tr><th scope="row">Product visibility</th><td>High, but always framed. Six framed compositions, each in flow.</td><td>Highest. The workspace bleeds; the explain panel runs at full size; the pool carries cited evidence on every row.</td><td>Medium in the hero (no chrome), highest in the signature, where the list stays as a ghost while the score is taken apart.</td></tr>
+    <tr><th scope="row">Interaction model</th><td>Two controls: the tuner (not pinned) and the pool filters, plus the candidate switcher.</td><td>Four real controls: the tuner with the gate, the what-if marking rows, pool filters, the candidate switcher.</td><td>Same four controls as 02.</td></tr>
+    <tr><th scope="row">Motion language</th><td>Reveals only. The signature is the stacked composition with sticky captions; nothing is scroll-linked.</td><td>V2 cinematic on the signature (layers separate and recede; the 87 persists top-right while its parts show); P3 reorder; P2 beats in the panel.</td><td>V3 experimental: the 87 scales past itself before the weights grow out of it; skill rows arrive in sequence; the evidence slides in from the right; the candidate view rises like a phone.</td></tr>
+    <tr><th scope="row">Mobile behaviour</th><td>The stack is the design, so the phone is the desktop minus the columns. Shortest page of the three at 390.</td><td>Phone-specific hero crop (compact pulse, three rows, drawer sheet ending on the verdict); the signature unpins into the stack; list-first tuner with one sticky control.</td><td>The chain stacks vertically; the signature unpins into the stack; the rest matches 02.</td></tr>
+    <tr><th scope="row">Strongest characteristic</th><td>Cannot fail. Every state is a still; reduced motion changes nothing; a screen reader hears the same order.</td><td>The first screen proves the product exists and the second screen proves it can be questioned. It is the only variation where the thesis is an experience rather than a claim.</td><td>The strongest single moment: the 87 becoming four bars is the "score is constructed" idea made literal.</td></tr>
+    <tr><th scope="row">Main risk</th><td>Restraint reads as safe. Without the pin, "the score, taken apart" is a well-typeset explanation rather than an event.</td><td>Two pins cost the visitor their scroll for about four viewports. The stage leaves a void below a short final layer at 1440.</td><td>Mid-transition overlap between two layers is legible at the state points and busy between them. The hero shows no chrome, so the four-second question "is it real software?" is answered one screen later.</td></tr>
+    <tr><th scope="row">Where it could be improved</th><td>Give the signature the time-mode P6 (layers step in on beats when the composition reveals) so it happens once without pinning.</td><td>Trim the pinned tuner to a plain sticky control column (already the case at 768); give the signature a tighter final dwell.</td><td>Hold each layer alone for longer (narrower crossfade windows), and put A3's workspace behind the chain at reduced opacity so the chrome is present.</td></tr>
+  </tbody>
+</table></div>
+</div></section>
+
+<section class="scene board__check" id="checklist"><div class="container">
+  <p class="eyebrow">Design review checklist</p>
+  <h2 class="h-section">Assessed on the built pages, <em>not on paper.</em></h2>
+  <p class="lede">✓ passes · △ passes with a note. Columns are the three complete pages.</p>
+  <div class="cmp__wrap"><table class="chk">
+    <thead><tr><th scope="col"></th><th scope="col">01</th><th scope="col">02</th><th scope="col">03</th><th scope="col">Note</th></tr></thead>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">First impression</th></tr>
+      <tr><th scope="row">Immediately recognisable as Transpahire</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Wordmark, serif accent, indigo, warm paper.</td></tr>
+      <tr><th scope="row">Product visible immediately</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note">A2 shows the argument first; chrome arrives one screen later.</td></tr>
+      <tr><th scope="row">Central differentiator obvious</th><td>△</td><td>✓</td><td>✓</td><td class="chk__note">01 says it; 02 and 03 show it on the second screen.</td></tr>
+      <tr><th scope="row">Avoids generic AI aesthetics</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">No gradient, glow, glass, particles, sparkle, typing.</td></tr>
+    </tbody>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">Visual</th></tr>
+      <tr><th scope="row">Hierarchy obvious</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note"></td></tr>
+      <tr><th scope="row">Typography carries enough weight</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Display at 104px, H2 at 64px, mono at 12px.</td></tr>
+      <tr><th scope="row">Composition intentional</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note">03's layer overlap between states reads as accident to some eyes.</td></tr>
+      <tr><th scope="row">Not too much empty space</th><td>△</td><td>△</td><td>△</td><td class="chk__note">Pinned stage leaves a void below a short final layer; 01 has long rests by design.</td></tr>
+      <tr><th scope="row">Not too much decoration</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">One wash in the hero, one on the closing band.</td></tr>
+    </tbody>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">Product</th></tr>
+      <tr><th scope="row">Real product UI visible</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Every composition is a production renderer or a restaging of one.</td></tr>
+      <tr><th scope="row">Product understandable</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note"></td></tr>
+      <tr><th scope="row">Evidence visible</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">The highlighter appears on every cited line and nowhere else.</td></tr>
+      <tr><th scope="row">Score believable</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">87 everywhere; six candidates at their published scores.</td></tr>
+    </tbody>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">Interaction</th></tr>
+      <tr><th scope="row">Every interaction communicates something</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Tuner, what-if, filters, switcher. Nothing decorative.</td></tr>
+      <tr><th scope="row">Tuner actually changes the result</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Kubernetes → critical promotes Rahul Verma; Kafka → critical gates five.</td></tr>
+      <tr><th scope="row">Signature sequence explains the score</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">List → 87 → weights → skills → cited line → candidate view.</td></tr>
+    </tbody>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">Motion</th></tr>
+      <tr><th scope="row">Motion communicates</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note">03 pushes furthest; two of its moves are closer to spectacle than explanation.</td></tr>
+      <tr><th scope="row">Restrained</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note"></td></tr>
+      <tr><th scope="row">Predictable</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note"></td></tr>
+      <tr><th scope="row">Reduced motion works</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Every stage unpins; layers render complete; verified with the OS query emulated.</td></tr>
+    </tbody>
+    <tbody>
+      <tr class="chk__group"><th scope="rowgroup" colspan="5">Mobile</th></tr>
+      <tr><th scope="row">First screen compelling</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Headline, one sentence, one CTA, job header and two rows at 390×844.</td></tr>
+      <tr><th scope="row">Product visible</th><td>✓</td><td>✓</td><td>△</td><td class="chk__note">A2's chain stacks; the workspace is below it.</td></tr>
+      <tr><th scope="row">Signature still works</th><td>✓</td><td>✓</td><td>✓</td><td class="chk__note">Six stacked frames with captions; no scroll-linking below 700px.</td></tr>
+      <tr><th scope="row">Page substantially shorter and clearer</th><td>△</td><td>△</td><td>△</td><td class="chk__note">About 17,400px at 390 against 19,200 today: shorter, not yet the 14,000 target.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section class="scene board__rec on-ink" id="recommendation"><div class="container">
+  <p class="eyebrow">Recommended prototype</p>
+  <h2 class="h-section">02, Product editorial, <em>is the strongest candidate for Stage 3.</em></h2>
+  <div class="board__reasons">
+    <p class="lede">Because it is the only one where the site's thesis is something that happens rather than something that is said. The first screen is the real workspace at real width, so the buyer's four-second question is answered before a word is read. The second screen takes the 87 apart on a pinned stage, so "explains itself" is an experience. The sixth scene lets the visitor change what counts and watch a name move, and watch a critical requirement empty the list.</p>
+    <p class="body-copy">It takes 01's discipline (every state is a still, every value is the data module's, reduced motion is the stack) and 03's single best move is worth stealing: the V3 mapping in which the 87 grows before the weights emerge from it should replace V2's plain crossfade between layers 2 and 3. The rest of 03 is the answer to "how far can we push it", and the answer is: to there, not past it.</p>
+    <p class="body-copy">What it needs before Stage 3 treats it as the page: the pinned tuner reduced to a sticky control column (the pin adds nothing the sticky column does not), the stage's final dwell tightened, the three findings in <code>STAGE-2.md</code> § 12 settled, and the proposed tuner fixture adopted through <code>tools/rankings.mjs</code> so the production page and the prototype agree.</p>
+  </div>
+</div></section>
+
+<aside class="proto-tag" aria-label="Prototype navigation">
+  <span class="proto-tag__label">Stage 2 prototype</span>
+  <span class="proto-tag__here">Board</span>
+  <a class="proto-tag__link" href="/prototypes/">Final</a>
+</aside>
+</main>
+
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="site-footer__grid">
+
+      <div>
+        <a class="wordmark" href="/" aria-label="Transpahire — home">
+          <svg class="wordmark__mark" aria-hidden="true" focusable="false"><use href="#stratum"/></svg>
+          <span>Transpahire</span>
+        </a>
+        <p class="site-footer__pitch">Hiring intelligence for teams that care about quality.</p>
+        <p class="site-footer__legal">
+          Transpahire, Inc.<br>
+          Registered company details pending.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-product">
+        <h2 class="site-footer__heading" id="footer-product">Product</h2>
+        <a class="site-footer__link" href="/product/">Overview</a>
+        <a class="site-footer__link" href="/product/matching/">Explainable matching</a>
+        <a class="site-footer__link" href="/product/sourcing/">Sourcing</a>
+        <a class="site-footer__link" href="/product/candidate-intelligence/">Candidate intelligence</a>
+        <a class="site-footer__link" href="/product/hiring-operations/">Hiring operations</a>
+        <a class="site-footer__link" href="/product/analytics/">Reporting</a>
+        <a class="site-footer__link" href="/check/job-description/">Check a job description</a>
+        <a class="site-footer__link" href="/check/resume/">Check a résumé</a>
+      </nav>
+
+      <nav aria-labelledby="footer-audience">
+        <h2 class="site-footer__heading" id="footer-audience">Who it is for</h2>
+        <a class="site-footer__link" href="/for-teams/">Recruiters &amp; talent teams</a>
+        <a class="site-footer__link" href="/for-hiring-managers/">Hiring managers</a>
+        <a class="site-footer__link" href="/for-candidates/">Looking for a role?</a>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <a class="site-footer__link" href="/about/">About</a>
+        <a class="site-footer__link" href="/changelog/">What has shipped</a>
+        <a class="site-footer__link" href="/pricing/">Pricing</a>
+        <a class="site-footer__link" href="/demo/">Book a demo</a>
+      </nav>
+
+      <!-- ONE legal link, not three. Phase 3's footer carried three "in
+           preparation" links, which was thirty-six reminders across the site
+           that the company was not ready. The drafts fixed that, and then the
+           set grew to four documents — four footer links to legal drafts is a
+           legal department this company does not have. /legal/ is the index. -->
+      <nav aria-labelledby="footer-trust">
+        <h2 class="site-footer__heading" id="footer-trust">Trust</h2>
+        <a class="site-footer__link" href="/trust/">Access and what is logged</a>
+        <a class="site-footer__link" href="/trust/#will-not-claim">What we will not claim</a>
+        <a class="site-footer__link" href="/legal/">Legal</a>
+      </nav>
+
+    </div>
+
+    <div class="signup signup--ink">
+  <p class="signup__title">Told when something ships.</p>
+  <p class="signup__promise">One email when there is something to say. Not a newsletter, no drip sequence, and you can leave from any of them.</p>
+
+  <!-- No action and no method: see the module header, and docs/phase-5.md § 9. -->
+  <form class="signup__form" novalidate>
+    <label class="sr-only" for="footer-signup-email">Your email address</label>
+    <input class="field__control signup__input" type="email" id="footer-signup-email" name="email"
+           autocomplete="email" placeholder="you@company.com">
+    <button class="btn btn--primary press" type="submit">Keep me posted</button>
+  </form>
+
+  <p class="signup__note" data-content="placeholder">
+    <strong>Not wired up yet.</strong> The list has no home and no double-opt-in
+    decision, so this would be a field that quietly discards what you typed.
+    Until it does, <a class="link" href="/changelog/">the changelog</a> is the
+    same information without the email — it is the page this list would be built
+    from.
+  </p>
+</div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Transpahire, Inc.</span>
+      <span>Made in India</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
