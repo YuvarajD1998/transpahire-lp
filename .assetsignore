@@ -1,0 +1,17 @@
+# Not served. Everything else in the repo root is the site.
+.git
+.vscode
+.assetsignore
+wrangler.jsonc
+node_modules
+.wrangler
+
+# The authoring layer and the prototype
+src/
+tools/
+prototypes/
+
+# Internal documents and the motion lab
+docs/
+*.md
+motion-lab.html

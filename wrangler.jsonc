@@ -1,0 +1,9 @@
+{
+  // Static assets only: no Worker script, no build. The committed HTML is the site.
+  // .assetsignore keeps the authoring layer and the internal docs off the deploy.
+  "name": "transpahire-lp",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "."
+  }
+}
