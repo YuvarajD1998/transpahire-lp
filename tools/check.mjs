@@ -223,9 +223,10 @@ function escapeRe(s) {
 /** Every `<div class="workspace"…>` … matching `</div>`, by div depth. */
 function workspaceBlocks(html) {
   const out = [];
-  /* PHASE 6: `class="workspace workspace--bleed"` is the hero's; a matcher
-     that only knew the bare class stopped checking the one page it was written
-     for the moment the hero gained a modifier. */
+  /* PHASE 6: `class="workspace workspace--bleed"` was the hero's until D15
+     made the hero a screenshot; a matcher that only knew the bare class
+     stopped checking the one page it was written for the moment the hero
+     gained a modifier. Keep the modifier clause for the next one. */
   const open = /<div\b[^>]*class="workspace(?: [^"]*)?"[^>]*>/g;
   let m;
   while ((m = open.exec(html))) {

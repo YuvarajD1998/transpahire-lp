@@ -289,54 +289,56 @@ try {
      ---------------------------------------------------------------------- */
 
   console.log('— hero, one screen —');
-  /* PHASE 6. The A3 hero has no frame: a route line, then the workspace edge
-     to edge. The first screen must hold the headline, the CTA, the route,
-     the job header, the pulse strip, the tabs, the toolbar and the FIRST
-     RANKED ROW, with the drawer opening on it — prototypes/STAGE-3.md § 3.10
-     measured the row at 770–833 (1440×900) and 716–779 (1280×800). */
+  /* D15. The hero is a screenshot of the candidate's dashboard in a frame.
+     The first screen must hold the headline, the CTA, the frame's route line
+     and the capture's FIRST ROW — the profile ring and the career insights,
+     which end 460px down the 1844×931 capture — and the image must have
+     loaded, because a broken image in the hero is the whole picture. */
+  const SHOT_FIRST_ROW = 460 / 931;
   for (const [w, h] of [[1440, 900], [1280, 800]]) {
     await goto('/', { width: w, height: h });
     const fold = await evaluate(`
-      const vh = window.innerHeight;
       const box = (sel) => {
         const el = document.querySelector(sel);
         if (!el) return null;
         const r = el.getBoundingClientRect();
-        return { top: Math.round(r.top), bottom: Math.round(r.bottom) };
+        return { top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) };
       };
-      const rows = [...document.querySelectorAll('#workspace-list > .rank__row')]
-        .filter((el) => el.getBoundingClientRect().bottom <= vh).length;
+      const img = document.querySelector('.claim__shot img');
       return {
-        title: box('.claim__title'), ctas: box('.claim__ctas'), route: box('.bleed__route'),
-        jobhead: box('.claim .jobhead'), pulse: box('.claim .pulse'), tabs: box('.claim .tabstrip--job'),
-        toolbar: box('.claim .toolbar'), first: box('#workspace-list > .rank__row'),
-        drawer: box('.claim .workspace__drawer'), rows,
+        title: box('.claim__title'), ctas: box('.claim__ctas'),
+        route: box('.claim__shot .frame__chrome'), shot: box('.claim__shot img'),
+        loaded: !!img && img.complete && img.naturalWidth > 0,
       };
     `);
     const label = `/ @${w}×${h}`;
-    for (const layer of ['title', 'ctas', 'route', 'jobhead', 'pulse', 'tabs', 'toolbar', 'first']) {
-      if (!fold[layer]) fail(`${label}: hero is missing .${layer}`);
+    for (const layer of ['title', 'ctas', 'route']) {
+      if (!fold[layer]) fail(`${label}: hero is missing its ${layer}`);
       else if (fold[layer].top < 0 || fold[layer].bottom > h) {
         fail(`${label}: the hero's ${layer} is not on the first screen (${fold[layer].top}–${fold[layer].bottom}px of ${h}px)`);
       }
     }
-    if (!fold.drawer) fail(`${label}: hero has no drawer`);
-    else if (fold.drawer.top >= h) fail(`${label}: the drawer opens below the fold (top ${fold.drawer.top}px of ${h}px)`);
-    if (!failures.some((m) => m.startsWith(label))) {
-      console.log(`  ok  ${label} — head, route, job header, pulse, tabs, toolbar; first row ${fold.first.top}–${fold.first.bottom}, drawer at ${fold.drawer.top}; ${fold.rows} rows above the fold`);
-      notes.push(`hero ${label}: first row ${fold.first.top}–${fold.first.bottom}px, drawer head at ${fold.drawer.top}px (Stage 3: ${w === 1440 ? '770–833 / 835' : '716–779 / 779'})`);
+    if (!fold.shot) fail(`${label}: hero has no screenshot`);
+    else {
+      if (!fold.loaded) fail(`${label}: the hero screenshot did not load`);
+      const firstRow = fold.shot.top + Math.round((fold.shot.bottom - fold.shot.top) * SHOT_FIRST_ROW);
+      if (firstRow > h) fail(`${label}: the screenshot's first row ends below the fold (${firstRow}px of ${h}px)`);
+      if (!failures.some((m) => m.startsWith(label))) {
+        console.log(`  ok  ${label} — head, CTA, route; screenshot ${fold.shot.width}px wide from ${fold.shot.top}px, first row ends at ${firstRow}px`);
+        notes.push(`hero ${label}: screenshot ${fold.shot.width}px wide, top ${fold.shot.top}px, first row ends ${firstRow}px`);
+      }
     }
   }
 
-  /* The hero composition must contain no operable control. `CLAUDE.md` § 5:
-     the hero may be dense; it may not be interactive. tools/check.mjs asserts
-     this over the markup; this asserts it over the rendered tree, which also
-     catches a focus stop arriving from a shared component. */
+  /* The hero must contain no operable control. `CLAUDE.md` § 5: the hero may
+     be dense; it may not be interactive. It is an image and a caption now, so
+     this guards the next change to it, and catches a focus stop arriving from
+     a shared component. */
   {
     await goto('/', { width: 1440, height: 900 });
     const operable = await evaluate(`
-      const ws = document.querySelector('.claim .workspace');
-      if (!ws) return ['no .workspace in the hero'];
+      const ws = document.querySelector('.claim__shot');
+      if (!ws) return ['no .claim__shot in the hero'];
       return [...ws.querySelectorAll('button, select, textarea, input, a[href], [tabindex]:not([tabindex="-1"])')]
         .map((el) => el.tagName + '.' + String(el.className).split(' ')[0]);
     `);

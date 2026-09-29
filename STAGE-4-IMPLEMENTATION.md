@@ -393,6 +393,44 @@ that hid it there already applied. Restoring it is one uncomment.
 Approved / unresolved: requested; whether the drawer's copy should follow is
 open.
 
+**D15 — The hero is a screenshot, not the composed workspace (29 Sep 2026).**
+Deviation: scene 01's composition — `jobWorkspace()`'s pieces assembled edge
+to edge under a route line, STAGE-3.md's A3 hero — is replaced by a
+screenshot of the running product's candidate dashboard (`/dashboard` in the
+product's routes), `assets/images/candidate-dashboard.png`, in a
+`screenshotSlot()` frame with a caption.
+Reason: visitors read the composition as the product's own interface, which it
+is not — it is a staging of the data module. A capture cannot be mistaken for
+anything else. The job page's capture is already `/product`'s, so the hero
+takes the candidate's side.
+Impact:
+- Width: the frame takes the container's full width,
+  `min(100% − 2 × --page-pad, --container)` — 1,280px at 1440, one gutter
+  wider than the head on each side; at 1280 and below the two edges meet. The
+  1,700px bleed cap went with the bleed.
+- First screen: the audit's one-screen test now measures the head, the CTA,
+  the frame's route line and the capture's first row (the profile ring and the
+  career insights, 460px down the 1,844×931 capture), and that the image
+  loaded. The row ends at 796px of 900 at 1440, 761px of 800 at 1280.
+- Phone: at ≤ 699px the frame crops to the capture's content column at 6 / 5.
+  The whole window there is a 180px thumbnail with 4px type, and the capture's
+  outer thirds are the app's empty gutters. Cropped, not composed. The capture
+  itself lost 6px on the right: a browser scrollbar.
+- Copy: scene 02's lede said "Sneha Iyer's row, from the screen above"; it
+  now reads "Sneha Iyer's row in a role's ranked pool." Nothing else changed.
+- P5 is now unspent on the homepage. The hero's sr-only H2 went with the
+  workspace; the figure is labelled by its alt text and caption. `.claim`
+  gained 32px of bottom padding so `overflow: hidden` does not cut the frame's
+  shadow. `.bleed`, `.bleed__route` and `.workspace--bleed` are deleted from
+  `sections.css`; the composition functions are untouched.
+- Heights: HEIGHTS_PENDING
+Approved / unresolved: requested. Open: the hero copy is written for a
+recruiter ("for talent teams", "every candidate scored against the role")
+and the picture is now the candidate's side; the caption names it so it
+cannot be misread, but whether the copy should follow is a wording decision.
+The capture greets a candidate by name and shows a résumé file name and an
+employer; clearing it is on `docs/content-integrity.md` § 5 with the others.
+
 Nothing else differs. Copy is untouched, including the eyebrow and "NN / 08"
 wording Stage 3 left as wording decisions.
 

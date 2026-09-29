@@ -15,8 +15,10 @@ capital T whose stem is built from opacity-graded stacked segments,
 
 **Phase status: Phase 6 — the landing page is the approved Stage 3 prototype,
 implemented.** Twenty-three pages. The homepage is now eight scenes
-(`prototypes/STAGE-3.md`, the production handoff): the job-detail workspace as
-the hero, the score taken apart on a pinned stage (P6, the sixth motion
+(`prototypes/STAGE-3.md`, the production handoff): a screenshot of the
+candidate's dashboard as the hero (since 29 Sep 2026, `STAGE-4-IMPLEMENTATION.md`
+D15 — it was the composed job-detail workspace, and visitors read that as the
+product's own UI), the score taken apart on a pinned stage (P6, the sixth motion
 primitive), the pool, the argument, the gate-capable tuner, the system and the
 close. `STAGE-4-IMPLEMENTATION.md` at the root is the record: files, the
 deviation log, and the two product decisions it raised, now settled. The Stage 3 visual
@@ -52,7 +54,8 @@ contact, by decision), counsel's sign-off on four legal drafts, the pricing mode
 Sep 2026) are demo data, and that the person whose résumé is in
 `/product/sourcing`'s extension screenshot (filled 28 Sep 2026, email blurred)
 and in `/product/candidate-intelligence`'s extraction-review screenshot (filled
-28 Sep 2026, cropped to the dialog) is happy to appear.
+28 Sep 2026, cropped to the dialog) is happy to appear, as is the candidate
+whose dashboard is the homepage hero (29 Sep 2026).
 
 **Three streams were NOT built, deliberately, and the reasons differ.**
 

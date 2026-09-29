@@ -1052,17 +1052,21 @@ The rail-numbered head every non-terminal scene carries: a 200px rail column
 below 900px; the number drops to micro size on the phone. Layout only —
 `sections.css`.
 
-### `.claim`, `.bleed`, `.workspace--bleed` — the hero
+### `.claim`, `.claim__shot` — the hero
 
-The A3 hero: a compact head, then the real job-detail workspace edge to edge
-under one route line and **no frame**. The workspace is `jobWorkspace()`'s
-pieces assembled inline (`jobHeader`, `pulseStrip`, `tabStrip`, `listToolbar`,
-`rankedList` tracked with the gate row, `drawerHead`, `explainPanel`) so the
-frame chrome can be left out. Dense and inert — every control a span, zero
-focus stops; both `tools/check.mjs` and `tools/audit.mjs` assert it. No reveal
-gates it; P5's drawer is released on `is-open` from `main.js` because the hero
-has no reveal ancestor. `still()` strips the counter hooks: no count-up in a
-hero. The bleed caps at 1,600px above 1,700px wide.
+A compact head, then a screenshot of the running product's candidate
+dashboard in a `screenshotSlot({ priority: true })` frame, captioned
+(STAGE-4-IMPLEMENTATION.md D15, 29 Sep 2026). `.claim__shot` is a `<figure>`
+that takes the container's full width — `min(100% − 2 × --page-pad,
+--container)`, one gutter wider than the head at 1440 — and at ≤ 699px crops
+the frame to the capture's content column (6 / 5, `object-position: 54% 0`;
+both read off this capture, so a recapture means remeasuring). Inert: zero
+focus stops, which `tools/audit.mjs` asserts over `.claim__shot`. No reveal
+gates it, no count-up.
+
+Until D15 the hero was `jobWorkspace()`'s pieces assembled edge to edge under
+a route line (`.bleed`, `.workspace--bleed`, deleted). Visitors read that
+composition as the product's own interface, which is why it went.
 
 ### `.wrows` / `.wrow` — `weightRows(DIMENSIONS, {large, lead})`
 

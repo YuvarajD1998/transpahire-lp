@@ -550,7 +550,7 @@ nothing stands out. `docs/phase-2/07-MOTION_STORYBOARD.md § 1` sets these, and
 | Expressive primitive per composition | **1** | 02 P6 stage · 04 P3 filter · 05 P2 sequence · 06 P3 reorder |
 | Interactive product elements | **3** | 04 pool chips · 05 candidate switcher · 06 controls + what-if |
 | P4 paths | **6 per page** | none on the landing page (the graph lives on /product/matching) |
-| P5 drawer reveals | **1 per page** | 01 hero |
+| P5 drawer reveals | **1 per page** | none since 29 Sep 2026 — the 01 hero was its one use, and the hero is a screenshot now (STAGE-4-IMPLEMENTATION.md D15) |
 | P6 stages | **1 per page** | 02 the score |
 
 The interactive budget was two through Phase 5 and is three as of Phase 6: the

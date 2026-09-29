@@ -2206,10 +2206,13 @@ ${SIGNALS.map((sig) => `        <div class="signals__cell">
  * Pass `image` when the real one arrives. The ratio is then read off the
  * image's own pixels rather than the slot's, because `.frame__body > img` is
  * `object-fit: cover` and a mismatched ratio would crop the product silently.
+ *
+ * `priority` is for a screenshot on the first screen — the homepage hero's is
+ * the largest paint on the page, so it is fetched first and decoded in step.
  */
-export function screenshotSlot({ what, ratio = '16 / 9', meta = 'app.transpahire.com', image }) {
+export function screenshotSlot({ what, ratio = '16 / 9', meta = 'app.transpahire.com', image, priority = false }) {
   const body = image
-    ? `<img src="${image.src}" alt="${esc(image.alt)}" width="${image.width}" height="${image.height}" decoding="async">`
+    ? `<img src="${image.src}" alt="${esc(image.alt)}" width="${image.width}" height="${image.height}" ${priority ? 'fetchpriority="high"' : 'decoding="async"'}>`
     : `<div class="frame__placeholder">
       <span class="frame__tag"><span class="frame__tag-kind">screenshot</span>${esc(what)}</span>
     </div>`;

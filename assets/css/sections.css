@@ -1294,12 +1294,13 @@ textarea.field__control--tall { min-height: 260px; }
 .on-ink.scene { background: var(--c-ink); }
 .scene--pool { background: var(--c-bone); }
 
-/* ---- 01 · THE CLAIM — compact head, then the product edge to edge ---------- */
+/* ---- 01 · THE CLAIM — compact head, then the running product --------------- */
 /* The one-screen test at 1440×900 and 1280×800 is a design input: the head is
-   compact so the route line, job header, pulse strip, tabs and the first
-   ranked row are on the first screen with the drawer opening on it.
-   tools/audit.mjs measures it. */
-.claim { padding-top: calc(var(--header-h) + var(--sp-6)); padding-bottom: 0; overflow: hidden; }
+   compact so the screenshot's chrome and its first row — the profile ring and
+   the career insights — are on the first screen. tools/audit.mjs measures it. */
+/* The bottom padding is the frame's shadow's: --shadow-elev reaches 60px below
+   the frame, and overflow: hidden would cut it in a hard line. */
+.claim { padding-top: calc(var(--header-h) + var(--sp-6)); padding-bottom: var(--sp-8); overflow: hidden; }
 /* The one wash the page keeps: top-left, faint, static. */
 .claim::before {
   content: "";
@@ -1335,66 +1336,34 @@ textarea.field__control--tall { min-height: 260px; }
   .claim__ctas .btn--secondary:not(:only-child) { display: none; }   /* one CTA on the phone; the hero's is already alone */
 }
 
-/* The bleed: the workspace runs edge to edge under one route line. No frame. */
-.bleed {
-  margin-top: var(--sp-6);
-  margin-inline: calc(50% - 50vw);
-  padding: 0 var(--page-pad) var(--sp-8);
-  background: var(--surface-raised);
-  border-top: 1px solid var(--border);
+/* The shot: the running product in a frame (D15). It takes the container's
+   full width — the gutters the head keeps are the frame's to use — so at 1440
+   it runs one gutter wider than the head on each side, and at 1280 and below
+   the two edges meet. It stops at --container: the capture is 1844px, and a
+   frame wider than 1280 buys size, not detail. */
+.claim__shot {
+  width: min(100% - 2 * var(--page-pad), var(--container));
+  margin: var(--sp-10) auto 0;
 }
-.bleed__route {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: .06em;
-  color: var(--text-muted);
-  padding: var(--sp-2) 0;
-  border-bottom: 1px solid var(--border-soft);
-  margin: 0 0 var(--sp-2);
-}
-.workspace--bleed { padding-inline: 0; }
-.workspace--bleed .workspace__drawer { left: 46%; }
-.bleed .composition-note { margin-top: var(--sp-4); }
-@media (max-width: 899px) { .workspace--bleed .workspace__drawer { left: 38%; } }
-/* At 1920 the bleed stops growing: rows 1,800px wide are not a product screen. */
-@media (min-width: 1700px) {
-  .bleed {
-    margin-inline: auto;
-    max-width: 1600px;
-    border-inline: 1px solid var(--border);
-    border-radius: var(--radius) var(--radius) 0 0;
-  }
-}
-/* PHONE: the workspace at 390 is a composition, not a stack. Pulse strip 2×2
-   at the 11px floor; three rows; toolbar dropped; the drawer as a cropped
-   sheet beneath the list ending on the verdict. The 400px crop and the 17px
-   lede are Stage 3's numbers. */
+.claim__shot .composition-note { margin-top: var(--sp-5); }
+/* PHONE: the whole window at 390 is a 180px thumbnail with 4px type, and the
+   capture's left and right thirds are the app's empty gutters. So the phone
+   shows the content column at 1.7× that size: 6 / 5 is the column's shape
+   (x 418–1482 of 1844, full height, 26px to spare each side) and 54% centres
+   it. Both numbers are read off this capture; recapture, remeasure. Cropped,
+   not composed — the pixels are the capture's. The 17px lede is Stage 3's. */
 @media (max-width: 699px) {
   .claim__eyebrow { margin-bottom: var(--sp-4); }
   .claim__row { padding-top: var(--sp-4); gap: var(--sp-4); }
   .claim__lede { font-size: 17px; }
-  .workspace--bleed { padding-inline: var(--sp-3); }
-  .workspace--bleed .pulse { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
-  .workspace--bleed .pulse__tile { padding: 8px 10px; }
-  .workspace--bleed .pulse__value, .workspace--bleed .pulse__tile--featured .pulse__value { font-size: 18px; }
-  .workspace--bleed .jobhead__stats,
-  .workspace--bleed .jobhead__pills,
-  .workspace--bleed .toolbar { display: none; }
-  .workspace--bleed .workspace__list { overflow-x: visible; }
-  .workspace--bleed .workspace__list .rank__list { min-width: 0; }
-  .workspace--bleed .workspace__list .rank__row--tracked { grid-template-columns: 34px minmax(0, 1fr) auto auto; gap: var(--sp-2); }
-  .workspace--bleed .workspace__list .rank__row--tracked .rank__origin,
-  .workspace--bleed .workspace__list .rank__row--tracked .rank__move { display: none; }
-  .workspace--bleed .workspace__list .rank__row--tracked .pill--stage { display: inline-flex; }
-  .workspace--bleed .workspace__list .rank__row--gate .gate__struck { display: none; }
-  .workspace--bleed .workspace__list .rank__row:nth-child(n + 4):not(.rank__row--gate) { display: none; }
-  .workspace--bleed .workspace__drawer { position: static; left: auto; right: auto; top: auto; bottom: auto; max-height: 400px; margin-top: var(--sp-3); }
-  .workspace--bleed .workspace__panes { display: grid; gap: 0; }
+  .claim__shot { margin-top: var(--sp-8); }
+  .claim__shot .frame__body { aspect-ratio: 6 / 5; }
+  .claim__shot .frame__body > img { object-position: 54% 0; }
 }
 
 /* ---- 01 → 02 · the bridge ------------------------------------------------- */
-/* The head arrives sooner after the workspace, and its lede names the object
-   the stage is about to open: the same row, the same 87. */
+/* The head arrives sooner after the hero, and its lede names the object the
+   stage is about to open: one row, one 87. */
 .scene--signature { padding-top: var(--section-y-tight); padding-bottom: var(--section-y-tight); }
 .scene--signature .scene__head { margin-bottom: var(--sp-8); }
 .scene--signature .composition-note { margin-top: var(--sp-4); }

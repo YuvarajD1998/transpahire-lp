@@ -5,7 +5,7 @@
  * implemented in production. Variation 02, "Product editorial": eight scenes,
  * three tempos — statement → demonstration → reflection — and one signature.
  *
- *   01 The claim      paper   the real job-detail workspace, edge to edge
+ *   01 The claim      paper   a screenshot of the candidate's dashboard, framed
  *   02 The score      paper   six layers of one object on a pinned stage ★ P6
  *   03 The problem    ink     one sentence, hard cut
  *   04 The pool       bone    the ranked list, the gate, the relationships
@@ -21,18 +21,19 @@
  * tuner's orderings included: RANKINGS carries the product's critical gate and
  * its bands, settled against the source (STAGE-4-IMPLEMENTATION.md § 12).
  *
- * Two budgets, spent exactly: one P5 drawer reveal (01) and one P6 stage (02).
+ * One budget, spent exactly: one P6 stage (02). The P5 drawer reveal went
+ * with the composed hero (STAGE-4-IMPLEMENTATION.md D15) and is unspent.
  * Reveals never gate the hero. No count-up in the hero or on the stage.
  */
 
 import {
-  candidateView, candidateWorkspace, compositionNote, criticalGate, drawerHead,
-  explainPanel, frame, gateTuner, jobHeader, listToolbar, marketCovered, missionConsole,
-  pulseStrip, rankedList, sceneHead, signature, still, switcher, tabStrip,
+  candidateView, candidateWorkspace, criticalGate, explainPanel, frame, gateTuner,
+  marketCovered, missionConsole, rankedList, sceneHead, screenshotSlot, signature, still,
+  switcher,
 } from '../lib/compositions.mjs';
 import {
-  DRAWER_TABS, EDGE_TYPES, JOB, JOB_TABS, MISSION, PHILOSOPHY, POOL_ROWS, REL_LABELS,
-  SKILL_EDGES, SWITCHER, candidate,
+  EDGE_TYPES, JOB, MISSION, PHILOSOPHY, POOL_ROWS, REL_LABELS, SKILL_EDGES, SWITCHER,
+  candidate,
 } from '../../assets/data/product-demo.js';
 
 export const meta = {
@@ -56,13 +57,17 @@ ${demo ? `        <a class="btn btn--primary hover-icon press" href="/demo/">Boo
 }
 
 /* ── 01 · THE CLAIM ────────────────────────────────────────────────────────
-   The A3 hero: compact head, then the product edge to edge under one route
-   line and no frame. The website opens into the product.
+   Compact head, then the running product: a screenshot of the candidate's
+   dashboard in a frame (deviation D15). It replaced the composed job-detail
+   workspace because visitors read the composition as the product's own UI,
+   and it was not; a capture cannot be mistaken for anything else. The job
+   page's screenshot is /product's, so the hero takes the candidate's side.
 
-   Dense and inert: every control in the workspace is a <span>; zero focus
-   stops before the CTA (CLAUDE.md § 5; tools/check.mjs and audit.mjs both
-   assert it). No reveal gates it; P5's drawer opens once on first paint. No
-   count-up: still() strips the counter hooks.
+   The frame takes the container's full width, one gutter wider than the head,
+   and the head is compact so the dashboard's first row — the profile ring and
+   the career insights — is on the first screen at 1440×900 and 1280×800
+   (tools/audit.mjs measures it). Inert: an image and a caption, zero focus
+   stops before the CTA. No reveal gates it, no count-up.
 
    ONE CTA, NOT TWO (deviation D13). "Book a demo" sat forty pixels under the
    header's own, which is fixed and keeps its button at every width, so the
@@ -81,38 +86,29 @@ const claim = still(`<section class="scene scene--claim claim" id="top" data-con
       ${ctas({ secondary: 'See the working', secondaryHref: '#score', demo: false })}
     </div>
   </div>
-  <div class="bleed" aria-label="The job detail screen">
-    <p class="bleed__route">${JOB.route}</p>
-    <h2 class="sr-only">What the engine returns for this role</h2>
-    <div class="workspace workspace--bleed" data-drawer-reveal>
-      <div class="workspace__job">
-${jobHeader()}
-${pulseStrip()}
-${tabStrip({ tabs: JOB_TABS, modifier: 'tabstrip--job' })}
-      </div>
-      <div class="workspace__panes">
-        <div class="workspace__list">
-${listToolbar()}
-${rankedList({ ids: POOL_ROWS, listId: 'workspace-list', variant: 'tracked', head: false, foot: false, selected: 'c1', move: true, gateRow: true })}
-        </div>
-        <div class="workspace__drawer">
-${drawerHead({ candidateId: 'c1' })}
-${tabStrip({ tabs: DRAWER_TABS, modifier: 'tabstrip--drawer' })}
-${explainPanel({ id: 'workspace-panel', candidateId: 'c1', sequenced: false, showFooter: false, showIdent: false, ringSize: 40 })}
-        </div>
-      </div>
-    </div>
-    ${compositionNote()}
-  </div>
+  <figure class="claim__shot">
+${screenshotSlot({
+  meta: 'app.transpahire.com / dashboard',
+  priority: true,
+  image: {
+    src: '/assets/images/candidate-dashboard.png',
+    width: 1844,
+    height: 931,
+    alt: 'The Transpahire candidate dashboard. A profile-completeness ring at 91%, with the profile, the résumé, 39 verified skills and matching against 16 open roles each marked done; a career-insights panel; and the first of six matched jobs, a React Developer role marked Strong fit, with the reasons listed under it — the React.js, TypeScript and HTML5 skills the role asks for, Figma counted through a related skill, the experience level — and the two required skills the profile does not list.',
+  },
+})}
+    <figcaption class="composition-note">Screenshot · the running product · a candidate's dashboard</figcaption>
+  </figure>
 </section>`);
 
 /* ── 02 · THE SCORE ★ ──────────────────────────────────────────────────────
-   The signature. Six layers of one object — Sneha Iyer's row from the screen
-   above — on a pinned stage the scroll takes apart: verdict → mechanism →
-   evidence → source → shared result. The lede names the object so the hero
-   and the stage read as one movement. P6, motion.css § 4b; one per page. */
+   The signature. Six layers of one object — Sneha Iyer's row in a role's
+   ranked pool — on a pinned stage the scroll takes apart: verdict → mechanism
+   → evidence → source → shared result. The lede names the object. Until D15
+   it said "from the screen above"; the hero is the candidate's dashboard now,
+   so the row is introduced here instead. P6, motion.css § 4b; one per page. */
 const score = `<section class="scene scene--signature" id="score" data-content="provisional">
-${sceneHead({ num: '02', name: 'The score', title: 'The score, <em>taken apart.</em>', lede: `${SNEHA.name}'s row, from the screen above. Six layers of one object.` })}
+${sceneHead({ num: '02', name: 'The score', title: 'The score, <em>taken apart.</em>', lede: `${SNEHA.name}'s row in a role's ranked pool. Six layers of one object.` })}
 ${signature({ id: 'c1' })}
   <div class="container"><p class="composition-note">Illustrative data · invented people and companies · every value from the product data module</p></div>
 </section>`;

@@ -453,7 +453,10 @@ Before this site may be indexed, **all** of the following.
       — `assets/images/browser-extension.png`, the extension over a résumé. So
       is the extraction review — `assets/images/extraction-review.png`, the
       résumé review dialog, cropped from `image copy.png` to the dialog itself.
-      **Every slot is filled; the three items below are what keeps this open**
+      **29 Sep 2026: the homepage hero is a screenshot too** —
+      `assets/images/candidate-dashboard.png`, a candidate's dashboard, in place
+      of the composed job workspace (STAGE-4-IMPLEMENTATION.md D15).
+      **Every slot is filled; the four items below are what keeps this open**
 - [ ] **The `/product` screenshot's people are cleared** — it shows two
       candidate names, their employers, expected salaries and notice periods,
       and a signed-in user's handle. Confirm they are seeded demo data, or
@@ -468,6 +471,12 @@ Before this site may be indexed, **all** of the following.
       one quote names an employer (BlueRise). The name and photograph on the
       profile behind the dialog are cropped out. Confirm the person is happy to
       be on the site, or recapture over a demo résumé
+- [ ] **The homepage hero screenshot's person is cleared** — it is a
+      candidate's dashboard: it greets them by first name (Yuvaraj) and shows
+      their résumé's file name, their profile figures, and a React Developer
+      role at TechCorp Inc. they applied to. If it is the maintainer's own
+      account, saying so closes this; otherwise confirm the person is happy to
+      be on the first screen of the site, or recapture against a demo account
 - [ ] **`og:image` exists** — render the explanation panel rather than a logo
       card; it is the one asset that explains the product at thumbnail size
 - [ ] **Company registration details** — one honest line in the footer today
